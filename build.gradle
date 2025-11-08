@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'jacoco'
 }
 
 group = 'com.MiguelRocha-24.hero'
@@ -15,6 +17,9 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+application {
+    mainClass = 'App'
+}
 test {
     useJUnitPlatform()
 }
