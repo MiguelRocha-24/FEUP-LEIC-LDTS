@@ -1,0 +1,6 @@
+Player's tryMove method relies on 2 arguments, grid and direction
+Grid is necessary if we want independence between the entities and grid, ie, i can spawn multiple players
+in whichever grid i prefer. However direction from MovableEntity could be used, but we decided that
+for testing purposes, as well as design, it would be better that before moving we tell the entity player
+where to move, instead of relying on its parent class, allowing for more dynamic movement when the
+View phase is implemented.
