@@ -58,7 +58,7 @@ public class MovableEntityTest {
     }
 
     @Test
-    void nextPositionUsesCurrentDirection() {
+    void nextPositionTester() {
         Position start = new Position(5, 5);
 
         TestMovableEntity e = new TestMovableEntity(start, Direction.UP);
