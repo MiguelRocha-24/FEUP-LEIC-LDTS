@@ -2,10 +2,10 @@
 
 ## Game Description
 
-The OVERKILL is a rogue-like shooter based game where you have to murder different waves of enemies, obtaining coins with each kill and having the chance to level up your power with the help of new guns.
-The variety of levels will have increased difficulty with different bullet speeds and strategic enemies.
+Crossy Road is an endless arcade hopper game where you guide a character across busy roads, train tracks, and rivers while avoiding various obstacles. Your goal is to travel as far as possible without getting hit by vehicles, trains, or falling into the water.
+As you progress, the difficulty increases with faster-moving traffic and more challenging patterns.
 
-This project was developed by Donal Knuth (knuth@edu.fe.up.pt), Timothy J. Berners-Lee (timothy@edu.fe.up.pt) and Vinton G. Cerf (vinton@edu.fe.up.pt) for LDTS 2021-22.
+This project was developed by João Barros (up202406502@edu.fe.up.pt), Miguel Rocha (up202405484@edu.fe.up.pt) and Rosa Chilengue (up202109257@edu.fe.up.pt) for LDTS 2025-26.
 
 ## Implemented Features
 
