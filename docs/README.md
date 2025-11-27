@@ -9,18 +9,20 @@ This project was developed by Donal Knuth (knuth@edu.fe.up.pt), Timothy J. Berne
 
 ## Implemented Features
 
-- **Connected Menus** - The user has the capability of browsing through the different menus including in game ones. (Ex: Main Menu, Instructions, Play, Shop and Pause).
-- **Buttons** - Functional and interactive buttons.
-- **Mouse and Keyboard control** - The mouse and keyboard inputs are received through the respective events and interpreted according to the current game state.
-- **Player control** - The player may move with the keyboard control and shoot his gun when the left mouse button is pressed.
-- **Collisions detection** - Collisions between different objects are verified. (Ex: Player, Bombs, Enemies, Obstacles).
-- **Different levels** - 7 different levels with an increasing difficulty were implemented.
-- **Shop interaction and money management** - The player may buy new items in the in game shop, some of which consist of new weapons, power ups and potions.
-- **Animations** - Several animations are incorporated in this game, from bomb explosions to level loading and the effects of consuming potions.
+At the moment there are no implemented features
 
 ## Planned Features
 
-All the planned features were successfully implemented.
+- **Connected Menus** - The user will have the capability of browsing through the different menus including in game ones. (Ex: Main Menu, Play, Shop and Pause).
+- **Buttons** - Functional and interactive buttons.
+- **Mouse and Keyboard control** - The mouse and keyboard inputs will be received through the respective events and interpreted according to the current game state.
+- **Player control** - The player will move using the keyboard. (WASD)
+- **Collision detection** - Collisions between different objects will be verified. (Ex: Player, Vehicles, Trains, Obstacles).
+- **Score** - Each run will have a score, storing the highest score upon death.
+- **Increase of difficulty** - As the game goes on, the difficulty will increase with faster-moving traffic and more challenging patterns.
+- **Shop interaction and coins** - The player will be able to buy new skins for the character in the in-game shop, with coins that will be earned by playing.
+- **Animations** - Several animations will be incorporated in the game, from the character walking to the movement of the vehicles and the animation of the character dying.
+- **Multiple users** - The game will support multiple users, each one with their own highest score and their coins.
 
 ## Design
 
