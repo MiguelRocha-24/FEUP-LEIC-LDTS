@@ -14,7 +14,11 @@ public class ConsoleViewer {
         this.playerViewer = new PlayerViewer();
     }
 
-    public void draw(Grid grid, List<Lane> lanes, Player player) {
+    public void draw(Level level) {
+        Grid grid = level.getGrid();
+        List<Lane> lanes = level.getLanes();
+        Player player = level.getPlayer();
+
         char[][] buffer = new char[grid.getH()][grid.getW()];
         for (char[] row : buffer) {
             Arrays.fill(row, '.');
