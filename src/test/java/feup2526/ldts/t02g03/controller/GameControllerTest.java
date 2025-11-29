@@ -3,6 +3,8 @@ package feup2526.ldts.t02g03.controller;
 import feup2526.ldts.t02g03.model.Direction;
 import feup2526.ldts.t02g03.model.Level;
 import feup2526.ldts.t02g03.model.Position;
+import feup2526.ldts.t02g03.model.RoadLane;
+import feup2526.ldts.t02g03.model.Vehicle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
@@ -102,5 +104,25 @@ public class GameControllerTest {
         Position initialPos = level.getPlayer().getPosition();
         controller.updatePlayer();
         assertEquals(initialPos, level.getPlayer().getPosition());
+    }
+
+    @Test
+    void testUpdateLanes() {
+        RoadLane lane1 = new RoadLane(Direction.RIGHT, 1, 1);
+        RoadLane lane2 = new RoadLane(Direction.LEFT, 1, 2);
+        level.getLanes().clear();
+        level.getLanes().add(lane1);
+        level.getLanes().add(lane2);
+
+        Vehicle v1 = new Vehicle(new Position(5, 1), Direction.RIGHT);
+        Vehicle v2 = new Vehicle(new Position(5, 2), Direction.LEFT);
+        lane1.addVehicle(v1);
+        lane2.addVehicle(v2);
+
+        controller = new GameController(level);
+        controller.updateLanes();
+
+        assertEquals(new Position(6, 1), lane1.getVehicles().get(0).getPosition());
+        assertEquals(new Position(4, 2), lane2.getVehicles().get(0).getPosition());
     }
 }
