@@ -18,7 +18,11 @@ dependencies {
 }
 
 application {
-    mainClass = 'App'
+    mainClass = 'feup2526.ldts.t02g03.application.App'
+}
+
+run {
+    standardInput = System.in
 }
 test {
     useJUnitPlatform()
