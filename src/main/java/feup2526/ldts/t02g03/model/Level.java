@@ -6,6 +6,7 @@ public class Level{
     private final Grid grid;
     private final Player player;
     private final List<Lane> lanes;
+    private boolean quit = false;
 
     public Level(int width, int height){
         this.grid = new Grid(width, height);
@@ -24,7 +25,10 @@ public class Level{
         }
     }
 
+    public void quit(){this.quit = true;}
     public boolean isGameOver(){
+        if (quit){return true;}
+        
         for (Lane lane : lanes) {
             if (lane instanceof RoadLane) {
                 RoadLane roadLane = (RoadLane) lane;
