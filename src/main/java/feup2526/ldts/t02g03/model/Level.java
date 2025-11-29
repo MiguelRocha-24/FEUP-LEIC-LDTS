@@ -28,9 +28,9 @@ public class Level{
     public void quit(){this.quit = true;}
     public boolean isGameOver(){
         if (quit){return true;}
-        
+
         for (Lane lane : lanes) {
-            if (lane instanceof RoadLane) {
+            if (lane.getRow() == player.getPosition().getY() && lane instanceof RoadLane) {
                 RoadLane roadLane = (RoadLane) lane;
                 for (Vehicle v : roadLane.getVehicles()) {
                     if (v.getPosition().equals(player.getPosition())) {
