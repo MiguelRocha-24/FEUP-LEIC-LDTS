@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EntityTest {
 
-    private static class DummyEntity extends Entity {
-        public DummyEntity(Position position) {
+    private static class TestEntity extends Entity {
+        public TestEntity(Position position) {
             super(position);
         }
     }
@@ -15,7 +15,7 @@ public class EntityTest {
     @Test
     void builderAndGetterTester() {
         Position p = new Position(3, 7);
-        Entity e = new DummyEntity(p);
+        Entity e = new TestEntity(p);
         assertEquals(p, e.getPosition());
     }
 }

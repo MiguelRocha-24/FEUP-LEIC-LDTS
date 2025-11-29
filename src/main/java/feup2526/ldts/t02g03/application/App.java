@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class App {
     public static void main(String[] args) throws IOException {
-        Level level = new Level(40, 20);
+        Level level = new Level(20, 7);
         GameController controller = new GameController(level);
         ConsoleViewer viewer = new ConsoleViewer();
 
