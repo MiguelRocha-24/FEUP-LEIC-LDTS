@@ -67,4 +67,8 @@ public class GameController {
             controller.step();
         }
     }
+
+    public Level getLevel(){return level;}
+    public Scanner getScanner(){return scanner;}
+    public List<RoadLaneController> getLaneControllers(){return laneControllers;}
 }
