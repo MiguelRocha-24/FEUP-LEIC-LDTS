@@ -44,8 +44,8 @@ public class MovableEntityTest {
     void setterTester2() {
         try {
             TestMovableEntity e = new TestMovableEntity(new Position(0,0), Direction.UP);
-            e.setDirection(null);               // code expected to throw
-            fail("Expected IllegalArgumentException to be thrown");  // if we reach this, test fails
+            e.setDirection(null);
+            fail("Expected IllegalArgumentException to be thrown");
         } catch (IllegalArgumentException expected) {
             assertTrue(expected.getMessage().contains("Direction"));
         }

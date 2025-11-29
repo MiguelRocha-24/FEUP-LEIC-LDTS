@@ -2,9 +2,7 @@ package feup2526.ldts.t02g03.model;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
+import static org.junit.jupiter.api.Assertions.*;
 public class VehicleTest {
 
     @Test
@@ -44,5 +42,16 @@ public class VehicleTest {
         }
         v.moveUnchecked(0);
         assertEquals(new Position(4,1), v.getPosition());
+    }
+
+    @Test
+    void equalsTest(){
+        Vehicle v = new Vehicle(new Position(1,1), Direction.RIGHT);
+        Vehicle v2 = new Vehicle(new Position(1,1), Direction.RIGHT);
+        assertEquals(v,v2);
+
+        assertNotEquals(v,new Vehicle(new Position(1,1), Direction.LEFT));
+        assertNotEquals(v,null);
+        assertNotEquals(v,new Object());
     }
 }

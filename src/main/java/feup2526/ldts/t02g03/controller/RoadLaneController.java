@@ -50,16 +50,15 @@ public class RoadLaneController {
         if (lane.getVehicles().isEmpty()) return;
 
         if (lane.getDirection() == Direction.LEFT) {
-            //Vehicles leave screen after passing left barrier (x=0)
+            //Vehicles leave screen after passing left barrier (x=0-removeBuffer)
             int cutoff = -removeBuffer;
-            while (!lane.getVehicles().isEmpty() && lane.getVehicles().getFirst().getPosition().getX() < cutoff) {
+            while (lane.getVehicles().getFirst().getPosition().getX() < cutoff) {
                 lane.getVehicles().removeFirst();
             }
         } else {
-            //Vehicles leave screen after passing right barrier (x=grid width)
+            //Vehicles leave screen after passing right barrier (x=grid width+removeBuffer)
             int cutoff = grid.getW() + removeBuffer;
-            while (!lane.getVehicles().isEmpty() && 
-                   lane.getVehicles().getLast().getPosition().getX() > cutoff) {
+            while (lane.getVehicles().getLast().getPosition().getX() > cutoff) {
                 lane.getVehicles().removeLast();
             }
         }
@@ -93,4 +92,13 @@ public class RoadLaneController {
             return (entryX - lastX) >= (minGap + 1);
         }
     }
+
+    public RoadLane getLane(){return lane;}
+    public Grid getGrid(){return grid;}
+    public double getSpawnChance(){return spawnChance;}
+    public int getMinGap(){return minGap;}
+    public int getRemoveBuffer(){return removeBuffer;}
+    public int getSpawnOffset(){return spawnOffset;}
+
+    public void setRandom(Random rng){this.rng = rng;}
 }
