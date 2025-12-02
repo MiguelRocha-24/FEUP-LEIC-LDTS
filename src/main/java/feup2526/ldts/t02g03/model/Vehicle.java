@@ -9,15 +9,6 @@ public class Vehicle extends MovableEntity{
         return nextPosition();
     }
 
-    public void moveOneUnchecked(){
-        this.position = nextPosition();
-    }
-
-    public void moveUnchecked(int distance) {
-        if (distance < 0) throw new IllegalArgumentException("distance must be >= 0");
-        for (int i = 0; i < distance; i++) moveOneUnchecked();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

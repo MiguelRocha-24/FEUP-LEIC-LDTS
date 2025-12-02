@@ -10,4 +10,5 @@ public abstract class Lane {
     }
 
     public int getRow(){return row;}
+    public void update(){};
 }

@@ -19,7 +19,7 @@ public class RoadLane extends MovableLane {
         if (v.getDirection() != direction) throw new IllegalArgumentException("Vehicle must have same direction as lane");
 
         // Maintain x-order
-        int x = v.getPosition().getX();
+        double x = v.getPosition().getX();
         int idx = 0;
         while (idx < vehicles.size() && vehicles.get(idx).getPosition().getX() <= x) {idx++;}
         vehicles.add(idx, v);
@@ -28,4 +28,11 @@ public class RoadLane extends MovableLane {
         if (v == null) throw new IllegalArgumentException("Vehicle required");
         if (!vehicles.contains(v)) throw new IllegalArgumentException("Vehicle not in lane");
         vehicles.remove(v);}
+
+    @Override
+    public void update(){
+        for (Vehicle v : vehicles) {
+            v.move(speed);
+        }
+    }
 }
