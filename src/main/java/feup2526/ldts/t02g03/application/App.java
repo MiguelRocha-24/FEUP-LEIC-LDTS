@@ -1,27 +1,46 @@
 package feup2526.ldts.t02g03.application;
 
+import com.googlecode.lanterna.input.KeyStroke;
 import feup2526.ldts.t02g03.controller.GameController;
 import feup2526.ldts.t02g03.model.Level;
-import feup2526.ldts.t02g03.view.ConsoleViewer;
+import feup2526.ldts.t02g03.view.LanternaViewer;
 import java.io.IOException;
 
 public class App {
-    public static void main(String[] args) throws IOException{
-        Level level = new Level(20, 7);
+    public static void main(String[] args) throws IOException {
+        Level level = new Level(20, 20);
         GameController controller = new GameController(level);
-        ConsoleViewer viewer = new ConsoleViewer();
-        run(level, controller, viewer);
+        LanternaViewer viewer = new LanternaViewer(20, 20);
+
+        try {
+            run(level, controller, viewer);
+        } finally {
+            viewer.close();
+        }
     }
 
-    public static void run(Level level, GameController controller, ConsoleViewer viewer) throws IOException{
+    public static void run(Level level, GameController controller, LanternaViewer viewer) throws IOException {
         // pregenerate lanes
-        for (int i = 0; i < 30; i++){
+        for (int i = 0; i < 500; i++) {
             controller.updateLanes();
         }
-        viewer.draw(level);
-        while(!level.isGameOver()){
-            if (controller.updatePlayer()){
-                viewer.draw(level);
+        int FPS = 30;
+        int frameTime = 1000 / FPS;
+        while (!level.isGameOver()) {
+            long startTime = System.currentTimeMillis();
+            viewer.draw(level);
+            KeyStroke key = viewer.readInput();
+            if (key != null) {
+                controller.handleInput(key);
+            }
+            controller.update();
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            long sleepTime = frameTime - elapsedTime;
+            try {
+                if (sleepTime > 0)
+                    Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                // ignore
             }
         }
     }

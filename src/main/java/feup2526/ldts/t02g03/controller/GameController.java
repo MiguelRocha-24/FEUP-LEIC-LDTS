@@ -1,27 +1,26 @@
 package feup2526.ldts.t02g03.controller;
 
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import feup2526.ldts.t02g03.model.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class GameController {
     private final Level level;
-    private final Scanner scanner;
     private final List<RoadLaneController> laneControllers;
     private final List<RiverController> riverControllers;
 
-    public GameController(Level level){
+    public GameController(Level level) {
         this.level = level;
-        this.scanner = new Scanner(System.in);
         this.laneControllers = new ArrayList<>();
         this.riverControllers = new ArrayList<>();
 
         for (Lane lane : level.getLanes()) {
             if (lane instanceof RoadLane) {
-                laneControllers.add(new RoadLaneController((RoadLane) lane, level.getGrid(), 0.3, 3, 2, 2));
+                laneControllers.add(new RoadLaneController((RoadLane) lane, level.getGrid(), 0.01, 3, 2, 2));
             } else if (lane instanceof River) {
-                riverControllers.add(new RiverController((River) lane, level.getGrid(), 0.3, 3, 2, 2));
+                riverControllers.add(new RiverController((River) lane, level.getGrid(), 0.05, 3, 2, 2));
             }
         }
     }
@@ -29,7 +28,6 @@ public class GameController {
     public void update() {
         if (level.isGameOver())
             return;
-        updatePlayer();
         updateLanes();
         checkCollisions();
     }
@@ -65,35 +63,49 @@ public class GameController {
         }
     }
 
-    public boolean updatePlayer() {
-        if (scanner.hasNextLine()) {
-            String line = scanner.nextLine().trim().toUpperCase();
-            if (line.equals("Q") || line.equals("ESC")) {
-                level.quit();
-                return true;
-            }
-            if (!line.isEmpty()) {
-                char c = line.charAt(0);
-                Direction dir = null;
-                switch (c) {
-                    case 'W':
-                        dir = Direction.UP;
-                        break;
-                    case 'S':
-                        dir = Direction.DOWN;
-                        break;
-                    case 'A':
-                        dir = Direction.LEFT;
-                        break;
-                    case 'D':
-                        dir = Direction.RIGHT;
-                        break;
-                }
-                if (dir != null) {
-                    level.getPlayer().move(dir, level.getGrid());
-                    return true;
-                }
-            }
+    public boolean handleInput(KeyStroke key) {
+        if (key == null)
+            return false;
+        if (key.getKeyType() == KeyType.EOF)
+            return true; 
+        if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q')) {
+            level.quit();
+            return true;
+        }
+        if (key.getKeyType() == KeyType.Escape) {
+            level.quit();
+            return true;
+        }
+
+        Direction dir = null;
+        switch (key.getKeyType()) {
+            case ArrowUp:
+                dir = Direction.UP;
+                break;
+            case ArrowDown:
+                dir = Direction.DOWN;
+                break;
+            case ArrowLeft:
+                dir = Direction.LEFT;
+                break;
+            case ArrowRight:
+                dir = Direction.RIGHT;
+                break;
+            case Character:
+                if (key.getCharacter() == 'w' || key.getCharacter() == 'W')
+                    dir = Direction.UP;
+                if (key.getCharacter() == 's' || key.getCharacter() == 'S')
+                    dir = Direction.DOWN;
+                if (key.getCharacter() == 'a' || key.getCharacter() == 'A')
+                    dir = Direction.LEFT;
+                if (key.getCharacter() == 'd' || key.getCharacter() == 'D')
+                    dir = Direction.RIGHT;
+                break;
+        }
+
+        if (dir != null) {
+            level.getPlayer().move(dir, level.getGrid());
+            return true;
         }
         return false;
     }
@@ -106,8 +118,4 @@ public class GameController {
             controller.step();
         }
     }
-
-    public Level getLevel(){return level;}
-    public Scanner getScanner(){return scanner;}
-    public List<RoadLaneController> getLaneControllers(){return laneControllers;}
 }

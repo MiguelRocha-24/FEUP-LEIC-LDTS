@@ -21,4 +21,17 @@ public class Player extends MovableEntity{
 
         return false;
     }
+
+    @Override   
+    public void move(double distance) {
+        if (direction == Direction.LEFT) {
+            this.position = new Position(this.position.getX() - distance, this.position.getY());
+        } else if (direction == Direction.RIGHT) {
+            this.position = new Position(this.position.getX() + distance, this.position.getY());
+        } else if (direction == Direction.UP) {
+            this.position = new Position(this.position.getX(), this.position.getY() - distance);
+        } else if (direction == Direction.DOWN) {
+            this.position = new Position(this.position.getX(), this.position.getY() + distance);
+        }
+    }
 }

@@ -24,7 +24,7 @@ public class RiverController {
         if (minGap <= 0) throw new IllegalArgumentException("Min gap must be > 0");
         if (removeBuffer <= 0) throw new IllegalArgumentException("Remove buffer must be > 0");
         if (spawnOffset <= 0) throw new IllegalArgumentException("Spawn offset must be > 0");   
-        
+
         this.river = river;
         this.grid = grid;
         this.rng = new Random();
@@ -75,7 +75,7 @@ public class RiverController {
         else{
             entryX = grid.getW() + spawnOffset;
         }
-        
+
 
         if (!isSpaceForSpawn(entryX)) return;
         Log l = new Log(new Position(entryX, river.getRow()), river.getDirection());
