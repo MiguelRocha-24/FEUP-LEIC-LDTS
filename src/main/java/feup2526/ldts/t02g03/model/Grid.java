@@ -16,10 +16,4 @@ public final class Grid {
     public boolean isInside(Position p) {
         return (p.getX() >= 0) && (p.getX() < this.w) && (p.getY() >= 0) && (p.getY() < this.h);
     }
-
-    public Position clamp(Position p) {
-        int x = Math.max(0, Math.min(w - 1, p.getX()));
-        int y = Math.max(0, Math.min(h - 1, p.getY()));
-        return new Position(x, y);
-    }
 }

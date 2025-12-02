@@ -24,4 +24,14 @@ public abstract class MovableEntity extends Entity {
             case RIGHT -> position.right();
         };
     }
+
+    public void move(double distance){
+        if (direction == Direction.LEFT){
+            this.position = new Position(this.position.getX() - distance, this.position.getY());
+        }
+        else if (direction == Direction.RIGHT){
+            this.position = new Position(this.position.getX() + distance, this.position.getY());
+        }
+    }
+
 }

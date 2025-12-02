@@ -17,7 +17,7 @@ public class River extends MovableLane{
         if (l.getPosition().getY() != row) throw new IllegalArgumentException("Log must be on this lane");
         if (l.getDirection() != direction) throw new IllegalArgumentException("Log must have same direction as lane");
         // Maintain x-order
-        int x = l.getPosition().getX();
+        double x = l.getPosition().getX();
         int idx = 0;
         while (idx < logs.size() && logs.get(idx).getPosition().getX() <= x) {idx++;}
         logs.add(idx, l);
@@ -26,4 +26,11 @@ public class River extends MovableLane{
         if (l == null) throw new IllegalArgumentException("Log required");
         if (!logs.contains(l)) throw new IllegalArgumentException("Log not in lane");
         logs.remove(l);}
+
+    @Override
+    public void update(){
+        for (Log l : logs) {
+            l.move(speed);
+        }
+    }
 }

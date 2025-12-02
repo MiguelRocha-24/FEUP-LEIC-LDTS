@@ -5,7 +5,6 @@ import feup2526.ldts.t02g03.model.Grid;
 import feup2526.ldts.t02g03.model.Log;
 import feup2526.ldts.t02g03.model.River;
 import feup2526.ldts.t02g03.model.Position;
-import feup2526.ldts.t02g03.model.Vehicle;
 
 import java.util.Random;
 
@@ -40,4 +39,58 @@ public class RiverController {
         cleanup();
         maybeSpawn();
     }
+
+    private void moveLogs() {
+        for (Log l : river.getLogs()) {
+            l.move(river.getSpeed());
+        }
+    }
+
+    private void cleanup() {
+        if (river.getLogs().isEmpty()) return;
+
+        if (river.getDirection() == Direction.LEFT) {
+            //Logs leave screen after passing left barrier (x=0-removeBuffer)
+            int cutoff = -removeBuffer;
+            while (river.getLogs().getFirst().getPosition().getX() < cutoff) {
+                river.getLogs().removeFirst();
+            }
+        } else {
+            //Logs leave screen after passing right barrier (x=grid width+removeBuffer)
+            int cutoff = grid.getW() + removeBuffer;
+            while (river.getLogs().getLast().getPosition().getX() > cutoff) {
+                river.getLogs().removeLast();
+            }
+        }
+    }
+
+    private void maybeSpawn() {
+        //Spawn chance is the probability of a log being spawned in a given step
+        //If the random number is greater than the spawn chance, no need to spawn log
+        if (rng.nextDouble() >= spawnChance) return;
+        int entryX;
+        if (river.getDirection() == Direction.RIGHT){
+            entryX = -spawnOffset;
+        }
+        else{
+            entryX = grid.getW() + spawnOffset;
+        }
+        
+
+        if (!isSpaceForSpawn(entryX)) return;
+        Log l = new Log(new Position(entryX, river.getRow()), river.getDirection());
+        river.addLog(l);
+    }
+
+    private boolean isSpaceForSpawn(int entryX) {
+        if (river.getLogs().isEmpty()) return true;
+        if (river.getDirection() == Direction.RIGHT) {
+            double firstX = river.getLogs().getFirst().getPosition().getX();
+            return (firstX - entryX) >= (minGap + 1);
+        } else {
+            double lastX = river.getLogs().getLast().getPosition().getX();
+            return (entryX - lastX) >= (minGap + 1);
+        }
+    }
+
 }

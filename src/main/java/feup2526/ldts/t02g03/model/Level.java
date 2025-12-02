@@ -7,6 +7,7 @@ public class Level{
     private final Player player;
     private final List<Lane> lanes;
     private boolean quit = false;
+    private boolean gameOver = false;
 
     public Level(int width, int height){
         this.grid = new Grid(width, height);
@@ -20,26 +21,26 @@ public class Level{
         for (int i = 1; i < grid.getH() - 1; i++) {
             Direction dir = (i % 2 == 0) ? Direction.RIGHT : Direction.LEFT;
             int speed = 1;
-            RoadLane lane = new RoadLane(dir, speed, i);
-            lanes.add(lane);
+            if (Math.random() < 0.5) {
+                RoadLane lane = new RoadLane(dir, speed, i);
+                lanes.add(lane);
+            } else {
+                River lane = new River(i, dir, speed);
+                lanes.add(lane);
+            }
         }
     }
 
-    public void quit(){this.quit = true;}
-    public boolean isGameOver(){
-        if (quit){return true;}
+    public void quit() {
+        this.quit = true;
+    }
 
-        for (Lane lane : lanes) {
-            if (lane.getRow() == player.getPosition().getY() && lane instanceof RoadLane) {
-                RoadLane roadLane = (RoadLane) lane;
-                for (Vehicle v : roadLane.getVehicles()) {
-                    if (v.getPosition().equals(player.getPosition())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+    public void setGameOver(boolean state) {
+        this.gameOver = state;
+    }
+
+    public boolean isGameOver() {
+        return quit || gameOver;
     }
 
     public Grid getGrid(){return grid;}

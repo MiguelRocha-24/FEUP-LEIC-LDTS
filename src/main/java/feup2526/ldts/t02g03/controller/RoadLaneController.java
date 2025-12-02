@@ -42,7 +42,7 @@ public class RoadLaneController {
 
     private void moveVehicles() {
         for (Vehicle v : lane.getVehicles()) {
-            v.moveUnchecked(lane.getSpeed());
+            v.move(lane.getSpeed());
         }
     }
 
@@ -85,10 +85,10 @@ public class RoadLaneController {
     private boolean isSpaceForSpawn(int entryX) {
         if (lane.getVehicles().isEmpty()) return true;
         if (lane.getDirection() == Direction.RIGHT) {
-            int firstX = lane.getVehicles().getFirst().getPosition().getX();
+            double firstX = lane.getVehicles().getFirst().getPosition().getX();
             return (firstX - entryX) >= (minGap + 1);
         } else {
-            int lastX = lane.getVehicles().getLast().getPosition().getX();
+            double lastX = lane.getVehicles().getLast().getPosition().getX();
             return (entryX - lastX) >= (minGap + 1);
         }
     }

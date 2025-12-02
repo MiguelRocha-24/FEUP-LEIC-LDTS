@@ -9,17 +9,16 @@ public class Player extends MovableEntity{
         super(start, direction);
     }
 
-    public boolean tryMove(Direction dir, Grid grid) {
+    public boolean move(Direction dir, Grid grid) {
         if (dir == null) throw new IllegalArgumentException("Direction cannot be null");
         if (grid == null) throw new IllegalArgumentException("Grid cannot be null");
 
-        setDirection(dir);
-        Position next = nextPosition();
-
-        if (grid.isInside(next)) {
-            this.position = next;
+        this.setDirection(dir);
+        if (grid.isInside(this.nextPosition())) {
+            this.move(1.0);
             return true;
         }
+
         return false;
     }
 }
