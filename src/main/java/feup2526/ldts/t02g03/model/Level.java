@@ -9,6 +9,8 @@ public class Level{
     private final List<Lane> lanes;
     private boolean quit = false;
     private boolean gameOver = false;
+    private boolean collisionDetected = false;
+    private long collisionTime = 0;
 
     public Level(int width, int height){
         this.grid = new Grid(width, height);
@@ -38,4 +40,11 @@ public class Level{
     public Grid getGrid(){return grid;}
     public Player getPlayer(){return player;}
     public List<Lane> getLanes(){return lanes;}
+    public boolean isCollisionDetected(){return collisionDetected;}
+    public long getCollisionTime(){return collisionTime;}
+    public void handleCollision() {
+        this.collisionDetected = true;
+        this.collisionTime = System.currentTimeMillis();
+    }
+
 }

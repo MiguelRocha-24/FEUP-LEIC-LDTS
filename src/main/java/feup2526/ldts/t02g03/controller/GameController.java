@@ -10,11 +10,13 @@ public class GameController {
     private final Level level;
     private final List<RoadLaneController> laneControllers;
     private final List<RiverController> riverControllers;
+    private final PlayerController playerController;
 
     public GameController(Level level) {
         this.level = level;
         this.laneControllers = new ArrayList<>();
         this.riverControllers = new ArrayList<>();
+        this.playerController = new PlayerController(level.getPlayer());
 
         for (Lane lane : level.getLanes()) {
             if (lane instanceof RoadLane) {
@@ -26,21 +28,36 @@ public class GameController {
     }
 
     public void update() {
+        if (level.isCollisionDetected()) {
+            if (System.currentTimeMillis() - level.getCollisionTime() > 1000) {
+                level.setGameOver(true);
+            }
+            return;
+        }
         if (level.isGameOver())
             return;
+
+        playerController.update();
         updateLanes();
         checkCollisions();
     }
 
     private void checkCollisions() {
+        Player player = level.getPlayer();
+        double pMin = player.getPosition().getX() + player.getOffsetX();
+        double pMax = pMin + player.getWidth();
+        int playerRow = (int) Math.round(player.getPosition().getY());
+
         for (Lane lane : level.getLanes()) {
-            if (lane.getRow() == (int) level.getPlayer().getPosition().getY()) {
+            if (lane.getRow() == playerRow) {
                 if (lane instanceof RoadLane) {
                     RoadLane roadLane = (RoadLane) lane;
                     for (Vehicle v : roadLane.getVehicles()) {
-                        if ((int) v.getPosition().getX() == (int) level.getPlayer().getPosition().getX() &&
-                                (int) v.getPosition().getY() == (int) level.getPlayer().getPosition().getY()) {
-                            level.setGameOver(true);
+                        double vMin = v.getPosition().getX() + v.getOffsetX();
+                        double vMax = vMin + v.getWidth();
+
+                        if (pMin < vMax && pMax > vMin) {
+                            level.handleCollision();
                             return;
                         }
                     }
@@ -48,18 +65,34 @@ public class GameController {
                     River river = (River) lane;
                     boolean onLog = false;
                     for (Log l : river.getLogs()) {
-                        if ((int) l.getPosition().getX() == (int) level.getPlayer().getPosition().getX() &&
-                                (int) l.getPosition().getY() == (int) level.getPlayer().getPosition().getY()) {
+                        double lMin = l.getPosition().getX() + l.getOffsetX();
+                        double lMax = lMin + l.getWidth();
+
+                        if (pMin < lMax && pMax > lMin) {
                             onLog = true;
+                            if (Math.abs(player.getPosition().getY() - playerRow) < 0.1) {
+                                playerController.moveTo(new Position(l.getPosition().getX(), playerRow - 0.2));
+                            } else {
+                                playerController.moveTo(new Position(player.getPosition().getX(), playerRow - 0.2));
+                            }
+                            movePlayerWithLog(player, l, river);
                             break;
                         }
                     }
                     if (!onLog) {
-                        level.setGameOver(true);
+                        level.handleCollision();
                         return;
                     }
                 }
             }
+        }
+    }
+
+    private void movePlayerWithLog(Player player, Log log, River river) {
+        if (log.getDirection() == Direction.LEFT) {
+            playerController.moveWithPlatform(-river.getSpeed());
+        } else {
+            playerController.moveWithPlatform(river.getSpeed());
         }
     }
 
@@ -106,8 +139,19 @@ public class GameController {
         }
 
         if (dir != null) {
-            level.getPlayer().move(dir, level.getGrid());
-            return true;
+            if (dir == Direction.UP || dir == Direction.DOWN) {
+                double currentY = level.getPlayer().getPosition().getY();
+                double targetY = Math.round(currentY) + (dir == Direction.UP ? -1 : 1);
+                Position newPos = new Position(level.getPlayer().getPosition().getX(), targetY);
+
+                if (level.getGrid().isInside(newPos)) {
+                    playerController.moveTo(newPos);
+                    return true;
+                }
+            } else {
+                playerController.changeTargetPosition(dir, level.getGrid());
+                return true;
+            }
         }
         return false;
     }
