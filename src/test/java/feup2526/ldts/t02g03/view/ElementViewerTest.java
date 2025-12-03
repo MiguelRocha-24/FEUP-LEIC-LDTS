@@ -14,5 +14,8 @@ public class ElementViewerTest {
 
         RoadViewer roadViewer = new RoadViewer(20);
         assertNotNull(roadViewer);
+
+        RiverViewer riverViewer = new RiverViewer(20);
+        assertNotNull(riverViewer);
     }
 }

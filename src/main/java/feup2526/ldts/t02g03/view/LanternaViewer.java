@@ -1,6 +1,5 @@
 package feup2526.ldts.t02g03.view;
 
-import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
@@ -24,6 +23,7 @@ public class LanternaViewer {
     private final PlayerViewer playerViewer;
     private final CarViewer carViewer;
     private final RoadViewer roadViewer;
+    private final RiverViewer riverViewer;
     private static final int TILE_SIZE = 16;
 
     public LanternaViewer(int width, int height) throws IOException, FontFormatException, URISyntaxException {
@@ -49,6 +49,7 @@ public class LanternaViewer {
         this.playerViewer = new PlayerViewer();
         this.carViewer = new CarViewer();
         this.roadViewer = new RoadViewer(width);
+        this.riverViewer = new RiverViewer(width);
     }
 
     public void draw(Level level) throws IOException {
@@ -67,10 +68,7 @@ public class LanternaViewer {
                 roadViewer.draw(tg, (RoadLane) lane, TILE_SIZE);
                 drawVehicles(tg, (RoadLane) lane);
             } else if (lane instanceof River) {
-                tg.setBackgroundColor(TextColor.Factory.fromString("#336699"));
-                tg.fillRectangle(new TerminalPosition(0, lane.getRow() * 16),
-                        new TerminalSize(level.getGrid().getW() * 16, 16),
-                        ' ');
+                riverViewer.draw(tg, (River) lane, TILE_SIZE);
                 drawLogs(tg, (River) lane);
             }
         }
@@ -84,7 +82,8 @@ public class LanternaViewer {
 
     private void drawLogs(TextGraphics tg, River river) {
         for (Log l : river.getLogs()) {
-            drawEntityBlock(tg, (int) (l.getPosition().getX() * TILE_SIZE), (int) (l.getPosition().getY() * TILE_SIZE), '=',
+            drawEntityBlock(tg, (int) (l.getPosition().getX() * TILE_SIZE), (int) (l.getPosition().getY() * TILE_SIZE),
+                    '=',
                     "#663300", "#336699");
         }
     }
