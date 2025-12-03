@@ -1,7 +1,6 @@
 package feup2526.ldts.t02g03.view;
 
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
@@ -24,6 +23,7 @@ public class LanternaViewer {
     private final CarViewer carViewer;
     private final RoadViewer roadViewer;
     private final RiverViewer riverViewer;
+    private final LogViewer logViewer;
     private static final int TILE_SIZE = 16;
 
     public LanternaViewer(int width, int height) throws IOException, FontFormatException, URISyntaxException {
@@ -50,6 +50,7 @@ public class LanternaViewer {
         this.carViewer = new CarViewer();
         this.roadViewer = new RoadViewer(width);
         this.riverViewer = new RiverViewer(width);
+        this.logViewer = new LogViewer();
     }
 
     public void draw(Level level) throws IOException {
@@ -82,24 +83,12 @@ public class LanternaViewer {
 
     private void drawLogs(TextGraphics tg, River river) {
         for (Log l : river.getLogs()) {
-            drawEntityBlock(tg, (int) (l.getPosition().getX() * TILE_SIZE), (int) (l.getPosition().getY() * TILE_SIZE),
-                    '=',
-                    "#663300", "#336699");
+            logViewer.draw(tg, l, TILE_SIZE);
         }
     }
 
     private void drawPlayer(TextGraphics tg, Player player) {
         playerViewer.draw(tg, player, TILE_SIZE);
-    }
-
-    private void drawEntityBlock(TextGraphics tg, int pixelX, int pixelY, char c, String fgColor, String bgColor) {
-        tg.setForegroundColor(TextColor.Factory.fromString(fgColor));
-        tg.setBackgroundColor(TextColor.Factory.fromString(bgColor));
-        for (int i = 0; i < TILE_SIZE; i++) {
-            for (int j = 0; j < TILE_SIZE; j++) {
-                tg.putString(pixelX + i, pixelY + j, String.valueOf(c));
-            }
-        }
     }
 
     public KeyStroke readInput() throws IOException {
