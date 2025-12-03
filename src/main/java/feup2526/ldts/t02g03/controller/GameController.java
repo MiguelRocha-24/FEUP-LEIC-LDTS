@@ -34,12 +34,12 @@ public class GameController {
 
     private void checkCollisions() {
         for (Lane lane : level.getLanes()) {
-            if (lane.getRow() == level.getPlayer().getPosition().getY()) {
+            if (lane.getRow() == (int) level.getPlayer().getPosition().getY()) {
                 if (lane instanceof RoadLane) {
                     RoadLane roadLane = (RoadLane) lane;
                     for (Vehicle v : roadLane.getVehicles()) {
-                        if (Math.abs(v.getPosition().getX() - level.getPlayer().getPosition().getX()) < 0.8 &&
-                                Math.abs(v.getPosition().getY() - level.getPlayer().getPosition().getY()) < 0.8) {
+                        if ((int) v.getPosition().getX() == (int) level.getPlayer().getPosition().getX() &&
+                                (int) v.getPosition().getY() == (int) level.getPlayer().getPosition().getY()) {
                             level.setGameOver(true);
                             return;
                         }
@@ -48,8 +48,8 @@ public class GameController {
                     River river = (River) lane;
                     boolean onLog = false;
                     for (Log l : river.getLogs()) {
-                        if (Math.abs(l.getPosition().getX() - level.getPlayer().getPosition().getX()) < 0.8 &&
-                                Math.abs(l.getPosition().getY() - level.getPlayer().getPosition().getY()) < 0.8) {
+                        if ((int) l.getPosition().getX() == (int) level.getPlayer().getPosition().getX() &&
+                                (int) l.getPosition().getY() == (int) level.getPlayer().getPosition().getY()) {
                             onLog = true;
                             break;
                         }
@@ -67,7 +67,7 @@ public class GameController {
         if (key == null)
             return false;
         if (key.getKeyType() == KeyType.EOF)
-            return true; 
+            return true;
         if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q')) {
             level.quit();
             return true;
@@ -100,6 +100,8 @@ public class GameController {
                     dir = Direction.LEFT;
                 if (key.getCharacter() == 'd' || key.getCharacter() == 'D')
                     dir = Direction.RIGHT;
+                break;
+            default:
                 break;
         }
 

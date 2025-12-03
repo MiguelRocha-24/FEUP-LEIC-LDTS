@@ -4,10 +4,12 @@ import com.googlecode.lanterna.input.KeyStroke;
 import feup2526.ldts.t02g03.controller.GameController;
 import feup2526.ldts.t02g03.model.Level;
 import feup2526.ldts.t02g03.view.LanternaViewer;
+import java.awt.FontFormatException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class App {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
         Level level = new Level(20, 20);
         GameController controller = new GameController(level);
         LanternaViewer viewer = new LanternaViewer(20, 20);
