@@ -3,6 +3,8 @@ package feup2526.ldts.t02g03.controller;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import feup2526.ldts.t02g03.model.*;
+import feup2526.ldts.t02g03.view.SafeLaneViewer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,12 +12,14 @@ public class GameController {
     private final Level level;
     private final List<RoadLaneController> laneControllers;
     private final List<RiverController> riverControllers;
+    private final List<SafeLaneController> safeLaneControllers;
     private final PlayerController playerController;
 
     public GameController(Level level) {
         this.level = level;
         this.laneControllers = new ArrayList<>();
         this.riverControllers = new ArrayList<>();
+        this.safeLaneControllers = new ArrayList<>();
         this.playerController = new PlayerController(level.getPlayer());
 
         for (Lane lane : level.getLanes()) {
@@ -23,6 +27,8 @@ public class GameController {
                 laneControllers.add(new RoadLaneController((RoadLane) lane, level.getGrid(), 0.01, 3, 2, 2));
             } else if (lane instanceof River) {
                 riverControllers.add(new RiverController((River) lane, level.getGrid(), 0.05, 3, 2, 2));
+            } else if (lane instanceof SafeLane) {
+                safeLaneControllers.add(new SafeLaneController((SafeLane) lane, level.getGrid(),0.3));
             }
         }
     }
@@ -161,6 +167,9 @@ public class GameController {
             controller.step();
         }
         for (RiverController controller : riverControllers) {
+            controller.step();
+        }
+        for (SafeLaneController controller : safeLaneControllers) {
             controller.step();
         }
     }

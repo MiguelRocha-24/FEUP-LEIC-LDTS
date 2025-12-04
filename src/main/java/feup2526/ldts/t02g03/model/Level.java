@@ -24,12 +24,15 @@ public class Level{
         for (int i = 1; i < grid.getH() - 1; i++) {
             Direction dir = (i % 2 == 0) ? Direction.RIGHT : Direction.LEFT;
             double speed = 0.05;
-            if (Math.random() < 0.5) {
+            double choseLane = Math.random();
+            if (choseLane < 0.33) {
                 RoadLane lane = new RoadLane(dir, speed, i);
                 lanes.add(lane);
-            } else {
+            } else if (choseLane < 0.66) {
                 River lane = new River(i, dir, speed);
                 lanes.add(lane);
+            } else {
+                SafeLane lane = new SafeLane(i);
             }
         }
     }

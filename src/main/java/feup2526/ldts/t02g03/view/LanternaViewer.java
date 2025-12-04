@@ -23,6 +23,7 @@ public class LanternaViewer {
     private final CarViewer carViewer;
     private final RoadViewer roadViewer;
     private final RiverViewer riverViewer;
+    private final SafeLaneViewer safeLaneViewer;
     private final LogViewer logViewer;
     private static final int TILE_SIZE = 16;
 
@@ -50,6 +51,7 @@ public class LanternaViewer {
         this.carViewer = new CarViewer();
         this.roadViewer = new RoadViewer(width);
         this.riverViewer = new RiverViewer(width);
+        this.safeLaneViewer = new SafeLaneViewer(width);
         this.logViewer = new LogViewer();
     }
 
@@ -71,6 +73,8 @@ public class LanternaViewer {
             } else if (lane instanceof River) {
                 riverViewer.draw(tg, (River) lane, TILE_SIZE);
                 drawLogs(tg, (River) lane);
+            } else if (lane instanceof SafeLane) {
+                safeLaneViewer.draw(tg, (SafeLane) lane, TILE_SIZE);
             }
         }
     }

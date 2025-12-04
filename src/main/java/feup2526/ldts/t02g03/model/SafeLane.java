@@ -5,6 +5,7 @@ import java.util.List;
 
 public class SafeLane extends Lane {
     private List<Tree> trees;
+
     public SafeLane(int row) {
         super(row);
         this.trees = new ArrayList<Tree>();
@@ -15,6 +16,7 @@ public class SafeLane extends Lane {
     public void addTree(Tree t) {
         if (t == null) throw new IllegalArgumentException("Tree required");
         if (t.getPosition().getY() != row) throw new IllegalArgumentException("Tree must be on this lane");
+
         // Maintain x-order
         double x = t.getPosition().getX();
         int idx = 0;
@@ -22,5 +24,8 @@ public class SafeLane extends Lane {
             idx++;
         }
         trees.add(idx, t);
+    }
+    @Override
+    public void update(){
     }
 }
