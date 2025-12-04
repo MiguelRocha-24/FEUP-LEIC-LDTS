@@ -44,6 +44,10 @@ public class Level{
     public Grid getGrid(){return grid;}
     public Player getPlayer(){return player;}
     public List<Lane> getLanes(){return lanes;}
+    public Lane getLane(int row) {
+        if (row < 1 || row >= grid.getH() - 1) return null;
+        return lanes.get(row - 1);
+    }
     public boolean isCollisionDetected(){return collisionDetected;}
     public long getCollisionTime(){return collisionTime;}
     public void handleCollision() {

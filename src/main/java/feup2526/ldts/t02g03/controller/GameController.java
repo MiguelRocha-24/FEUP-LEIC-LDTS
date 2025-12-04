@@ -158,14 +158,39 @@ public class GameController {
                 double targetY = Math.round(currentY) + (dir == Direction.UP ? -1 : 1);
                 Position newPos = new Position(level.getPlayer().getPosition().getX(), targetY);
 
-                if (level.getGrid().isInside(newPos)) {
+                if (level.getGrid().isInside(newPos) && !isTree(newPos)) {
                     playerController.moveTo(newPos);
                     return true;
                 }
             } else {
-                playerController.changeTargetPosition(dir, level.getGrid());
-                return true;
+                Position nextPos;
+                if (dir == Direction.LEFT) {
+                    nextPos = new Position(level.getPlayer().getTargetPosition().getX() - 0.8, level.getPlayer().getTargetPosition().getY());
+                } else {
+                    nextPos = new Position(level.getPlayer().getTargetPosition().getX() + 0.8, level.getPlayer().getTargetPosition().getY());
+                }
+
+                if (level.getGrid().isInside(nextPos) && !isTree(nextPos)) {
+                    playerController.changeTargetPosition(dir, level.getGrid());
+                    return true;
+                }
             }
+        }
+        return false;
+    }
+
+    private boolean isTree(Position p) {
+        double pMin = p.getX() + level.getPlayer().getOffsetX();
+        double pMax = pMin + level.getPlayer().getWidth();
+        int row = (int) Math.round(p.getY());
+
+        Lane lane = level.getLane(row);
+        if (lane instanceof SafeLane) {
+            return ((SafeLane) lane).getTrees().stream().anyMatch(tree -> {
+                double tMin = tree.getPosition().getX();
+                double tMax = tMin + 1.0;
+                return pMin < tMax && pMax > tMin;
+            });
         }
         return false;
     }
