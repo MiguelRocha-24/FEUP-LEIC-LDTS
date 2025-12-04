@@ -25,6 +25,7 @@ public class LanternaViewer {
     private final RiverViewer riverViewer;
     private final SafeLaneViewer safeLaneViewer;
     private final LogViewer logViewer;
+    private final TreeViewer treeViewer;
     private static final int TILE_SIZE = 16;
 
     public LanternaViewer(int width, int height) throws IOException, FontFormatException, URISyntaxException {
@@ -33,7 +34,7 @@ public class LanternaViewer {
         Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         ge.registerFont(font);
-        Font newfont = font.deriveFont(Font.PLAIN, 4);
+        Font newfont = font.deriveFont(Font.PLAIN, 8);
 
         AWTTerminalFontConfiguration cfg = AWTTerminalFontConfiguration.newInstance(newfont);
 
@@ -53,6 +54,7 @@ public class LanternaViewer {
         this.riverViewer = new RiverViewer(width);
         this.safeLaneViewer = new SafeLaneViewer(width);
         this.logViewer = new LogViewer();
+        this.treeViewer = new TreeViewer();
     }
 
     public void draw(Level level) throws IOException {
@@ -75,6 +77,7 @@ public class LanternaViewer {
                 drawLogs(tg, (River) lane);
             } else if (lane instanceof SafeLane) {
                 safeLaneViewer.draw(tg, (SafeLane) lane, TILE_SIZE);
+                drawTrees(tg,(SafeLane) lane);
             }
         }
     }
@@ -88,6 +91,12 @@ public class LanternaViewer {
     private void drawLogs(TextGraphics tg, River river) {
         for (Log l : river.getLogs()) {
             logViewer.draw(tg, l, TILE_SIZE);
+        }
+    }
+
+    private void drawTrees(TextGraphics tg, SafeLane lane) {
+        for (Tree t : lane.getTrees()) {
+            treeViewer.draw(tg,t, TILE_SIZE);
         }
     }
 

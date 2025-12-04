@@ -5,7 +5,7 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class PlayerViewer extends SpriteViewer<Player> {
     public PlayerViewer() {
-        super("docs/images/sprites/chicken.png");
+        super("docs/images/sprites/chicken-1.png");
     }
 
     @Override

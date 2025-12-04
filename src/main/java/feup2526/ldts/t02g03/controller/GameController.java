@@ -76,12 +76,20 @@ public class GameController {
 
                         if (pMin < lMax && pMax > lMin) {
                             onLog = true;
-                            if (Math.abs(player.getPosition().getY() - playerRow) < 0.1) {
-                                playerController.moveTo(new Position(l.getPosition().getX(), playerRow - 0.2));
-                            } else {
-                                playerController.moveTo(new Position(player.getPosition().getX(), playerRow - 0.2));
+                            double dist = playerController.getDistanceToTarget();
+
+                            if (dist < 0.1) {
+                                player.setOnLog(true);
                             }
-                            movePlayerWithLog(player, l, river);
+
+                            if (player.isOnLog()) {
+                                if (Math.abs(player.getPosition().getY() - playerRow) < 0.1) {
+                                    playerController.moveTo(new Position(l.getPosition().getX(), playerRow));
+                                } else {
+                                    playerController.moveTo(new Position(player.getPosition().getX(), playerRow));
+                                }
+                                movePlayerWithLog(player, l, river);
+                            }
                             break;
                         }
                     }

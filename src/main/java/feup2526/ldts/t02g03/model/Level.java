@@ -32,7 +32,8 @@ public class Level{
                 River lane = new River(i, dir, speed);
                 lanes.add(lane);
             } else {
-                SafeLane lane = new SafeLane(i);
+                SafeLane lane = new SafeLane(i, grid.getW());
+                lanes.add(lane);
             }
         }
     }

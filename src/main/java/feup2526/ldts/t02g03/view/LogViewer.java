@@ -5,7 +5,7 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class LogViewer extends SpriteViewer<Log> {
     public LogViewer() {
-        super("docs/images/sprites/log.png");
+        super("docs/images/sprites/log2.png");
     }
 
     @Override
