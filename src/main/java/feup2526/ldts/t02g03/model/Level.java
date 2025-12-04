@@ -32,10 +32,13 @@ public class Level{
                 River lane = new River(i, dir, speed);
                 lanes.add(lane);
             } else {
-                SafeLane lane = new SafeLane(i, grid.getW());
+                SafeLane lane = new SafeLane(i, grid.getW(),true);
                 lanes.add(lane);
             }
         }
+        SafeLane lastLane = new SafeLane(grid.getH()-1, grid.getW(),false);
+        lastLane.getTrees().clear();
+        lanes.add(lastLane);
     }
 
     public void quit(){this.quit = true;}

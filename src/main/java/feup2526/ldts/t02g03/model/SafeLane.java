@@ -6,12 +6,14 @@ import java.util.List;
 public class SafeLane extends Lane {
     private List<Tree> trees;
 
-    public SafeLane(int row,int width) {
+    public SafeLane(int row,int width,boolean spawnTrees) {
         super(row);
         this.trees = new ArrayList<Tree>();
-        for (int x = 0; x < width; x++) {
-            if (Math.random() < 0.25) {
-                this.addTree(new Tree(new Position(x, row)));
+        if (spawnTrees) {
+            for (int x = 0; x < width; x++) {
+                if (Math.random() < 0.25) {
+                    this.addTree(new Tree(new Position(x, row)));
+                }
             }
         }
     }
