@@ -10,9 +10,9 @@ import java.net.URISyntaxException;
 
 public class App {
     public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
-        Level level = new Level(20, 20);
+        Level level = new Level(10, 10);
         GameController controller = new GameController(level);
-        LanternaViewer viewer = new LanternaViewer(20, 20);
+        LanternaViewer viewer = new LanternaViewer(10, 10);
 
         try {
             run(level, controller, viewer);

@@ -25,6 +25,16 @@ public class Player extends MovableEntity {
         this.targetPosition = targetPosition;
     }
 
+    private boolean isOnLog;
+
+    public boolean isOnLog() {
+        return isOnLog;
+    }
+
+    public void setOnLog(boolean onLog) {
+        isOnLog = onLog;
+    }
+
     @Override
     protected Position nextPosition() {
         return switch (direction) {

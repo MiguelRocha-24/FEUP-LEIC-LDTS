@@ -50,6 +50,7 @@ public class PlayerController {
     }
 
     public void moveTo(Position target) {
+        player.setOnLog(false);
         player.setTargetPosition(target);
     }
 
@@ -60,12 +61,13 @@ public class PlayerController {
         if (grid == null) {
             throw new IllegalArgumentException("Grid cannot be null");
         }
+        player.setOnLog(false);
         player.setDirection(dir);
         Position nextPos;
         if (dir == Direction.LEFT) {
-            nextPos = new Position(player.getTargetPosition().getX() - 0.5, player.getTargetPosition().getY());
+            nextPos = new Position(player.getTargetPosition().getX() - 0.8, player.getTargetPosition().getY());
         } else if (dir == Direction.RIGHT) {
-            nextPos = new Position(player.getTargetPosition().getX() + 0.5, player.getTargetPosition().getY());
+            nextPos = new Position(player.getTargetPosition().getX() + 0.8, player.getTargetPosition().getY());
         } else {
             nextPos = switch (dir) {
                 case UP -> player.getTargetPosition().up();
@@ -80,5 +82,10 @@ public class PlayerController {
         }
 
         return false;
+    }
+
+    public double getDistanceToTarget() {
+        return Math.sqrt(Math.pow(player.getTargetPosition().getX() - player.getPosition().getX(), 2) +
+                Math.pow(player.getTargetPosition().getY() - player.getPosition().getY(), 2));
     }
 }
