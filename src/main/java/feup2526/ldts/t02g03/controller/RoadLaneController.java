@@ -24,7 +24,7 @@ public class RoadLaneController {
         if (minGap <= 0) throw new IllegalArgumentException("Min gap must be > 0");
         if (removeBuffer <= 0) throw new IllegalArgumentException("Remove buffer must be > 0");
         if (spawnOffset <= 0) throw new IllegalArgumentException("Spawn offset must be > 0");   
-        
+
         this.lane = lane;
         this.grid = grid;
         this.rng = new Random();
@@ -48,17 +48,16 @@ public class RoadLaneController {
 
     private void cleanup() {
         if (lane.getVehicles().isEmpty()) return;
-
         if (lane.getDirection() == Direction.LEFT) {
             //Vehicles leave screen after passing left barrier (x=0-removeBuffer)
             int cutoff = -removeBuffer;
-            while (lane.getVehicles().getFirst().getPosition().getX() < cutoff) {
+            while (!lane.getVehicles().isEmpty() && lane.getVehicles().getFirst().getPosition().getX() < cutoff) {
                 lane.getVehicles().removeFirst();
             }
         } else {
             //Vehicles leave screen after passing right barrier (x=grid width+removeBuffer)
             int cutoff = grid.getW() + removeBuffer;
-            while (lane.getVehicles().getLast().getPosition().getX() > cutoff) {
+            while (!lane.getVehicles().isEmpty() && lane.getVehicles().getLast().getPosition().getX() > cutoff) {
                 lane.getVehicles().removeLast();
             }
         }
@@ -75,8 +74,6 @@ public class RoadLaneController {
         else{
             entryX = grid.getW() + spawnOffset;
         }
-        
-
         if (!isSpaceForSpawn(entryX)) return;
         Vehicle v = new Vehicle(new Position(entryX, lane.getRow()), lane.getDirection());
         lane.addVehicle(v);

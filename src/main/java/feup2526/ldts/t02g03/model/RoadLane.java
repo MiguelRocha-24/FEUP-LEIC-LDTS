@@ -6,7 +6,7 @@ import java.util.List;
 public class RoadLane extends MovableLane {
     private List<Vehicle> vehicles;
 
-    public RoadLane(Direction direction, int speed, int row) {
+    public RoadLane(Direction direction, double speed, int row) {
         super(row, direction, speed);
         this.vehicles = new ArrayList<>();
     }

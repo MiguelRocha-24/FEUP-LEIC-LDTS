@@ -3,11 +3,11 @@ package feup2526.ldts.t02g03.model;
 public class Vehicle extends MovableEntity{
     public Vehicle(Position position, Direction direction) {
         super(position, direction);
+        this.width = 1.8;
+        this.offsetX = 0.1;
     }
 
-    public Position previewNext(){
-        return nextPosition();
-    }
+    public Position previewNext(){return nextPosition();}
 
     @Override
     public boolean equals(Object o) {

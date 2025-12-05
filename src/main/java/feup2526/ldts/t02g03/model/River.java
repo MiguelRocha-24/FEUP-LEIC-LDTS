@@ -5,7 +5,8 @@ import java.util.List;
 
 public class River extends MovableLane{
     private List<Log> logs;
-    public River(int row, Direction direction, int speed){
+
+    public River(int row, Direction direction, double speed) {
         super(row, direction, speed);
         this.logs = new ArrayList<Log>();
     }

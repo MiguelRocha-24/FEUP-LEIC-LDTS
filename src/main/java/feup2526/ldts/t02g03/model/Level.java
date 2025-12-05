@@ -1,4 +1,5 @@
 package feup2526.ldts.t02g03.model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,8 @@ public class Level{
     private final List<Lane> lanes;
     private boolean quit = false;
     private boolean gameOver = false;
+    private boolean collisionDetected = false;
+    private long collisionTime = 0;
 
     public Level(int width, int height){
         this.grid = new Grid(width, height);
@@ -20,7 +23,7 @@ public class Level{
     private void initializeLevel(){
         for (int i = 1; i < grid.getH() - 1; i++) {
             Direction dir = (i % 2 == 0) ? Direction.RIGHT : Direction.LEFT;
-            int speed = 1;
+            double speed = 0.05;
             if (Math.random() < 0.5) {
                 RoadLane lane = new RoadLane(dir, speed, i);
                 lanes.add(lane);
@@ -31,19 +34,17 @@ public class Level{
         }
     }
 
-    public void quit() {
-        this.quit = true;
-    }
-
-    public void setGameOver(boolean state) {
-        this.gameOver = state;
-    }
-
-    public boolean isGameOver() {
-        return quit || gameOver;
-    }
-
+    public void quit(){this.quit = true;}
+    public void setGameOver(boolean state){this.gameOver = state;}
+    public boolean isGameOver(){return quit || gameOver;}
     public Grid getGrid(){return grid;}
     public Player getPlayer(){return player;}
     public List<Lane> getLanes(){return lanes;}
+    public boolean isCollisionDetected(){return collisionDetected;}
+    public long getCollisionTime(){return collisionTime;}
+    public void handleCollision() {
+        this.collisionDetected = true;
+        this.collisionTime = System.currentTimeMillis();
+    }
+
 }
