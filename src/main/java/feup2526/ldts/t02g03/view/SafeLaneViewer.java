@@ -7,7 +7,7 @@ public class SafeLaneViewer extends SpriteViewer<SafeLane> {
     private final int width;
 
     public SafeLaneViewer(int width) {
-        super("docs/images/sprites/safeLane.png");
+        super("docs/images/sprites/grass2.png");
         this.width = width;
 
     }
