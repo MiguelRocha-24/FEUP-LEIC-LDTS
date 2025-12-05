@@ -23,7 +23,9 @@ public class LanternaViewer {
     private final CarViewer carViewer;
     private final RoadViewer roadViewer;
     private final RiverViewer riverViewer;
+    private final SafeLaneViewer safeLaneViewer;
     private final LogViewer logViewer;
+    private final TreeViewer treeViewer;
     private static final int TILE_SIZE = 16;
 
     public LanternaViewer(int width, int height) throws IOException, FontFormatException, URISyntaxException {
@@ -50,7 +52,9 @@ public class LanternaViewer {
         this.carViewer = new CarViewer();
         this.roadViewer = new RoadViewer(width);
         this.riverViewer = new RiverViewer(width);
+        this.safeLaneViewer = new SafeLaneViewer(width);
         this.logViewer = new LogViewer();
+        this.treeViewer = new TreeViewer();
     }
 
     public void draw(Level level) throws IOException {
@@ -71,6 +75,9 @@ public class LanternaViewer {
             } else if (lane instanceof River) {
                 riverViewer.draw(tg, (River) lane, TILE_SIZE);
                 drawLogs(tg, (River) lane);
+            } else if (lane instanceof SafeLane) {
+                safeLaneViewer.draw(tg, (SafeLane) lane, TILE_SIZE);
+                drawTrees(tg,(SafeLane) lane);
             }
         }
     }
@@ -84,6 +91,12 @@ public class LanternaViewer {
     private void drawLogs(TextGraphics tg, River river) {
         for (Log l : river.getLogs()) {
             logViewer.draw(tg, l, TILE_SIZE);
+        }
+    }
+
+    private void drawTrees(TextGraphics tg, SafeLane lane) {
+        for (Tree t : lane.getTrees()) {
+            treeViewer.draw(tg,t, TILE_SIZE);
         }
     }
 

@@ -3,6 +3,8 @@ package feup2526.ldts.t02g03.controller;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import feup2526.ldts.t02g03.model.*;
+import feup2526.ldts.t02g03.view.SafeLaneViewer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,12 +12,14 @@ public class GameController {
     private final Level level;
     private final List<RoadLaneController> laneControllers;
     private final List<RiverController> riverControllers;
+    private final List<SafeLaneController> safeLaneControllers;
     private final PlayerController playerController;
 
     public GameController(Level level) {
         this.level = level;
         this.laneControllers = new ArrayList<>();
         this.riverControllers = new ArrayList<>();
+        this.safeLaneControllers = new ArrayList<>();
         this.playerController = new PlayerController(level.getPlayer());
 
         for (Lane lane : level.getLanes()) {
@@ -23,6 +27,8 @@ public class GameController {
                 laneControllers.add(new RoadLaneController((RoadLane) lane, level.getGrid(), 0.01, 3, 2, 2));
             } else if (lane instanceof River) {
                 riverControllers.add(new RiverController((River) lane, level.getGrid(), 0.05, 3, 2, 2));
+            } else if (lane instanceof SafeLane) {
+                safeLaneControllers.add(new SafeLaneController((SafeLane) lane, level.getGrid(),0.3));
             }
         }
     }
@@ -152,14 +158,39 @@ public class GameController {
                 double targetY = Math.round(currentY) + (dir == Direction.UP ? -1 : 1);
                 Position newPos = new Position(level.getPlayer().getPosition().getX(), targetY);
 
-                if (level.getGrid().isInside(newPos)) {
+                if (level.getGrid().isInside(newPos) && !isTree(newPos)) {
                     playerController.moveTo(newPos);
                     return true;
                 }
             } else {
-                playerController.changeTargetPosition(dir, level.getGrid());
-                return true;
+                Position nextPos;
+                if (dir == Direction.LEFT) {
+                    nextPos = new Position(level.getPlayer().getTargetPosition().getX() - 0.8, level.getPlayer().getTargetPosition().getY());
+                } else {
+                    nextPos = new Position(level.getPlayer().getTargetPosition().getX() + 0.8, level.getPlayer().getTargetPosition().getY());
+                }
+
+                if (level.getGrid().isInside(nextPos) && !isTree(nextPos)) {
+                    playerController.changeTargetPosition(dir, level.getGrid());
+                    return true;
+                }
             }
+        }
+        return false;
+    }
+
+    private boolean isTree(Position p) {
+        double pMin = p.getX() + level.getPlayer().getOffsetX();
+        double pMax = pMin + level.getPlayer().getWidth();
+        int row = (int) Math.round(p.getY());
+
+        Lane lane = level.getLane(row);
+        if (lane instanceof SafeLane) {
+            return ((SafeLane) lane).getTrees().stream().anyMatch(tree -> {
+                double tMin = tree.getPosition().getX();
+                double tMax = tMin + 1.0;
+                return pMin < tMax && pMax > tMin;
+            });
         }
         return false;
     }
@@ -169,6 +200,9 @@ public class GameController {
             controller.step();
         }
         for (RiverController controller : riverControllers) {
+            controller.step();
+        }
+        for (SafeLaneController controller : safeLaneControllers) {
             controller.step();
         }
     }

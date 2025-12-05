@@ -24,14 +24,21 @@ public class Level{
         for (int i = 1; i < grid.getH() - 1; i++) {
             Direction dir = (i % 2 == 0) ? Direction.RIGHT : Direction.LEFT;
             double speed = 0.05;
-            if (Math.random() < 0.5) {
+            double choseLane = Math.random();
+            if (choseLane < 0.33) {
                 RoadLane lane = new RoadLane(dir, speed, i);
                 lanes.add(lane);
-            } else {
+            } else if (choseLane < 0.66) {
                 River lane = new River(i, dir, speed);
+                lanes.add(lane);
+            } else {
+                SafeLane lane = new SafeLane(i, grid.getW(),true);
                 lanes.add(lane);
             }
         }
+        SafeLane lastLane = new SafeLane(grid.getH()-1, grid.getW(),false);
+        lastLane.getTrees().clear();
+        lanes.add(lastLane);
     }
 
     public void quit(){this.quit = true;}
@@ -40,6 +47,10 @@ public class Level{
     public Grid getGrid(){return grid;}
     public Player getPlayer(){return player;}
     public List<Lane> getLanes(){return lanes;}
+    public Lane getLane(int row) {
+        if (row < 1 || row >= grid.getH() - 1) return null;
+        return lanes.get(row - 1);
+    }
     public boolean isCollisionDetected(){return collisionDetected;}
     public long getCollisionTime(){return collisionTime;}
     public void handleCollision() {
