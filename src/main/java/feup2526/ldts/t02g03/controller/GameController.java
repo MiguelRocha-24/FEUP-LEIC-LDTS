@@ -14,6 +14,7 @@ public class GameController {
     private final List<RiverController> riverControllers;
     private final List<SafeLaneController> safeLaneControllers;
     private final PlayerController playerController;
+    private final CoinCounter coinCounter;
 
     public GameController(Level level) {
         this.level = level;
@@ -21,6 +22,7 @@ public class GameController {
         this.riverControllers = new ArrayList<>();
         this.safeLaneControllers = new ArrayList<>();
         this.playerController = new PlayerController(level.getPlayer());
+        this.coinCounter = new CoinCounter();
 
         for (Lane lane : level.getLanes()) {
             if (lane instanceof RoadLane) {
@@ -96,6 +98,19 @@ public class GameController {
                     if (!onLog) {
                         level.handleCollision();
                         return;
+                    }
+                } else if (lane instanceof SafeLane) {
+                    SafeLane safeLane = (SafeLane) lane;
+                    for (int i = 0; i < safeLane.getCoins().size(); i++) {
+                        Coin c = safeLane.getCoins().get(i);
+                        double cMin = c.getPosition().getX() + c.getOffsetX();
+                        double cMax = cMin + c.getWidth();
+
+                        if (pMin < cMax && pMax > cMin) {
+                            safeLane.getCoins().remove(i);
+                            i--;
+                            coinCounter.increment();
+                        }
                     }
                 }
             }

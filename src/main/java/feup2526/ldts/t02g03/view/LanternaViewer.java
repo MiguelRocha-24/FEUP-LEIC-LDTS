@@ -26,6 +26,7 @@ public class LanternaViewer {
     private final SafeLaneViewer safeLaneViewer;
     private final LogViewer logViewer;
     private final TreeViewer treeViewer;
+    private final CoinViewer coinViewer;
     private static final int TILE_SIZE = 16;
 
     public LanternaViewer(int width, int height) throws IOException, FontFormatException, URISyntaxException {
@@ -55,6 +56,7 @@ public class LanternaViewer {
         this.safeLaneViewer = new SafeLaneViewer(width);
         this.logViewer = new LogViewer();
         this.treeViewer = new TreeViewer();
+        this.coinViewer = new CoinViewer();
     }
 
     public void draw(Level level) throws IOException {
@@ -78,6 +80,7 @@ public class LanternaViewer {
             } else if (lane instanceof SafeLane) {
                 safeLaneViewer.draw(tg, (SafeLane) lane, TILE_SIZE);
                 drawTrees(tg,(SafeLane) lane);
+                drawCoins(tg,(SafeLane) lane);
             }
         }
     }
@@ -97,6 +100,12 @@ public class LanternaViewer {
     private void drawTrees(TextGraphics tg, SafeLane lane) {
         for (Tree t : lane.getTrees()) {
             treeViewer.draw(tg,t, TILE_SIZE);
+        }
+    }
+
+    private void drawCoins(TextGraphics tg, SafeLane lane) {
+        for (Coin c : lane.getCoins()) {
+            coinViewer.draw(tg,c, TILE_SIZE);
         }
     }
 
