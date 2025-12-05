@@ -15,6 +15,9 @@ public class GameController {
     private final List<SafeLaneController> safeLaneControllers;
     private final PlayerController playerController;
     private final CoinCounter coinCounter;
+    public final RunScore runScore;
+    public final HighestScore highestScore;
+    private int minRowReached;
 
     public GameController(Level level) {
         this.level = level;
@@ -23,6 +26,9 @@ public class GameController {
         this.safeLaneControllers = new ArrayList<>();
         this.playerController = new PlayerController(level.getPlayer());
         this.coinCounter = new CoinCounter();
+        this.runScore = new RunScore();
+        this.highestScore = new HighestScore();
+        this.minRowReached = (int) level.getPlayer().getPosition().getY();
 
         for (Lane lane : level.getLanes()) {
             if (lane instanceof RoadLane) {
@@ -175,6 +181,10 @@ public class GameController {
 
                 if (level.getGrid().isInside(newPos) && !isTree(newPos)) {
                     playerController.moveTo(newPos);
+                    if (newPos.getY() < minRowReached) {
+                        runScore.increment();
+                        minRowReached = (int) newPos.getY();
+                    }
                     return true;
                 }
             } else {

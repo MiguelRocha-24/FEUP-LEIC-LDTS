@@ -45,5 +45,8 @@ public class App {
                 // ignore
             }
         }
+        if (controller.runScore.getCount() > controller.highestScore.getCount()) {
+            controller.highestScore.setCount(controller.runScore.getCount());
+        }
     }
 }
