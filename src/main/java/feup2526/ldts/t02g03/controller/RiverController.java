@@ -95,4 +95,24 @@ public class RiverController implements LaneController {
         }
     }
 
+    public Log getLogAt(River river, Position pos) {
+        double centered = pos.getX()+0.5;
+        for (Log log : river.getLogs()) {
+            double lMin = log.getPosition().getX();
+            double lMax = lMin + log.getWidth();
+            if (centered < lMax && centered > lMin) {
+                return log;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void handleCollision(Lane lane, Level level) {
+    }
+
+    @Override
+    public boolean isBlocked(Lane lane, Position pos) {
+        return false;
+    }
 }

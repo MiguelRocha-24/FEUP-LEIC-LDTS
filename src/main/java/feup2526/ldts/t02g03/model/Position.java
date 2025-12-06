@@ -15,8 +15,10 @@ public final class Position {
     public Position down(){return new Position(x,y+1.0);}
     public Position left(){return new Position(x-1.0,y);}
     public Position right(){return new Position(x+1.0,y);}
-    public Position translate(int dx, int dy) {
-        return new Position(x+dx,y+dy);
+    public Position translate(int dx, int dy) {return new Position(x + dx, y + dy);}
+
+    public double distance(Position other) {
+        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
 
     @Override

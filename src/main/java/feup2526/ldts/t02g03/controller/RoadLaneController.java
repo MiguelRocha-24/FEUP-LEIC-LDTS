@@ -94,9 +94,48 @@ public class RoadLaneController implements LaneController {
         }
     }
 
-    public double getSpawnChance() {return spawnChance;}
-    public int getMinGap() {return minGap;}
-    public int getRemoveBuffer() {return removeBuffer;}
-    public int getSpawnOffset() {return spawnOffset;}
-    public void setRandom(Random rng) {this.rng = rng;}
+    @Override
+    public void handleCollision(Lane lane, Level level) {
+        RoadLane roadLane = (RoadLane) lane;
+        Player player = level.getPlayer();
+        if (Math.abs(player.getPosition().getY() - roadLane.getRow()) > 0.8)
+            return;
+        double pMin = player.getPosition().getX() + player.getOffsetX();
+        double pMax = pMin + player.getWidth();
+
+        for (Vehicle v : roadLane.getVehicles()) {
+            double vMin = v.getPosition().getX() + v.getOffsetX();
+            double vMax = vMin + v.getWidth();
+
+            if (pMin < vMax && pMax > vMin) {
+                level.handleCollision();
+                return;
+            }
+        }
+    }
+
+    @Override
+    public boolean isBlocked(Lane lane, Position pos) {
+        return false;
+    }
+
+    public double getSpawnChance() {
+        return spawnChance;
+    }
+
+    public int getMinGap() {
+        return minGap;
+    }
+
+    public int getRemoveBuffer() {
+        return removeBuffer;
+    }
+
+    public int getSpawnOffset() {
+        return spawnOffset;
+    }
+
+    public void setRandom(Random rng) {
+        this.rng = rng;
+    }
 }

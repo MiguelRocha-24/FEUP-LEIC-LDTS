@@ -41,12 +41,18 @@ public class PlayerController {
         player.setPosition(new Position(newX, newY));
     }
 
-    public void moveWithPlatform(double dx) {
-        Position currentPos = player.getPosition();
-        Position targetPos = player.getTargetPosition();
+    // In PlayerController.java
 
-        player.setPosition(new Position(currentPos.getX() + dx, currentPos.getY()));
-        player.setTargetPosition(new Position(targetPos.getX() + dx, targetPos.getY()));
+    // Move ONLY the body (for when standing on a log)
+    public void moveBody(double dx) {
+        Position pos = player.getPosition();
+        player.setPosition(new Position(pos.getX() + dx, pos.getY()));
+    }
+
+    // Move ONLY the target (for when the target is on a log)
+    public void moveTarget(double dx) {
+        Position pos = player.getTargetPosition();
+        player.setTargetPosition(new Position(pos.getX() + dx, pos.getY()));
     }
 
     public void moveTo(Position target) {
@@ -65,9 +71,9 @@ public class PlayerController {
         player.setDirection(dir);
         Position nextPos;
         if (dir == Direction.LEFT) {
-            nextPos = new Position(player.getTargetPosition().getX() - 0.8, player.getTargetPosition().getY());
+            nextPos = new Position(player.getTargetPosition().getX() - 1.0, player.getTargetPosition().getY());
         } else if (dir == Direction.RIGHT) {
-            nextPos = new Position(player.getTargetPosition().getX() + 0.8, player.getTargetPosition().getY());
+            nextPos = new Position(player.getTargetPosition().getX() + 1.0, player.getTargetPosition().getY());
         } else {
             nextPos = switch (dir) {
                 case UP -> player.getTargetPosition().up();

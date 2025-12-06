@@ -14,7 +14,7 @@ public class CarViewer extends SpriteViewer<Vehicle> {
     private BufferedImage carRight;
 
     public CarViewer() {
-        super("docs/images/sprites/car.png"); // Default/Fallback
+        super("docs/images/sprites/carLeft.png"); // Default/Fallback
         try {
             carLeft = ImageIO.read(new File("docs/images/sprites/carLeft.png"));
             carRight = ImageIO.read(new File("docs/images/sprites/carRight.png"));
