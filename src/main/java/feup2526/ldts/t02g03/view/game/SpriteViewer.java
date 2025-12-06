@@ -1,4 +1,4 @@
-package feup2526.ldts.t02g03.view;
+package feup2526.ldts.t02g03.view.game;
 
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;

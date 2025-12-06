@@ -14,14 +14,14 @@ public class Level{
 
     public Level(int width, int height){
         this.grid = new Grid(width, height);
-        this.player = new Player(new Position(width / 2, height - 1));
+        this.player = new Player(new Position(width / 2, height - 2));
         this.lanes = new ArrayList<>();
 
         initializeLevel();
     }
 
     private void initializeLevel(){
-        for (int i = 1; i < grid.getH() - 1; i++) {
+        for (int i = 0; i < grid.getH() - 2; i++) {
             Direction dir = (i % 2 == 0) ? Direction.RIGHT : Direction.LEFT;
             double speed = 0.05;
             double choseLane = Math.random();
@@ -36,8 +36,11 @@ public class Level{
                 lanes.add(lane);
             }
         }
+        lanes.add(new SafeLane(grid.getH()-2, grid.getW(),false));
         SafeLane lastLane = new SafeLane(grid.getH()-1, grid.getW(),false);
-        lastLane.getTrees().clear();
+        for (int i = 0; i < grid.getW(); i++) {
+            lastLane.addTree(new Tree(new Position(i, grid.getH()-1)));
+        }
         lanes.add(lastLane);
     }
 
@@ -48,8 +51,8 @@ public class Level{
     public Player getPlayer(){return player;}
     public List<Lane> getLanes(){return lanes;}
     public Lane getLane(int row) {
-        if (row < 1 || row >= grid.getH() - 1) return null;
-        return lanes.get(row - 1);
+        if (row < 0 || row >= grid.getH()) return null;
+        return lanes.get(row);
     }
     public boolean isCollisionDetected(){return collisionDetected;}
     public long getCollisionTime(){return collisionTime;}
