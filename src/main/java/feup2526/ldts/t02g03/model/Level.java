@@ -11,12 +11,13 @@ public class Level{
     private boolean gameOver = false;
     private boolean collisionDetected = false;
     private long collisionTime = 0;
+    private final CoinCounter coinCounter;
 
     public Level(int width, int height){
         this.grid = new Grid(width, height);
         this.player = new Player(new Position(width / 2, height - 2));
         this.lanes = new ArrayList<>();
-
+        this.coinCounter = new CoinCounter();
         initializeLevel();
     }
 
@@ -60,5 +61,5 @@ public class Level{
         this.collisionDetected = true;
         this.collisionTime = System.currentTimeMillis();
     }
-
+    public CoinCounter getCoinCounter(){return coinCounter;}
 }

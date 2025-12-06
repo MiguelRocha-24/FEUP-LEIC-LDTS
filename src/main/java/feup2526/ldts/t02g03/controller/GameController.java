@@ -4,16 +4,12 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import feup2526.ldts.t02g03.model.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GameController extends Controller<Level> {
     private final Level level;
-    private final List<RoadLaneController> laneControllers;
-    private final List<RiverController> riverControllers;
-    private final List<SafeLaneController> safeLaneControllers;
+    private final RoadLaneController roadLaneController;
+    private final RiverController riverController;
+    private final SafeLaneController safeLaneController;
     private final PlayerController playerController;
-    private final CoinCounter coinCounter;
     public final RunScore runScore;
     public final HighestScore highestScore;
     private int minRowReached;
@@ -21,24 +17,13 @@ public class GameController extends Controller<Level> {
     public GameController(Level level) {
         super(level);
         this.level = level;
-        this.laneControllers = new ArrayList<>();
-        this.riverControllers = new ArrayList<>();
-        this.safeLaneControllers = new ArrayList<>();
+        this.roadLaneController = new RoadLaneController(0.01, 3, 2, 2);
+        this.riverController = new RiverController(0.05, 3, 2, 2);
+        this.safeLaneController = new SafeLaneController(0.3);
         this.playerController = new PlayerController(level.getPlayer());
-        this.coinCounter = new CoinCounter();
         this.runScore = new RunScore();
         this.highestScore = new HighestScore();
         this.minRowReached = (int) level.getPlayer().getPosition().getY();
-
-        for (Lane lane : level.getLanes()) {
-            if (lane instanceof RoadLane) {
-                laneControllers.add(new RoadLaneController((RoadLane) lane, level.getGrid(), 0.01, 3, 2, 2));
-            } else if (lane instanceof River) {
-                riverControllers.add(new RiverController((River) lane, level.getGrid(), 0.05, 3, 2, 2));
-            } else if (lane instanceof SafeLane) {
-                safeLaneControllers.add(new SafeLaneController((SafeLane) lane, level.getGrid(), 0.3));
-            }
-        }
     }
 
     @Override
@@ -67,187 +52,148 @@ public class GameController extends Controller<Level> {
         }
         if (level.isGameOver())
             return;
-
-        playerController.update();
         updateLanes();
+        playerController.update();
+        resolvePlatformPhysics();
         checkCollisions();
     }
 
-    private void checkCollisions() {
+
+    //Test the players current and target position against logs
+    private void resolvePlatformPhysics() {
         Player player = level.getPlayer();
-        double pMin = player.getPosition().getX() + player.getOffsetX();
-        double pMax = pMin + player.getWidth();
-        int playerRow = (int) Math.round(player.getPosition().getY());
+        movePointWithLog(player.getPosition(), true);
+        movePointWithLog(player.getTargetPosition(), false);
+    }
 
-        for (Lane lane : level.getLanes()) {
-            if (lane.getRow() == playerRow) {
-                if (lane instanceof RoadLane) {
-                    RoadLane roadLane = (RoadLane) lane;
-                    for (Vehicle v : roadLane.getVehicles()) {
-                        double vMin = v.getPosition().getX() + v.getOffsetX();
-                        double vMax = vMin + v.getWidth();
 
-                        if (pMin < vMax && pMax > vMin) {
-                            level.handleCollision();
-                            return;
-                        }
-                    }
-                } else if (lane instanceof River) {
-                    River river = (River) lane;
-                    boolean onLog = false;
-                    for (Log l : river.getLogs()) {
-                        double lMin = l.getPosition().getX() + l.getOffsetX();
-                        double lMax = lMin + l.getWidth();
+    private void checkCollisions() {
+        int playerRow = (int) Math.round(level.getPlayer().getPosition().getY());
 
-                        if (pMin < lMax && pMax > lMin) {
-                            onLog = true;
-                            double dist = playerController.getDistanceToTarget();
-
-                            if (dist < 0.1) {
-                                player.setOnLog(true);
-                            }
-
-                            if (player.isOnLog()) {
-                                if (Math.abs(player.getPosition().getY() - playerRow) < 0.1) {
-                                    playerController.moveTo(new Position(l.getPosition().getX(), playerRow));
-                                } else {
-                                    playerController.moveTo(new Position(player.getPosition().getX(), playerRow));
-                                }
-                                movePlayerWithLog(player, l, river);
-                            }
-                            break;
-                        }
-                    }
-                    if (!onLog) {
-                        level.handleCollision();
-                        return;
-                    }
-                } else if (lane instanceof SafeLane) {
-                    SafeLane safeLane = (SafeLane) lane;
-                    for (int i = 0; i < safeLane.getCoins().size(); i++) {
-                        Coin c = safeLane.getCoins().get(i);
-                        double cMin = c.getPosition().getX() + c.getOffsetX();
-                        double cMax = cMin + c.getWidth();
-
-                        if (pMin < cMax && pMax > cMin) {
-                            safeLane.getCoins().remove(i);
-                            i--;
-                            coinCounter.increment();
-                        }
-                    }
-                }
+        // Check current lane and adjacent lanes (just in case of overlap or movement)
+        for (int row = playerRow - 1; row <= playerRow + 1; row++) {
+            Lane lane = level.getLane(row);
+            if (lane != null) {
+                getController(lane).handleCollision(lane, level);
             }
         }
     }
 
-    private void movePlayerWithLog(Player player, Log log, River river) {
-        if (log.getDirection() == Direction.LEFT) {
-            playerController.moveWithPlatform(-river.getSpeed());
-        } else {
-            playerController.moveWithPlatform(river.getSpeed());
-        }
+    private LaneController getController(Lane lane) {
+        if (lane instanceof RoadLane)
+            return roadLaneController;
+        if (lane instanceof River)
+            return riverController;
+        if (lane instanceof SafeLane)
+            return safeLaneController;
+        return null;
     }
 
     public boolean handleInput(KeyStroke key) {
-        if (key == null)
-            return false;
-        if (key.getKeyType() == KeyType.EOF)
-            return true;
-        if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q')) {
-            level.quit();
-            return true;
-        }
-        if (key.getKeyType() == KeyType.Escape) {
+        if (key == null) return false;
+        if (key.getKeyType() == KeyType.EOF) return true;
+        if ((key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q')) 
+            || key.getKeyType() == KeyType.Escape) {
             level.quit();
             return true;
         }
 
         Direction dir = null;
         switch (key.getKeyType()) {
-            case ArrowUp:
-                dir = Direction.UP;
-                break;
-            case ArrowDown:
-                dir = Direction.DOWN;
-                break;
-            case ArrowLeft:
-                dir = Direction.LEFT;
-                break;
-            case ArrowRight:
-                dir = Direction.RIGHT;
-                break;
+            case ArrowUp:    dir = Direction.UP; break;
+            case ArrowDown:  dir = Direction.DOWN; break;
+            case ArrowLeft:  dir = Direction.LEFT; break;
+            case ArrowRight: dir = Direction.RIGHT; break;
             case Character:
-                if (key.getCharacter() == 'w' || key.getCharacter() == 'W')
-                    dir = Direction.UP;
-                if (key.getCharacter() == 's' || key.getCharacter() == 'S')
-                    dir = Direction.DOWN;
-                if (key.getCharacter() == 'a' || key.getCharacter() == 'A')
-                    dir = Direction.LEFT;
-                if (key.getCharacter() == 'd' || key.getCharacter() == 'D')
-                    dir = Direction.RIGHT;
+                char c = Character.toLowerCase(key.getCharacter());
+                if (c == 'w') dir = Direction.UP;
+                if (c == 's') dir = Direction.DOWN;
+                if (c == 'a') dir = Direction.LEFT;
+                if (c == 'd') dir = Direction.RIGHT;
                 break;
-            default:
-                break;
+            default: break;
+        }
+        if (dir == null) return false;
+        Position currentPos = level.getPlayer().getPosition();
+        Position tp = null;
+        //Calculate the destination (grid blocks)
+        if (dir == Direction.UP)    tp = new Position(currentPos.getX(), currentPos.getY() - 1);
+        if (dir == Direction.DOWN)  tp = new Position(currentPos.getX(), currentPos.getY() + 1);
+        if (dir == Direction.LEFT)  tp = new Position(currentPos.getX() - 1, currentPos.getY());
+        if (dir == Direction.RIGHT) tp = new Position(currentPos.getX() + 1, currentPos.getY());
+        if (tp == null) return false;
+
+
+        int destRow = (int) Math.round(tp.getY());
+        Lane destLane = level.getLane(destRow);
+
+        //snapping player to center of a log
+        if ((dir == Direction.UP || dir == Direction.DOWN) && destLane instanceof River) {
+            Log targetLog = riverController.getLogAt((River) destLane, tp);
+            if (targetLog != null) {
+                double centeredX = targetLog.getPosition().getX();
+                tp = new Position(centeredX, tp.getY());
+            }
+        }
+        //snap player to grid cell center
+        else if (destLane != null && !(destLane instanceof River)) {
+            tp = new Position((double) Math.round(tp.getX()), (int) Math.round(tp.getY()));
         }
 
-        if (dir != null) {
-            if (dir == Direction.UP || dir == Direction.DOWN) {
-                double currentY = level.getPlayer().getPosition().getY();
-                double targetY = Math.round(currentY) + (dir == Direction.UP ? -1 : 1);
-                Position newPos = new Position(level.getPlayer().getPosition().getX(), targetY);
+        if (!isBlocked(tp)) {
+            playerController.moveTo(tp);
+            return true;
+        }
 
-                if (level.getGrid().isInside(newPos) && !isTree(newPos)) {
-                    playerController.moveTo(newPos);
-                    if (newPos.getY() < minRowReached) {
-                        runScore.increment();
-                        minRowReached = (int) newPos.getY();
-                    }
-                    return true;
+        return false;
+    }
+    /*
+    Somewhat confusing method, 
+    getting coordinates, we get if there is a log on not 
+    If there is a log, We check if theres a player there: 
+    If yes, move actual player position.
+    If not, its because the input was the target destination of the player when jump was made, 
+    So update the target position
+     */
+    private void movePointWithLog(Position p, boolean isPlayerBody) {
+        int row = (int) Math.round(p.getY());
+        Lane lane = level.getLane(row);
+        if (lane instanceof River) {
+            River river = (River) lane;
+            Log log = riverController.getLogAt(river, p);
+            if (log != null) {
+                double speed = river.getSpeed();
+                if (river.getDirection() == Direction.LEFT) {
+                    speed = -speed;
                 }
-            } else {
-                Position nextPos;
-                if (dir == Direction.LEFT) {
-                    nextPos = new Position(level.getPlayer().getTargetPosition().getX() - 0.8,
-                            level.getPlayer().getTargetPosition().getY());
+                if (isPlayerBody) {
+                    Position current = level.getPlayer().getPosition();
+                    level.getPlayer().setPosition(new Position(current.getX() + speed, current.getY()));
                 } else {
-                    nextPos = new Position(level.getPlayer().getTargetPosition().getX() + 0.8,
-                            level.getPlayer().getTargetPosition().getY());
+                    Position target = level.getPlayer().getTargetPosition();
+                    level.getPlayer().setTargetPosition(new Position(target.getX() + speed, target.getY()));
                 }
-
-                if (level.getGrid().isInside(nextPos) && !isTree(nextPos)) {
-                    playerController.changeTargetPosition(dir, level.getGrid());
-                    return true;
+            } 
+            //no log, and player on its final position, so its dead
+            else if (isPlayerBody) {
+                if (level.getPlayer().getPosition().distance(level.getPlayer().getTargetPosition()) < 0.2) {
+                    level.setGameOver(true);
                 }
             }
         }
-        return false;
     }
-
-    private boolean isTree(Position p) {
-        double pMin = p.getX() + level.getPlayer().getOffsetX();
-        double pMax = pMin + level.getPlayer().getWidth();
+    private boolean isBlocked(Position p) {
         int row = (int) Math.round(p.getY());
-
         Lane lane = level.getLane(row);
-        if (lane instanceof SafeLane) {
-            return ((SafeLane) lane).getTrees().stream().anyMatch(tree -> {
-                double tMin = tree.getPosition().getX();
-                double tMax = tMin + 1.0;
-                return pMin < tMax && pMax > tMin;
-            });
+        if (lane != null) {
+            return getController(lane).isBlocked(lane, p);
         }
         return false;
     }
 
     public void updateLanes() {
-        for (RoadLaneController controller : laneControllers) {
-            controller.step();
-        }
-        for (RiverController controller : riverControllers) {
-            controller.step();
-        }
-        for (SafeLaneController controller : safeLaneControllers) {
-            controller.step();
+        for (Lane lane : level.getLanes()) {
+            getController(lane).update(lane, level);
         }
     }
 }

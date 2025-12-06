@@ -14,7 +14,7 @@ public class RiverViewer extends SpriteViewer<River> {
     private BufferedImage riverRight;
 
     public RiverViewer(int width) {
-        super("docs/images/sprites/river.png");
+        super("docs/images/sprites/riverLeft.png");
         this.width = width;
         try {
             riverLeft = ImageIO.read(new File("docs/images/sprites/riverLeft.png"));
