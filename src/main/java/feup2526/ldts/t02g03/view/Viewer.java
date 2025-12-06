@@ -1,6 +1,5 @@
 package feup2526.ldts.t02g03.view;
 
-import feup2526.ldts.t02g03.view.LanternaViewer;
 import java.io.IOException;
 
 public abstract class Viewer<T> {

@@ -13,12 +13,23 @@ public class MenuViewer extends Viewer<Menu> {
     @Override
     public void draw(LanternaViewer gui) throws IOException {
         gui.clear();
-        gui.drawText(5, 5, "Menu", "#FFFFFF");
 
+        int terminalWidth = gui.getTerminalWidth();
+        int terminalHeight = gui.getTerminalHeight();
+
+        String title = "CROSSY ROADS";
+        int titleX = (terminalWidth - title.length()) / 2;
+        int titleY = terminalHeight / 4;
+
+        gui.drawText(titleX, titleY, title, "#FFD700");
+
+        int startY = terminalHeight / 2;
         for (int i = 0; i < getModel().getNumberEntries(); i++) {
+            String entry = getModel().getEntry(i);
+            int entryX = (terminalWidth - entry.length()) / 2;
             gui.drawText(
-                    5, 7 + i,
-                    getModel().getEntry(i),
+                    entryX, startY + (i * 3),
+                    entry,
                     getModel().isSelected(i) ? "#FFD700" : "#FFFFFF");
         }
         gui.refresh();

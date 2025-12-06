@@ -3,8 +3,6 @@ package feup2526.ldts.t02g03.controller.menu;
 import feup2526.ldts.t02g03.Game;
 import feup2526.ldts.t02g03.controller.Controller;
 import feup2526.ldts.t02g03.model.menu.Menu;
-import feup2526.ldts.t02g03.states.GameState;
-import feup2526.ldts.t02g03.model.Level;
 import com.googlecode.lanterna.input.KeyStroke;
 import java.io.IOException;
 
@@ -29,7 +27,7 @@ public class MenuController extends Controller<Menu> {
                 if (getModel().isSelected("Exit"))
                     game.setState(null);
                 if (getModel().isSelected("Start"))
-                    game.setState(new GameState(new Level(game.getGridWidth(), game.getGridHeight())));
+                    game.startGameState();
                 break;
             case EOF:
                 game.setState(null);

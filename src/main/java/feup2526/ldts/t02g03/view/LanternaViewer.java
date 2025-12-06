@@ -36,6 +36,11 @@ public class LanternaViewer {
     }
 
     public void close() throws IOException {
+        try {
+            screen.stopScreen();
+        } catch (Exception e) {
+            // Ignore if already stopped
+        }
         screen.close();
     }
 
