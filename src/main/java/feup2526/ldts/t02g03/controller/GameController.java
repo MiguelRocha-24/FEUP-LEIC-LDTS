@@ -9,9 +9,9 @@ import java.util.List;
 
 public class GameController extends Controller<Level> {
     private final Level level;
-    private final List<RoadLaneController> laneControllers;
-    private final List<RiverController> riverControllers;
-    private final List<SafeLaneController> safeLaneControllers;
+    private final RoadLaneController roadLaneController;
+    private final RiverController riverController;
+    private final SafeLaneController safeLaneController;
     private final PlayerController playerController;
     private final CoinCounter coinCounter;
     public final RunScore runScore;
@@ -21,24 +21,14 @@ public class GameController extends Controller<Level> {
     public GameController(Level level) {
         super(level);
         this.level = level;
-        this.laneControllers = new ArrayList<>();
-        this.riverControllers = new ArrayList<>();
-        this.safeLaneControllers = new ArrayList<>();
+        this.roadLaneController = new RoadLaneController(0.01, 3, 2, 2);
+        this.riverController = new RiverController(0.05, 3, 2, 2);
+        this.safeLaneController = new SafeLaneController(0.3);
         this.playerController = new PlayerController(level.getPlayer());
         this.coinCounter = new CoinCounter();
         this.runScore = new RunScore();
         this.highestScore = new HighestScore();
         this.minRowReached = (int) level.getPlayer().getPosition().getY();
-
-        for (Lane lane : level.getLanes()) {
-            if (lane instanceof RoadLane) {
-                laneControllers.add(new RoadLaneController((RoadLane) lane, level.getGrid(), 0.01, 3, 2, 2));
-            } else if (lane instanceof River) {
-                riverControllers.add(new RiverController((River) lane, level.getGrid(), 0.05, 3, 2, 2));
-            } else if (lane instanceof SafeLane) {
-                safeLaneControllers.add(new SafeLaneController((SafeLane) lane, level.getGrid(), 0.3));
-            }
-        }
     }
 
     @Override
@@ -240,14 +230,14 @@ public class GameController extends Controller<Level> {
     }
 
     public void updateLanes() {
-        for (RoadLaneController controller : laneControllers) {
-            controller.step();
-        }
-        for (RiverController controller : riverControllers) {
-            controller.step();
-        }
-        for (SafeLaneController controller : safeLaneControllers) {
-            controller.step();
+        for (Lane lane : level.getLanes()) {
+            if (lane instanceof RoadLane) {
+                roadLaneController.update(lane, level);
+            } else if (lane instanceof River) {
+                riverController.update(lane, level);
+            } else if (lane instanceof SafeLane) {
+                safeLaneController.update(lane, level);
+            }
         }
     }
 }
