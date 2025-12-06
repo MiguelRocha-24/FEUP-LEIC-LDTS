@@ -3,12 +3,11 @@ package feup2526.ldts.t02g03.controller;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import feup2526.ldts.t02g03.model.*;
-import feup2526.ldts.t02g03.view.SafeLaneViewer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameController {
+public class GameController extends Controller<Level> {
     private final Level level;
     private final List<RoadLaneController> laneControllers;
     private final List<RiverController> riverControllers;
@@ -17,6 +16,7 @@ public class GameController {
     private final CoinCounter coinCounter;
 
     public GameController(Level level) {
+        super(level);
         this.level = level;
         this.laneControllers = new ArrayList<>();
         this.riverControllers = new ArrayList<>();
@@ -30,8 +30,25 @@ public class GameController {
             } else if (lane instanceof River) {
                 riverControllers.add(new RiverController((River) lane, level.getGrid(), 0.05, 3, 2, 2));
             } else if (lane instanceof SafeLane) {
-                safeLaneControllers.add(new SafeLaneController((SafeLane) lane, level.getGrid(),0.3));
+                safeLaneControllers.add(new SafeLaneController((SafeLane) lane, level.getGrid(), 0.3));
             }
+        }
+    }
+
+    @Override
+    public void step(feup2526.ldts.t02g03.Game game, KeyStroke key, long time) throws java.io.IOException {
+        if (key != null) {
+            if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q')) {
+                game.setState(new feup2526.ldts.t02g03.states.MenuState(new feup2526.ldts.t02g03.model.menu.Menu()));
+            } else if (key.getKeyType() == KeyType.Escape) {
+                game.setState(new feup2526.ldts.t02g03.states.MenuState(new feup2526.ldts.t02g03.model.menu.Menu()));
+            } else {
+                handleInput(key);
+            }
+        }
+        update();
+        if (level.isGameOver()) {
+            game.setState(new feup2526.ldts.t02g03.states.MenuState(new feup2526.ldts.t02g03.model.menu.Menu()));
         }
     }
 
@@ -180,9 +197,11 @@ public class GameController {
             } else {
                 Position nextPos;
                 if (dir == Direction.LEFT) {
-                    nextPos = new Position(level.getPlayer().getTargetPosition().getX() - 0.8, level.getPlayer().getTargetPosition().getY());
+                    nextPos = new Position(level.getPlayer().getTargetPosition().getX() - 0.8,
+                            level.getPlayer().getTargetPosition().getY());
                 } else {
-                    nextPos = new Position(level.getPlayer().getTargetPosition().getX() + 0.8, level.getPlayer().getTargetPosition().getY());
+                    nextPos = new Position(level.getPlayer().getTargetPosition().getX() + 0.8,
+                            level.getPlayer().getTargetPosition().getY());
                 }
 
                 if (level.getGrid().isInside(nextPos) && !isTree(nextPos)) {
