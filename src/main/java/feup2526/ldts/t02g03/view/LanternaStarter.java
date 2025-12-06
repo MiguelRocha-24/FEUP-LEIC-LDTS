@@ -15,20 +15,28 @@ import java.net.URL;
 
 public class LanternaStarter {
     private final AWTTerminalFontConfiguration fontConfig;
+    private final Font font;
+    private static final int TILE_SIZE = 16;
 
     public LanternaStarter() throws IOException, FontFormatException, URISyntaxException {
         URL resource = getClass().getClassLoader().getResource("square.ttf");
         File fontFile = new File(resource.toURI());
-        Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+        Font baseFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        ge.registerFont(font);
-        Font newfont = font.deriveFont(Font.PLAIN, 8);
-        this.fontConfig = AWTTerminalFontConfiguration.newInstance(newfont);
+        ge.registerFont(baseFont);
+        this.font = baseFont.deriveFont(Font.PLAIN, 8);
+        this.fontConfig = AWTTerminalFontConfiguration.newInstance(this.font);
     }
 
-    public LanternaViewer createViewer(int width, int height) throws IOException {
+    public LanternaViewer createFullscreenViewer() throws IOException {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        FontMetrics fm = new Canvas().getFontMetrics(font);
+        int charSize = fm.charWidth('W');
+        int cols = screenSize.width / charSize;
+        int rows = screenSize.height / charSize;
+
         Terminal terminal = new DefaultTerminalFactory()
-                .setInitialTerminalSize(new TerminalSize(width * 16, height * 16))
+                .setInitialTerminalSize(new TerminalSize(cols, rows))
                 .setTerminalEmulatorFontConfiguration(fontConfig)
                 .setForceAWTOverSwing(true)
                 .createTerminal();
@@ -38,5 +46,13 @@ public class LanternaStarter {
         screen.startScreen();
 
         return new LanternaViewer(screen);
+    }
+
+    public int getGridWidth(LanternaViewer viewer) {
+        return viewer.getTerminalWidth() / TILE_SIZE;
+    }
+
+    public int getGridHeight(LanternaViewer viewer) {
+        return viewer.getTerminalHeight() / TILE_SIZE;
     }
 }

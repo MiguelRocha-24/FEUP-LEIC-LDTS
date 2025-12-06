@@ -13,10 +13,14 @@ public class Game {
     private final LanternaStarter starter;
     private LanternaViewer gui;
     private State<?> state;
+    private int gridWidth;
+    private int gridHeight;
 
     public Game() throws IOException, FontFormatException, URISyntaxException {
         this.starter = new LanternaStarter();
-        this.gui = starter.createViewer(10, 10);
+        this.gui = starter.createFullscreenViewer();
+        this.gridWidth = starter.getGridWidth(gui);
+        this.gridHeight = starter.getGridHeight(gui);
         this.state = new MenuState(new Menu());
     }
 
@@ -28,11 +32,12 @@ public class Game {
         this.state = state;
     }
 
-    public void updateViewer(int width, int height) throws IOException {
-        if (gui != null) {
-            gui.close();
-        }
-        this.gui = starter.createViewer(width, height);
+    public int getGridWidth() {
+        return gridWidth;
+    }
+
+    public int getGridHeight() {
+        return gridHeight;
     }
 
     public void start() throws IOException {

@@ -29,7 +29,7 @@ public class MenuController extends Controller<Menu> {
                 if (getModel().isSelected("Exit"))
                     game.setState(null);
                 if (getModel().isSelected("Start"))
-                    game.setState(new GameState(new Level(10, 10)));
+                    game.setState(new GameState(new Level(game.getGridWidth(), game.getGridHeight())));
                 break;
             case EOF:
                 game.setState(null);

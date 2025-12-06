@@ -38,4 +38,12 @@ public class LanternaViewer {
     public void close() throws IOException {
         screen.close();
     }
+
+    public int getTerminalWidth() {
+        return screen.getTerminalSize().getColumns();
+    }
+
+    public int getTerminalHeight() {
+        return screen.getTerminalSize().getRows();
+    }
 }
