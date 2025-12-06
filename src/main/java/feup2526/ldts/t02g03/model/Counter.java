@@ -12,6 +12,10 @@ public abstract class Counter {
         this.count = load();
     }
 
+    public   void setCount(int count) {
+        this.count = count;
+        save();
+    }
     public void increment() {
         this.count++;
         save();

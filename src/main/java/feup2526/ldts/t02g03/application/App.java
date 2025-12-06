@@ -9,5 +9,6 @@ public class App {
     public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
         Game game = new Game();
         game.start();
+
     }
 }
