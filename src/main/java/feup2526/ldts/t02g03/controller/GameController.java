@@ -203,7 +203,7 @@ public class GameController extends Controller<Level> {
             // no log, and player on its final position, so its dead
             else if (isPlayerBody) {
                 if (level.getPlayer().getPosition().distance(level.getPlayer().getTargetPosition()) < 0.2) {
-                    level.setGameOver(true);
+                    level.handleCollision();
                 }
             }
         }
