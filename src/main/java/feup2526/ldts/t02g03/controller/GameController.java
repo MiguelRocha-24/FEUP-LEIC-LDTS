@@ -4,6 +4,11 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import feup2526.ldts.t02g03.model.*;
 
+import feup2526.ldts.t02g03.model.menu.Menu;
+import feup2526.ldts.t02g03.model.menu.User;
+import feup2526.ldts.t02g03.model.menu.UserManager;
+import feup2526.ldts.t02g03.states.MenuState;
+
 public class GameController extends Controller<Level> {
     private final Level level;
     private final RoadLaneController roadLaneController;
@@ -30,16 +35,38 @@ public class GameController extends Controller<Level> {
     public void step(feup2526.ldts.t02g03.Game game, KeyStroke key, long time) throws java.io.IOException {
         if (key != null) {
             if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q')) {
-                game.setState(new feup2526.ldts.t02g03.states.MenuState(new feup2526.ldts.t02g03.model.menu.Menu()));
+                returnToMenu(game);
             } else if (key.getKeyType() == KeyType.Escape) {
-                game.setState(new feup2526.ldts.t02g03.states.MenuState(new feup2526.ldts.t02g03.model.menu.Menu()));
+                returnToMenu(game);
             } else {
                 handleInput(key);
             }
         }
         update();
         if (level.isGameOver()) {
-            game.setState(new feup2526.ldts.t02g03.states.MenuState(new feup2526.ldts.t02g03.model.menu.Menu()));
+            returnToMenu(game);
+        }
+    }
+
+    private void returnToMenu(feup2526.ldts.t02g03.Game game) throws java.io.IOException {
+        updateUserStats(game);
+        Menu menu = new Menu();
+        menu.setCurrentUser(game.getCurrentUser());
+        game.setState(new MenuState(menu));
+    }
+
+    private void updateUserStats(feup2526.ldts.t02g03.Game game) {
+        User user = game.getCurrentUser();
+        if (user != null) {
+            int coins = level.getCoinCounter().getCount();
+            int score = level.getRunScore().getCount();
+
+            user.setCoins(user.getCoins() + coins);
+            if (score > user.getHighScore()) {
+                user.setHighScore(score);
+            }
+
+            new UserManager().updateUser(user);
         }
     }
 

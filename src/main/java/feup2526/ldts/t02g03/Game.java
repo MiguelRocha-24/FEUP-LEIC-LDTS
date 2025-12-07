@@ -10,10 +10,13 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import feup2526.ldts.t02g03.states.NewUserState;
+
 public class Game {
     private final LanternaStarter starter;
     private LanternaViewer gui;
     private State<?> state;
+    private feup2526.ldts.t02g03.model.menu.User currentUser;
 
     public Game() throws IOException, FontFormatException, URISyntaxException {
         this.starter = new LanternaStarter();
@@ -26,18 +29,40 @@ public class Game {
     }
 
     public void setState(State<?> state) throws IOException {
-        // Close old GUI before creating new one
-        if (this.state != null && state != null && this.state.getClass() != state.getClass()) {
-            gui.close();
+        if (state == null) {
+            this.state = null;
+            return;
         }
 
-        if (state instanceof GameState && !(this.state instanceof GameState)) {
+        boolean currentIsGame = (this.state instanceof GameState);
+        boolean nextIsGame = (state instanceof GameState);
+
+        boolean currentIsMenu = (this.state instanceof MenuState || this.state instanceof NewUserState);
+        boolean nextIsMenu = (state instanceof MenuState || state instanceof NewUserState);
+
+        if (this.state != null) {
+            if (currentIsGame && !nextIsGame) {
+                gui.close();
+            } else if (currentIsMenu && !nextIsMenu) {
+                gui.close();
+            }
+        }
+
+        if (nextIsGame && !currentIsGame) {
             this.gui = starter.createGameViewer();
-        } else if (state instanceof MenuState && !(this.state instanceof MenuState)) {
+        } else if (nextIsMenu && !currentIsMenu) {
             this.gui = starter.createMenuViewer();
         }
 
         this.state = state;
+    }
+
+    public feup2526.ldts.t02g03.model.menu.User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(feup2526.ldts.t02g03.model.menu.User currentUser) {
+        this.currentUser = currentUser;
     }
 
     public int getTerminalGridWidth() {
