@@ -1,9 +1,9 @@
 package feup2526.ldts.t02g03.view.game;
 
-import feup2526.ldts.t02g03.model.Vehicle;
+import feup2526.ldts.t02g03.model.game.Vehicle;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
-import feup2526.ldts.t02g03.model.Direction;
+import feup2526.ldts.t02g03.model.game.Direction;
 import com.googlecode.lanterna.TextCharacter;
 
 public class CarViewer extends SpriteViewer<Vehicle> {

@@ -1,6 +1,6 @@
 package feup2526.ldts.t02g03.application;
-import feup2526.ldts.t02g03.controller.GameController;
-import feup2526.ldts.t02g03.model.Level;
+import feup2526.ldts.t02g03.controller.game.GameController;
+import feup2526.ldts.t02g03.model.game.Level;
 import feup2526.ldts.t02g03.view.ConsoleViewer;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

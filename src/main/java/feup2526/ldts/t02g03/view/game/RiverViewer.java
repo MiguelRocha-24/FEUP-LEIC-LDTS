@@ -1,7 +1,7 @@
 package feup2526.ldts.t02g03.view.game;
 
-import feup2526.ldts.t02g03.model.River;
-import feup2526.ldts.t02g03.model.Direction;
+import feup2526.ldts.t02g03.model.game.River;
+import feup2526.ldts.t02g03.model.game.Direction;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.TextCharacter;
 

@@ -1,6 +1,6 @@
 package feup2526.ldts.t02g03.view.game;
 
-import feup2526.ldts.t02g03.model.Player;
+import feup2526.ldts.t02g03.model.game.Player;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class PlayerViewer extends SpriteViewer<Player> {

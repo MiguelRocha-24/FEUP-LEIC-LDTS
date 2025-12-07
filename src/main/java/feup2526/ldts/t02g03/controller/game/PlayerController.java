@@ -1,9 +1,9 @@
-package feup2526.ldts.t02g03.controller;
+package feup2526.ldts.t02g03.controller.game;
 
-import feup2526.ldts.t02g03.model.Direction;
-import feup2526.ldts.t02g03.model.Grid;
-import feup2526.ldts.t02g03.model.Player;
-import feup2526.ldts.t02g03.model.Position;
+import feup2526.ldts.t02g03.model.game.Direction;
+import feup2526.ldts.t02g03.model.game.Grid;
+import feup2526.ldts.t02g03.model.game.Player;
+import feup2526.ldts.t02g03.model.game.Position;
 
 public class PlayerController {
     private final Player player;

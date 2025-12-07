@@ -1,7 +1,7 @@
 package feup2526.ldts.t02g03.view.game;
 
 import com.googlecode.lanterna.graphics.TextGraphics;
-import feup2526.ldts.t02g03.model.*;
+import feup2526.ldts.t02g03.model.game.*;
 import feup2526.ldts.t02g03.view.LanternaViewer;
 import feup2526.ldts.t02g03.view.Viewer;
 

@@ -1,4 +1,4 @@
-package feup2526.ldts.t02g03.model;
+package feup2526.ldts.t02g03.model.game;
 
 import java.util.ArrayList;
 import java.util.List;

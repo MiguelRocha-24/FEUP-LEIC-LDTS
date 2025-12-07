@@ -1,10 +1,10 @@
 package feup2526.ldts.t02g03.controller;
 
-import feup2526.ldts.t02g03.model.Direction;
-import feup2526.ldts.t02g03.model.Level;
-import feup2526.ldts.t02g03.model.Position;
-import feup2526.ldts.t02g03.model.RoadLane;
-import feup2526.ldts.t02g03.model.Vehicle;
+import feup2526.ldts.t02g03.model.game.Direction;
+import feup2526.ldts.t02g03.model.game.Level;
+import feup2526.ldts.t02g03.model.game.Position;
+import feup2526.ldts.t02g03.model.game.RoadLane;
+import feup2526.ldts.t02g03.model.game.Vehicle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;

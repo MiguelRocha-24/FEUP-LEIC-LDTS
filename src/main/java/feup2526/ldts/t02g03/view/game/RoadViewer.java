@@ -1,6 +1,6 @@
 package feup2526.ldts.t02g03.view.game;
 
-import feup2526.ldts.t02g03.model.RoadLane;
+import feup2526.ldts.t02g03.model.game.RoadLane;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class RoadViewer extends SpriteViewer<RoadLane> {

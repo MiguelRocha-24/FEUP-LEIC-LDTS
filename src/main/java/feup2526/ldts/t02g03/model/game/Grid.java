@@ -1,4 +1,4 @@
-package feup2526.ldts.t02g03.model;
+package feup2526.ldts.t02g03.model.game;
 
 public final class Grid {
     private final int w,h;
