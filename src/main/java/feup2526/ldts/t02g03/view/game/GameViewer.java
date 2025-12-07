@@ -16,6 +16,7 @@ public class GameViewer extends Viewer<Level> {
     private final LogViewer logViewer;
     private final TreeViewer treeViewer;
     private final CoinViewer coinViewer;
+    private final NumberViewer numberViewer;
     private static final int TILE_SIZE = 16;
 
     public GameViewer(Level model) {
@@ -29,6 +30,7 @@ public class GameViewer extends Viewer<Level> {
         this.logViewer = new LogViewer();
         this.treeViewer = new TreeViewer();
         this.coinViewer = new CoinViewer();
+        this.numberViewer = new NumberViewer();
     }
 
     @Override
@@ -38,6 +40,11 @@ public class GameViewer extends Viewer<Level> {
 
         drawLanes(tg, getModel());
         drawPlayer(tg, getModel().getPlayer());
+
+        int score = getModel().getRunScore().getCount();
+        int scoreWidth = numberViewer.getWidth(score);
+        int x = gui.getTerminalWidth() - scoreWidth - 1;
+        numberViewer.draw(tg, score, x, 1);
 
         gui.refresh();
     }
