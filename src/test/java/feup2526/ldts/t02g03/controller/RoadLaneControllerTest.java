@@ -1,6 +1,6 @@
 package feup2526.ldts.t02g03.controller;
 
-import feup2526.ldts.t02g03.model.*;
+import feup2526.ldts.t02g03.model.game.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

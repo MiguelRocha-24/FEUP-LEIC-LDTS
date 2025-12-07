@@ -49,7 +49,6 @@ public class LanternaStarter {
                 .setInitialTerminalSize(new TerminalSize(cols, rows))
                 .setTerminalEmulatorFontConfiguration(menuFontConfig)
                 .setForceAWTOverSwing(true)
-                .setMouseCaptureMode(null)
                 .createTerminal();
 
         Screen screen = new TerminalScreen(terminal);

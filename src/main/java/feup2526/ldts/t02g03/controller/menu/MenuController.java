@@ -1,6 +1,6 @@
 package feup2526.ldts.t02g03.controller.menu;
 
-import feup2526.ldts.t02g03.Game;
+import feup2526.ldts.t02g03.application.Game;
 import feup2526.ldts.t02g03.controller.Controller;
 import feup2526.ldts.t02g03.model.menu.Menu;
 import com.googlecode.lanterna.input.KeyStroke;

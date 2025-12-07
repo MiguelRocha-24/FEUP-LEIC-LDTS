@@ -1,6 +1,6 @@
 package feup2526.ldts.t02g03.view.game;
 
-import feup2526.ldts.t02g03.model.Coin;
+import feup2526.ldts.t02g03.model.game.Coin;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import java.util.ArrayList;
 

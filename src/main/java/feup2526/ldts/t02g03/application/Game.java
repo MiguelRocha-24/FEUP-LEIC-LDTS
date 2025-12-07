@@ -1,4 +1,4 @@
-package feup2526.ldts.t02g03;
+package feup2526.ldts.t02g03.application;
 
 import feup2526.ldts.t02g03.states.State;
 import feup2526.ldts.t02g03.states.MenuState;
@@ -18,10 +18,13 @@ public class Game {
     private State<?> state;
     private feup2526.ldts.t02g03.model.menu.User currentUser;
 
+    private final MenuState menuState;
+
     public Game() throws IOException, FontFormatException, URISyntaxException {
         this.starter = new LanternaStarter();
         this.gui = starter.createMenuViewer();
-        this.state = new MenuState(new Menu());
+        this.menuState = new MenuState(new Menu());
+        this.state = this.menuState;
     }
 
     public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
@@ -71,6 +74,10 @@ public class Game {
 
     public int getTerminalGridHeight() {
         return starter.getGridHeight(gui);
+    }
+
+    public void returnToMenu() throws IOException {
+        setState(menuState);
     }
 
     public void startGameState() throws IOException {

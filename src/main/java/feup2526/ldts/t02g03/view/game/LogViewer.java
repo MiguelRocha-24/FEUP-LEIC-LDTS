@@ -1,6 +1,6 @@
 package feup2526.ldts.t02g03.view.game;
 
-import feup2526.ldts.t02g03.model.Log;
+import feup2526.ldts.t02g03.model.game.Log;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class LogViewer extends SpriteViewer<Log> {

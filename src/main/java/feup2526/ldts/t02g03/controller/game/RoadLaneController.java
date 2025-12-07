@@ -1,6 +1,6 @@
-package feup2526.ldts.t02g03.controller;
+package feup2526.ldts.t02g03.controller.game;
 
-import feup2526.ldts.t02g03.model.*;
+import feup2526.ldts.t02g03.model.game.*;
 
 import java.util.Random;
 

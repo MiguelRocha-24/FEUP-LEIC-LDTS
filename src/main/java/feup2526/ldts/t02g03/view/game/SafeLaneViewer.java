@@ -1,6 +1,6 @@
 package feup2526.ldts.t02g03.view.game;
 
-import feup2526.ldts.t02g03.model.SafeLane;
+import feup2526.ldts.t02g03.model.game.SafeLane;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class SafeLaneViewer extends SpriteViewer<SafeLane> {

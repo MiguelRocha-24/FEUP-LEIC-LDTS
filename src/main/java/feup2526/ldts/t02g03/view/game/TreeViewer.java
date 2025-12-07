@@ -1,6 +1,6 @@
 package feup2526.ldts.t02g03.view.game;
 
-import feup2526.ldts.t02g03.model.Tree;
+import feup2526.ldts.t02g03.model.game.Tree;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class TreeViewer extends SpriteViewer<Tree>{

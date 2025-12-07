@@ -1,4 +1,4 @@
-package feup2526.ldts.t02g03.model;
+package feup2526.ldts.t02g03.model.game;
 
 public class Coin extends Entity {
     private double width;
