@@ -6,18 +6,12 @@ import feup2526.ldts.t02g03.model.game.SafeLane;
 import feup2526.ldts.t02g03.model.game.Player;
 import feup2526.ldts.t02g03.model.game.Position;
 
-import java.util.Random;
-
-public class SafeLaneController implements LaneController {
-    private Random rng;
-    private double spawnChance;
+public class SafeLaneController extends BaseLaneController {
 
     public SafeLaneController(double spawnChance) {
+        super(spawnChance);
         if (spawnChance < 0 || spawnChance > 1)
             throw new IllegalArgumentException("Spawn chance must be between 0 and 1");
-
-        this.rng = new Random();
-        this.spawnChance = spawnChance;
     }
 
     @Override
@@ -65,4 +59,5 @@ public class SafeLaneController implements LaneController {
             return pMin < tMax && pMax > tMin;
         });
     }
+
 }

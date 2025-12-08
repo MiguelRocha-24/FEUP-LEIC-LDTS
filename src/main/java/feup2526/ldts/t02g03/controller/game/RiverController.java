@@ -2,16 +2,13 @@ package feup2526.ldts.t02g03.controller.game;
 
 import feup2526.ldts.t02g03.model.game.*;
 
-import java.util.Random;
-
-public class RiverController implements LaneController {
-    private Random rng;
-    private double spawnChance;
+public class RiverController extends BaseLaneController {
     private int minGap;
     private int removeBuffer;
     private int spawnOffset;
 
     public RiverController(double spawnChance, int minGap, int removeBuffer, int spawnOffset) {
+        super(spawnChance);
         if (spawnChance < 0 || spawnChance > 1)
             throw new IllegalArgumentException("Spawn chance must be between 0 and 1");
         if (minGap <= 0)
@@ -21,8 +18,6 @@ public class RiverController implements LaneController {
         if (spawnOffset <= 0)
             throw new IllegalArgumentException("Spawn offset must be > 0");
 
-        this.rng = new Random();
-        this.spawnChance = spawnChance;
         this.minGap = minGap;
         this.removeBuffer = removeBuffer;
         this.spawnOffset = spawnOffset;
@@ -96,7 +91,7 @@ public class RiverController implements LaneController {
     }
 
     public Log getLogAt(River river, Position pos) {
-        double centered = pos.getX()+0.5;
+        double centered = pos.getX() + 0.5;
         for (Log log : river.getLogs()) {
             double lMin = log.getPosition().getX();
             double lMax = lMin + log.getWidth();
@@ -114,5 +109,43 @@ public class RiverController implements LaneController {
     @Override
     public boolean isBlocked(Lane lane, Position pos) {
         return false;
+    }
+
+    @Override
+    public Position getSnapPosition(Lane lane, Position target) {
+        if (!(lane instanceof River))
+            return target;
+        Log targetLog = getLogAt((River) lane, target);
+        if (targetLog != null) {
+            double centeredX = targetLog.getPosition().getX();
+            return new Position(centeredX, target.getY());
+        }
+        return target;
+    }
+
+    @Override
+    public void handlePhysics(Lane lane, Level level, Position position, boolean isPlayerBody) {
+        if (!(lane instanceof River))
+            return;
+        River river = (River) lane;
+        Log log = getLogAt(river, position);
+
+        if (log != null) {
+            double speed = river.getSpeed();
+            if (river.getDirection() == Direction.LEFT) {
+                speed = -speed;
+            }
+            if (isPlayerBody) {
+                Position current = level.getPlayer().getPosition();
+                level.getPlayer().setPosition(new Position(current.getX() + speed, current.getY()));
+            } else {
+                Position target = level.getPlayer().getTargetPosition();
+                level.getPlayer().setTargetPosition(new Position(target.getX() + speed, target.getY()));
+            }
+        } else if (isPlayerBody) {
+            if (level.getPlayer().getPosition().distance(level.getPlayer().getTargetPosition()) < 0.2) {
+                level.handleCollision();
+            }
+        }
     }
 }
