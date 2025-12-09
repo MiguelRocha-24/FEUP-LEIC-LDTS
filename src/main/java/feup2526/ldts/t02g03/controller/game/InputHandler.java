@@ -28,6 +28,10 @@ public class InputHandler {
             return true;
         }
 
+        if (playerController.getDistanceToTarget() > 0.05) {
+            return false;
+        }
+
         Direction dir = null;
         switch (key.getKeyType()) {
             case ArrowUp:
