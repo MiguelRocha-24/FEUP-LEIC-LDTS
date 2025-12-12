@@ -4,41 +4,36 @@ import feup2526.ldts.t02g03.controller.Controller;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import feup2526.ldts.t02g03.model.game.*;
-
-import feup2526.ldts.t02g03.model.menu.User;
-import feup2526.ldts.t02g03.model.menu.UserManager;
+import feup2526.ldts.t02g03.application.*;
+import java.io.IOException;
+import java.util.Map;
 
 public class GameController extends Controller<Level> {
     private final Level level;
-    private final RoadLaneController roadLaneController;
-    private final RiverController riverController;
-    private final SafeLaneController safeLaneController;
+    private final Map<Class<?>, LaneController> controllerMap;
     private final PlayerController playerController;
-    public final RunScore runScore;
-    public final HighestScore highestScore;
-    private int minRowReached;
+    private final InputHandler inputHandler;
+    private final ScoreManager scoreManager;
 
-    public GameController(Level level) {
+    public GameController(Level level, PlayerController playerController, InputHandler inputHandler,
+            ScoreManager scoreManager, Map<Class<?>, LaneController> controllerMap) {
         super(level);
         this.level = level;
-        this.roadLaneController = new RoadLaneController(0.01, 3, 2, 2);
-        this.riverController = new RiverController(0.05, 3, 2, 2);
-        this.safeLaneController = new SafeLaneController(0.3);
-        this.playerController = new PlayerController(level.getPlayer());
-        this.runScore = level.getRunScore();
-        this.highestScore = new HighestScore();
-        this.minRowReached = (int) level.getPlayer().getPosition().getY();
+        this.controllerMap = controllerMap;
+        this.playerController = playerController;
+        this.inputHandler = inputHandler;
+        this.scoreManager = scoreManager;
     }
 
     @Override
-    public void step(feup2526.ldts.t02g03.application.Game game, KeyStroke key, long time) throws java.io.IOException {
+    public void step(Game game, KeyStroke key, long time) throws IOException {
         if (key != null) {
             if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q')) {
                 returnToMenu(game);
             } else if (key.getKeyType() == KeyType.Escape) {
                 returnToMenu(game);
             } else {
-                handleInput(key);
+                inputHandler.handleInput(key);
             }
         }
         update();
@@ -47,24 +42,9 @@ public class GameController extends Controller<Level> {
         }
     }
 
-    private void returnToMenu(feup2526.ldts.t02g03.application.Game game) throws java.io.IOException {
-        updateUserStats(game);
+    private void returnToMenu(Game game) throws IOException {
+        scoreManager.updateUserStats(game);
         game.returnToMenu();
-    }
-
-    private void updateUserStats(feup2526.ldts.t02g03.application.Game game) {
-        User user = game.getCurrentUser();
-        if (user != null) {
-            int coins = level.getCoinCounter().getCount();
-            int score = level.getRunScore().getCount();
-
-            user.setCoins(user.getCoins() + coins);
-            if (score > user.getHighScore()) {
-                user.setHighScore(score);
-            }
-
-            new UserManager().updateUser(user);
-        }
     }
 
     public void update() {
@@ -80,12 +60,7 @@ public class GameController extends Controller<Level> {
         playerController.update();
         resolvePlatformPhysics();
         checkCollisions();
-
-        int currentRow = (int) Math.round(level.getPlayer().getPosition().getY());
-        if (currentRow < minRowReached) {
-            runScore.increment(minRowReached - currentRow);
-            minRowReached = currentRow;
-        }
+        scoreManager.updateScore();
     }
 
     // Test the players current and target position against logs
@@ -108,92 +83,7 @@ public class GameController extends Controller<Level> {
     }
 
     private LaneController getController(Lane lane) {
-        if (lane instanceof RoadLane)
-            return roadLaneController;
-        if (lane instanceof River)
-            return riverController;
-        if (lane instanceof SafeLane)
-            return safeLaneController;
-        return null;
-    }
-
-    public boolean handleInput(KeyStroke key) {
-        if (key == null)
-            return false;
-        if (key.getKeyType() == KeyType.EOF)
-            return true;
-        if ((key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q'))
-                || key.getKeyType() == KeyType.Escape) {
-            level.quit();
-            return true;
-        }
-
-        Direction dir = null;
-        switch (key.getKeyType()) {
-            case ArrowUp:
-                dir = Direction.UP;
-                break;
-            case ArrowDown:
-                dir = Direction.DOWN;
-                break;
-            case ArrowLeft:
-                dir = Direction.LEFT;
-                break;
-            case ArrowRight:
-                dir = Direction.RIGHT;
-                break;
-            case Character:
-                char c = Character.toLowerCase(key.getCharacter());
-                if (c == 'w')
-                    dir = Direction.UP;
-                if (c == 's')
-                    dir = Direction.DOWN;
-                if (c == 'a')
-                    dir = Direction.LEFT;
-                if (c == 'd')
-                    dir = Direction.RIGHT;
-                break;
-            default:
-                break;
-        }
-        if (dir == null)
-            return false;
-        Position currentPos = level.getPlayer().getPosition();
-        Position tp = null;
-        // Calculate the destination (grid blocks)
-        if (dir == Direction.UP)
-            tp = new Position(currentPos.getX(), currentPos.getY() - 1);
-        if (dir == Direction.DOWN)
-            tp = new Position(currentPos.getX(), currentPos.getY() + 1);
-        if (dir == Direction.LEFT)
-            tp = new Position(currentPos.getX() - 1, currentPos.getY());
-        if (dir == Direction.RIGHT)
-            tp = new Position(currentPos.getX() + 1, currentPos.getY());
-        if (tp == null)
-            return false;
-
-        int destRow = (int) Math.round(tp.getY());
-        Lane destLane = level.getLane(destRow);
-
-        // snapping player to center of a log
-        if ((dir == Direction.UP || dir == Direction.DOWN) && destLane instanceof River) {
-            Log targetLog = riverController.getLogAt((River) destLane, tp);
-            if (targetLog != null) {
-                double centeredX = targetLog.getPosition().getX();
-                tp = new Position(centeredX, tp.getY());
-            }
-        }
-        // snap player to grid cell center
-        else if (destLane != null && !(destLane instanceof River)) {
-            tp = new Position((double) Math.round(tp.getX()), (int) Math.round(tp.getY()));
-        }
-
-        if (!isBlocked(tp)) {
-            playerController.moveTo(tp);
-            return true;
-        }
-
-        return false;
+        return controllerMap.get(lane.getClass());
     }
 
     /*
@@ -208,38 +98,8 @@ public class GameController extends Controller<Level> {
     private void movePointWithLog(Position p, boolean isPlayerBody) {
         int row = (int) Math.round(p.getY());
         Lane lane = level.getLane(row);
-        if (lane instanceof River) {
-            River river = (River) lane;
-            Log log = riverController.getLogAt(river, p);
-            if (log != null) {
-                double speed = river.getSpeed();
-                if (river.getDirection() == Direction.LEFT) {
-                    speed = -speed;
-                }
-                if (isPlayerBody) {
-                    Position current = level.getPlayer().getPosition();
-                    level.getPlayer().setPosition(new Position(current.getX() + speed, current.getY()));
-                } else {
-                    Position target = level.getPlayer().getTargetPosition();
-                    level.getPlayer().setTargetPosition(new Position(target.getX() + speed, target.getY()));
-                }
-            }
-            // no log, and player on its final position, so its dead
-            else if (isPlayerBody) {
-                if (level.getPlayer().getPosition().distance(level.getPlayer().getTargetPosition()) < 0.2) {
-                    level.handleCollision();
-                }
-            }
-        }
-    }
-
-    private boolean isBlocked(Position p) {
-        int row = (int) Math.round(p.getY());
-        Lane lane = level.getLane(row);
-        if (lane != null) {
-            return getController(lane).isBlocked(lane, p);
-        }
-        return false;
+        LaneController controller = getController(lane);
+        controller.handlePhysics(lane, level, p, isPlayerBody);
     }
 
     public void updateLanes() {

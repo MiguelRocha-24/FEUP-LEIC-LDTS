@@ -10,4 +10,8 @@ public interface LaneController {
     void handleCollision(Lane lane, Level level);
 
     boolean isBlocked(Lane lane, Position pos);
+
+    Position getSnapPosition(Lane lane, Position target);
+
+    void handlePhysics(Lane lane, Level level, Position position, boolean isPlayerBody);
 }

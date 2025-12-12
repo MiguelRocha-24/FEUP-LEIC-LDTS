@@ -4,28 +4,19 @@ import feup2526.ldts.t02g03.model.game.*;
 
 import java.util.Random;
 
-public class RoadLaneController implements LaneController {
-    private Random rng;
-    private double spawnChance;
-    private int minGap;
-    private int removeBuffer;
-    private int spawnOffset;
+public class RoadLaneController extends BaseLaneController {
+    private int minSpeed;
+    private int maxSpeed;
 
-    public RoadLaneController(double spawnChance, int minGap, int removeBuffer, int spawnOffset) {
+    public RoadLaneController(double spawnChance, int minSpeed, int maxSpeed, long seed) {
+        super(spawnChance, seed);
         if (spawnChance < 0 || spawnChance > 1)
             throw new IllegalArgumentException("Spawn chance must be between 0 and 1");
-        if (minGap <= 0)
-            throw new IllegalArgumentException("Min gap must be > 0");
-        if (removeBuffer <= 0)
-            throw new IllegalArgumentException("Remove buffer must be > 0");
-        if (spawnOffset <= 0)
-            throw new IllegalArgumentException("Spawn offset must be > 0");
+        if (minSpeed <= 0 || maxSpeed <= 0 || minSpeed > maxSpeed)
+            throw new IllegalArgumentException("Invalid speed range");
 
-        this.rng = new Random();
-        this.spawnChance = spawnChance;
-        this.minGap = minGap;
-        this.removeBuffer = removeBuffer;
-        this.spawnOffset = spawnOffset;
+        this.minSpeed = minSpeed;
+        this.maxSpeed = maxSpeed;
     }
 
     @Override
@@ -33,73 +24,64 @@ public class RoadLaneController implements LaneController {
         if (!(lane instanceof RoadLane))
             return;
         RoadLane roadLane = (RoadLane) lane;
-        Grid grid = level.getGrid();
 
         moveVehicles(roadLane);
-        cleanup(roadLane, grid);
-        maybeSpawn(roadLane, grid);
+        spawnVehicles(roadLane, level.getGrid().getW());
+        removeOffScreenVehicles(roadLane, level.getGrid().getW());
     }
 
     private void moveVehicles(RoadLane lane) {
-        for (Vehicle v : lane.getVehicles()) {
-            v.move(lane.getSpeed());
-        }
-    }
-
-    private void cleanup(RoadLane lane, Grid grid) {
-        if (lane.getVehicles().isEmpty())
-            return;
-        if (lane.getDirection() == Direction.LEFT) {
-            // Vehicles leave screen after passing left barrier (x=0-removeBuffer)
-            int cutoff = -removeBuffer;
-            while (!lane.getVehicles().isEmpty() && lane.getVehicles().getFirst().getPosition().getX() < cutoff) {
-                lane.getVehicles().removeFirst();
+        for (Vehicle vehicle : lane.getVehicles()) {
+            Position pos = vehicle.getPosition();
+            double speed = lane.getSpeed();
+            if (lane.getDirection() == Direction.LEFT) {
+                speed = -speed;
             }
-        } else {
-            // Vehicles leave screen after passing right barrier (x=grid width+removeBuffer)
-            int cutoff = grid.getW() + removeBuffer;
-            while (!lane.getVehicles().isEmpty() && lane.getVehicles().getLast().getPosition().getX() > cutoff) {
-                lane.getVehicles().removeLast();
+            vehicle.setPosition(new Position(pos.getX() + speed, pos.getY()));
+        }
+    }
+
+    private void spawnVehicles(RoadLane lane, int gridWidth) {
+        if (rng.nextDouble() < spawnChance) {
+            // Check if there is space to spawn a new vehicle
+            boolean canSpawn = true;
+            double spawnX = (lane.getDirection() == Direction.RIGHT) ? 0 : gridWidth - 1;
+
+            for (Vehicle v : lane.getVehicles()) {
+                if (Math.abs(v.getPosition().getX() - spawnX) < 2.0) { // Minimum distance between vehicles
+                    canSpawn = false;
+                    break;
+                }
+            }
+
+            if (canSpawn) {
+                // Randomly choose a vehicle type (Car or Bus)
+                Vehicle newVehicle;
+                if (rng.nextBoolean()) {
+                    newVehicle = new Car(new Position(spawnX, lane.getRow()), lane.getDirection());
+                } else {
+                    newVehicle = new Bus(new Position(spawnX, lane.getRow()), lane.getDirection());
+                }
+                lane.addVehicle(newVehicle);
             }
         }
     }
 
-    private void maybeSpawn(RoadLane lane, Grid grid) {
-        // Spawn chance is the probability of a vehicle being spawned in a given step
-        // If the random number is greater than the spawn chance, no need to spawn
-        // vehicle
-        if (rng.nextDouble() >= spawnChance)
-            return;
-        int entryX;
-        if (lane.getDirection() == Direction.RIGHT) {
-            entryX = -spawnOffset;
-        } else {
-            entryX = grid.getW() + spawnOffset;
-        }
-        if (!isSpaceForSpawn(lane, entryX))
-            return;
-        Vehicle v = new Vehicle(new Position(entryX, lane.getRow()), lane.getDirection());
-        lane.addVehicle(v);
-    }
-
-    private boolean isSpaceForSpawn(RoadLane lane, int entryX) {
-        if (lane.getVehicles().isEmpty())
-            return true;
-        if (lane.getDirection() == Direction.RIGHT) {
-            double firstX = lane.getVehicles().getFirst().getPosition().getX();
-            return (firstX - entryX) >= (minGap + 1);
-        } else {
-            double lastX = lane.getVehicles().getLast().getPosition().getX();
-            return (entryX - lastX) >= (minGap + 1);
-        }
+    private void removeOffScreenVehicles(RoadLane lane, int gridWidth) {
+        lane.getVehicles().removeIf(v -> {
+            double x = v.getPosition().getX();
+            return x < -2 || x > gridWidth + 2;
+        });
     }
 
     @Override
     public void handleCollision(Lane lane, Level level) {
         RoadLane roadLane = (RoadLane) lane;
         Player player = level.getPlayer();
+
         if (Math.abs(player.getPosition().getY() - roadLane.getRow()) > 0.8)
             return;
+
         double pMin = player.getPosition().getX() + player.getOffsetX();
         double pMax = pMin + player.getWidth();
 
@@ -123,19 +105,19 @@ public class RoadLaneController implements LaneController {
         return spawnChance;
     }
 
-    public int getMinGap() {
-        return minGap;
+    public int getMinSpeed() {
+        return minSpeed;
     }
 
-    public int getRemoveBuffer() {
-        return removeBuffer;
-    }
-
-    public int getSpawnOffset() {
-        return spawnOffset;
+    public int getMaxSpeed() {
+        return maxSpeed;
     }
 
     public void setRandom(Random rng) {
         this.rng = rng;
+    }
+
+    @Override
+    public void handlePhysics(Lane lane, Level level, Position position, boolean isPlayerBody) {
     }
 }
