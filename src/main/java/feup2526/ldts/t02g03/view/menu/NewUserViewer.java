@@ -1,7 +1,7 @@
 package feup2526.ldts.t02g03.view.menu;
 
 import feup2526.ldts.t02g03.model.menu.Menu;
-import feup2526.ldts.t02g03.view.LanternaViewer;
+import feup2526.ldts.t02g03.view.GUI;
 import feup2526.ldts.t02g03.view.Viewer;
 
 import java.io.IOException;
@@ -32,9 +32,7 @@ public class NewUserViewer extends Viewer<Menu> {
     }
 
     @Override
-    public void draw(LanternaViewer gui) throws IOException {
-        gui.clear();
-
+    protected void drawElements(GUI gui) throws IOException {
         int terminalWidth = gui.getTerminalWidth();
         int terminalHeight = gui.getTerminalHeight();
 
@@ -48,7 +46,5 @@ public class NewUserViewer extends Viewer<Menu> {
         int inputY = terminalHeight / 2 + 1;
 
         gui.drawText(inputX, inputY, currentInput, "#FFD700");
-
-        gui.refresh();
     }
 }

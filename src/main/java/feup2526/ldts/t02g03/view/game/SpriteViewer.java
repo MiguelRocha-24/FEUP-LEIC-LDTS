@@ -1,8 +1,7 @@
 package feup2526.ldts.t02g03.view.game;
 
-import com.googlecode.lanterna.TextCharacter;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
+import feup2526.ldts.t02g03.view.GUI;
+import feup2526.ldts.t02g03.view.GUIImage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,34 +9,37 @@ import java.io.File;
 import java.io.IOException;
 
 public abstract class SpriteViewer<T> implements ElementViewer<T> {
-    protected TextCharacter[][] sprite;
-    private static final java.util.Map<String, TextCharacter[][]> cache = new java.util.HashMap<>();
+    private final String spritePath;
+    private static final java.util.Map<String, GUIImage> cache = new java.util.HashMap<>();
 
     public SpriteViewer(String spritePath) {
-        this.sprite = loadSprite(spritePath);
+        this.spritePath = spritePath;
     }
 
-    protected TextCharacter[][] loadSprite(String spritePath) {
-        if (cache.containsKey(spritePath)) {
-            return cache.get(spritePath);
+    protected GUIImage getSprite(GUI gui) {
+        return getSprite(gui, spritePath);
+    }
+
+    protected GUIImage getSprite(GUI gui, String path) {
+        if (cache.containsKey(path)) {
+            return cache.get(path);
         }
         try {
-            BufferedImage originalImage = ImageIO.read(new File(spritePath));
-            TextCharacter[][] textChars = convertToTextCharacters(originalImage);
-            cache.put(spritePath, textChars);
-            return textChars;
+            BufferedImage originalImage = ImageIO.read(new File(path));
+            GUIImage image = convertToGUIImage(gui, originalImage);
+            cache.put(path, image);
+            return image;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    //Implmented differently to professor, 
-    //Allows for a more efficient loading of sprites, by only loading the sprite once and storing its drawing 
-    private TextCharacter[][] convertToTextCharacters(BufferedImage sprite) {
+    public static GUIImage convertToGUIImage(GUI gui, BufferedImage sprite) {
         int width = sprite.getWidth();
         int height = sprite.getHeight();
-        TextCharacter[][] characters = new TextCharacter[width][height];
+        GUIImage image = gui.createOffScreenImage(width, height);
+        boolean hasTransparency = false;
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -48,27 +50,20 @@ public abstract class SpriteViewer<T> implements ElementViewer<T> {
                 int blue = a & 255;
 
                 if (alpha != 0) {
-                    characters[x][y] = TextCharacter.fromCharacter(' ',
-                            new TextColor.RGB(red, green, blue), new TextColor.RGB(red, green, blue))[0];
+                    String color = String.format("#%02x%02x%02x", red, green, blue);
+                    image.setPixel(x, y, color);
                 } else {
-                    characters[x][y] = null;
+                    hasTransparency = true;
                 }
             }
         }
-        return characters;
+        image.setTransparency(hasTransparency);
+        return image;
     }
 
-    protected void drawSprite(TextGraphics graphics, TextCharacter[][] sprite, int xPos, int yPos) {
-        if (sprite == null)
-            return;
-
-        for (int x = 0; x < sprite.length; x++) {
-            for (int y = 0; y < sprite[0].length; y++) {
-                TextCharacter c = sprite[x][y];
-                if (c != null) {
-                    graphics.setCharacter(xPos + x, yPos + y, c);
-                }
-            }
+    protected void drawSprite(GUI gui, GUIImage sprite, int xPos, int yPos) {
+        if (sprite != null) {
+            gui.drawImage(xPos, yPos, sprite);
         }
     }
 }
