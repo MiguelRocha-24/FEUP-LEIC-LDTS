@@ -14,6 +14,8 @@ public class GameController extends Controller<Level> {
     private final PlayerController playerController;
     private final InputHandler inputHandler;
     private final ScoreManager scoreManager;
+    private int minGeneratedRow;
+    private int maxGeneratedRow;
 
     public GameController(Level level, PlayerController playerController, InputHandler inputHandler,
             ScoreManager scoreManager, Map<Class<?>, LaneController> controllerMap) {
@@ -23,6 +25,9 @@ public class GameController extends Controller<Level> {
         this.playerController = playerController;
         this.inputHandler = inputHandler;
         this.scoreManager = scoreManager;
+
+        this.maxGeneratedRow = level.getGrid().getH() - 1;
+        this.minGeneratedRow = level.getGrid().getH() - 2;
     }
 
     @Override
@@ -56,11 +61,73 @@ public class GameController extends Controller<Level> {
         }
         if (level.isGameOver())
             return;
+
+        // Update Camera
+        Camera camera = level.getCamera();
+        Player player = level.getPlayer();
+
+        // Start camera on first movement
+        if (!camera.isMoving() && player.getPosition().getY() < level.getGrid().getH() - 2) {
+            camera.startMoving();
+        }
+
+        camera.update(player.getPosition().getY(), level.getGrid().getH());
+
+        // Check death condition (player below screen)
+        if (player.getPosition().getY() > camera.getY() + level.getGrid().getH()) {
+            level.setGameOver(true);
+        }
+
+        // Generate new lanes
+        // Generate new lanes
+        updateLanesGeneration();
+
         updateLanes();
         playerController.update();
         resolvePlatformPhysics();
         checkCollisions();
         scoreManager.updateScore();
+    }
+
+    private void updateLanesGeneration() {
+        Camera camera = level.getCamera();
+        int cameraTopRow = (int) camera.getY();
+        int generationBuffer = 6;
+        int targetMinRow = cameraTopRow - generationBuffer;
+
+
+        while (minGeneratedRow > targetMinRow) {
+            minGeneratedRow--;
+            generateLane(minGeneratedRow);
+        }
+
+        int cameraBottomRow = (int) (camera.getY() + level.getGrid().getH());
+        int cleanupThreshold = cameraBottomRow + 2;
+
+        while (maxGeneratedRow > cleanupThreshold) {
+            level.removeLane(maxGeneratedRow);
+            maxGeneratedRow--;
+        }
+    }
+
+    private void generateLane(int row) {
+        if (level.getLane(row) != null)
+            return;
+
+        Direction dir = (Math.abs(row) % 2 == 0) ? Direction.RIGHT : Direction.LEFT;
+        //aumenta dificuldade -> para ser ajustado
+        double speed = 0.05 + (Math.abs(row) * 0.0001);
+        double choseLane = Math.random();
+
+        Lane lane;
+        if (choseLane < 0.33) {
+            lane = new RoadLane(dir, speed, row);
+        } else if (choseLane < 0.66) {
+            lane = new River(row, dir, speed);
+        } else {
+            lane = new SafeLane(row, level.getGrid().getW(), true);
+        }
+        level.addLane(row, lane);
     }
 
     // Test the players current and target position against logs
@@ -103,8 +170,16 @@ public class GameController extends Controller<Level> {
     }
 
     public void updateLanes() {
-        for (Lane lane : level.getLanes()) {
-            getController(lane).update(lane, level);
+        int cameraY = (int) level.getCamera().getY();
+        int buffer = 6;
+        int startRow = cameraY - buffer;
+        int endRow = cameraY + level.getGrid().getH() + buffer;
+
+        for (int row = startRow; row <= endRow; row++) {
+            Lane lane = level.getLane(row);
+            if (lane != null) {
+                getController(lane).update(lane, level);
+            }
         }
     }
 }
