@@ -13,10 +13,10 @@ public class SafeLaneViewer extends SpriteViewer<SafeLane> {
     }
 
     @Override
-    public void draw(GUI gui, SafeLane lane, int tileSize) {
+    public void draw(GUI gui, SafeLane lane, int tileSize, int yPos) {
         GUIImage sprite = getSprite(gui);
         for (int i = 0; i < width; i++) {
-            drawSprite(gui, sprite, i * tileSize, lane.getRow() * tileSize);
+            drawSprite(gui, sprite, i * tileSize, yPos);
         }
     }
 }
