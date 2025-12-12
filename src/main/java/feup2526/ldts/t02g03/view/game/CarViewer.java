@@ -18,7 +18,7 @@ public class CarViewer extends SpriteViewer<Vehicle> {
     public void draw(GUI gui, Vehicle vehicle, int tileSize) {
         String path = (vehicle.getDirection() == Direction.LEFT) ? LEFT_SPRITE : RIGHT_SPRITE;
         GUIImage sprite = getSprite(gui, path);
-        drawSprite(gui, sprite, (int) (vehicle.getPosition().getX() * tileSize),
-                (int) (vehicle.getPosition().getY() * tileSize));
+        drawSprite(gui, sprite, (int) (vehicle.getPosition().getX() * tileSize) + 2,
+                (int) (vehicle.getPosition().getY() * tileSize) + 1);
     }
 }
