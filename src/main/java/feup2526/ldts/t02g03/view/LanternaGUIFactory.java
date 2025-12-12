@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public class LanternaStarter {
+public class LanternaGUIFactory implements GUIFactory {
     private final AWTTerminalFontConfiguration menuFontConfig;
     private final AWTTerminalFontConfiguration gameFontConfig;
     private final Font menuFont;
@@ -22,7 +22,7 @@ public class LanternaStarter {
     private static final int MENU_FONT_SIZE = 16;
     private static final int GAME_FONT_SIZE = 8;
 
-    public LanternaStarter() throws IOException, FontFormatException, URISyntaxException {
+    public LanternaGUIFactory() throws IOException, FontFormatException, URISyntaxException {
         URL resource = getClass().getClassLoader().getResource("square.ttf");
         File fontFile = new File(resource.toURI());
         Font baseFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
@@ -35,7 +35,8 @@ public class LanternaStarter {
         this.gameFontConfig = AWTTerminalFontConfiguration.newInstance(this.gameFont);
     }
 
-    public LanternaViewer createMenuViewer() throws IOException {
+    @Override
+    public GUI createMenuGUI() throws IOException {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle maxBounds = ge.getMaximumWindowBounds();
 
@@ -55,10 +56,11 @@ public class LanternaStarter {
         screen.setCursorPosition(null);
         screen.startScreen();
 
-        return new LanternaViewer(screen);
+        return new LanternaGUI(screen);
     }
 
-    public LanternaViewer createGameViewer() throws IOException {
+    @Override
+    public GUI createGameGUI() throws IOException {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle maxBounds = ge.getMaximumWindowBounds();
 
@@ -77,17 +79,19 @@ public class LanternaStarter {
         screen.setCursorPosition(null);
         screen.startScreen();
 
-        return new LanternaViewer(screen);
+        return new LanternaGUI(screen);
     }
 
-    public int getGridWidth(LanternaViewer viewer) {
-        int termWidth = viewer.getTerminalWidth();
+    @Override
+    public int getGridWidth(GUI gui) {
+        int termWidth = gui.getTerminalWidth();
         int gridWidth = termWidth / TILE_SIZE;
         return gridWidth;
     }
 
-    public int getGridHeight(LanternaViewer viewer) {
-        int termHeight = viewer.getTerminalHeight();
+    @Override
+    public int getGridHeight(GUI gui) {
+        int termHeight = gui.getTerminalHeight();
         int gridHeight = termHeight / TILE_SIZE;
         return gridHeight;
     }
