@@ -2,32 +2,25 @@ package feup2526.ldts.t02g03.view.game;
 
 import feup2526.ldts.t02g03.model.game.River;
 import feup2526.ldts.t02g03.model.game.Direction;
-import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.TextCharacter;
-
+import feup2526.ldts.t02g03.view.GUI;
+import feup2526.ldts.t02g03.view.GUIImage;
 
 public class RiverViewer extends SpriteViewer<River> {
     private final int width;
-    private TextCharacter[][] riverLeft;
-    private TextCharacter[][] riverRight;
+    private static final String LEFT_SPRITE = "docs/images/sprites/riverLeft.png";
+    private static final String RIGHT_SPRITE = "docs/images/sprites/riverRight.png";
 
     public RiverViewer(int width) {
-        super("docs/images/sprites/riverLeft.png");
+        super(LEFT_SPRITE);
         this.width = width;
-        riverLeft = loadSprite("docs/images/sprites/riverLeft.png");
-        riverRight = loadSprite("docs/images/sprites/riverRight.png");
     }
 
     @Override
-    public void draw(TextGraphics tg, River river, int tileSize) {
-        TextCharacter[][] spriteToDraw = sprite;
-        if (river.getDirection() == Direction.LEFT && riverLeft != null) {
-            spriteToDraw = riverLeft;
-        } else if (river.getDirection() == Direction.RIGHT && riverRight != null) {
-            spriteToDraw = riverRight;
-        }
+    public void draw(GUI gui, River river, int tileSize) {
+        String path = (river.getDirection() == Direction.LEFT) ? LEFT_SPRITE : RIGHT_SPRITE;
+        GUIImage sprite = getSprite(gui, path);
         for (int i = 0; i < width; i++) {
-            drawSprite(tg, spriteToDraw, i * tileSize, river.getRow() * tileSize);
+            drawSprite(gui, sprite, i * tileSize, river.getRow() * tileSize);
         }
     }
 }

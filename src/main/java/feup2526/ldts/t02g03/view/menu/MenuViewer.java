@@ -2,8 +2,8 @@ package feup2526.ldts.t02g03.view.menu;
 
 import feup2526.ldts.t02g03.model.menu.Menu;
 import feup2526.ldts.t02g03.model.menu.User;
+import feup2526.ldts.t02g03.view.GUI;
 import feup2526.ldts.t02g03.view.Viewer;
-import feup2526.ldts.t02g03.view.LanternaViewer;
 import java.io.IOException;
 import java.util.List;
 
@@ -13,9 +13,7 @@ public class MenuViewer extends Viewer<Menu> {
     }
 
     @Override
-    public void draw(LanternaViewer gui) throws IOException {
-        gui.clear();
-
+    protected void drawElements(GUI gui) throws IOException {
         int terminalWidth = gui.getTerminalWidth();
         int terminalHeight = gui.getTerminalHeight();
 
@@ -66,6 +64,5 @@ public class MenuViewer extends Viewer<Menu> {
                         getModel().isSelected(i) ? "#FFD700" : "#FFFFFF");
             }
         }
-        gui.refresh();
     }
 }
