@@ -1,9 +1,8 @@
 package feup2526.ldts.t02g03.view.game;
 
-import com.googlecode.lanterna.graphics.TextGraphics;
-import feup2526.ldts.t02g03.model.game.*;
-import feup2526.ldts.t02g03.view.LanternaViewer;
+import feup2526.ldts.t02g03.view.GUI;
 import feup2526.ldts.t02g03.view.Viewer;
+import feup2526.ldts.t02g03.model.game.*;
 
 import java.io.IOException;
 
@@ -34,62 +33,57 @@ public class GameViewer extends Viewer<Level> {
     }
 
     @Override
-    public void draw(LanternaViewer gui) throws IOException {
-        gui.clear();
-        TextGraphics tg = gui.createTextGraphics();
-
-        drawLanes(tg, getModel());
-        drawPlayer(tg, getModel().getPlayer());
+    protected void drawElements(GUI gui) throws IOException {
+        drawLanes(gui, getModel());
+        drawPlayer(gui, getModel().getPlayer());
 
         int score = getModel().getRunScore().getCount();
-        int scoreWidth = numberViewer.getWidth(score);
+        int scoreWidth = numberViewer.getWidth(gui, score);
         int x = gui.getTerminalWidth() - scoreWidth - 1;
-        numberViewer.draw(tg, score, x, 1);
-
-        gui.refresh();
+        numberViewer.draw(gui, score, x, 1);
     }
 
-    private void drawLanes(TextGraphics tg, Level level) {
+    private void drawLanes(GUI gui, Level level) {
         for (Lane lane : level.getLanes()) {
             if (lane instanceof RoadLane) {
-                roadViewer.draw(tg, (RoadLane) lane, TILE_SIZE);
-                drawVehicles(tg, (RoadLane) lane);
+                roadViewer.draw(gui, (RoadLane) lane, TILE_SIZE);
+                drawVehicles(gui, (RoadLane) lane);
             } else if (lane instanceof River) {
-                riverViewer.draw(tg, (River) lane, TILE_SIZE);
-                drawLogs(tg, (River) lane);
+                riverViewer.draw(gui, (River) lane, TILE_SIZE);
+                drawLogs(gui, (River) lane);
             } else if (lane instanceof SafeLane) {
-                safeLaneViewer.draw(tg, (SafeLane) lane, TILE_SIZE);
-                drawTrees(tg, (SafeLane) lane);
-                drawCoins(tg, (SafeLane) lane);
+                safeLaneViewer.draw(gui, (SafeLane) lane, TILE_SIZE);
+                drawTrees(gui, (SafeLane) lane);
+                drawCoins(gui, (SafeLane) lane);
             }
         }
     }
 
-    private void drawVehicles(TextGraphics tg, RoadLane lane) {
+    private void drawVehicles(GUI gui, RoadLane lane) {
         for (Vehicle v : lane.getVehicles()) {
-            carViewer.draw(tg, v, TILE_SIZE);
+            carViewer.draw(gui, v, TILE_SIZE);
         }
     }
 
-    private void drawLogs(TextGraphics tg, River river) {
+    private void drawLogs(GUI gui, River river) {
         for (Log l : river.getLogs()) {
-            logViewer.draw(tg, l, TILE_SIZE);
+            logViewer.draw(gui, l, TILE_SIZE);
         }
     }
 
-    private void drawTrees(TextGraphics tg, SafeLane lane) {
+    private void drawTrees(GUI gui, SafeLane lane) {
         for (Tree t : lane.getTrees()) {
-            treeViewer.draw(tg, t, TILE_SIZE);
+            treeViewer.draw(gui, t, TILE_SIZE);
         }
     }
 
-    private void drawCoins(TextGraphics tg, SafeLane lane) {
+    private void drawCoins(GUI gui, SafeLane lane) {
         for (Coin c : lane.getCoins()) {
-            coinViewer.draw(tg, c, TILE_SIZE);
+            coinViewer.draw(gui, c, TILE_SIZE);
         }
     }
 
-    private void drawPlayer(TextGraphics tg, Player player) {
-        playerViewer.draw(tg, player, TILE_SIZE);
+    private void drawPlayer(GUI gui, Player player) {
+        playerViewer.draw(gui, player, TILE_SIZE);
     }
 }

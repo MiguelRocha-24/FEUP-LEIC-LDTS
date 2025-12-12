@@ -1,32 +1,24 @@
 package feup2526.ldts.t02g03.view.game;
 
 import feup2526.ldts.t02g03.model.game.Vehicle;
-import com.googlecode.lanterna.graphics.TextGraphics;
+import feup2526.ldts.t02g03.view.GUI;
+import feup2526.ldts.t02g03.view.GUIImage;
 
 import feup2526.ldts.t02g03.model.game.Direction;
-import com.googlecode.lanterna.TextCharacter;
 
 public class CarViewer extends SpriteViewer<Vehicle> {
-    private TextCharacter[][] carLeft;
-    private TextCharacter[][] carRight;
+    private static final String LEFT_SPRITE = "docs/images/sprites/carLeft.png";
+    private static final String RIGHT_SPRITE = "docs/images/sprites/carRight.png";
 
     public CarViewer() {
-        super("docs/images/sprites/carLeft.png"); // Default/Fallback
-        carLeft = loadSprite("docs/images/sprites/carLeft.png");
-        carRight = loadSprite("docs/images/sprites/carRight.png");
+        super(LEFT_SPRITE);
     }
 
     @Override
-    public void draw(TextGraphics tg, Vehicle vehicle, int tileSize) {
-        TextCharacter[][] spriteToDraw = sprite;
-        if (vehicle.getDirection() == Direction.LEFT) {
-            spriteToDraw = carLeft;
-        } else if (vehicle.getDirection() == Direction.RIGHT) {
-            spriteToDraw = carRight;
-        }
-
-        drawSprite(tg, spriteToDraw, (int) (vehicle.getPosition().getX() * tileSize),
+    public void draw(GUI gui, Vehicle vehicle, int tileSize) {
+        String path = (vehicle.getDirection() == Direction.LEFT) ? LEFT_SPRITE : RIGHT_SPRITE;
+        GUIImage sprite = getSprite(gui, path);
+        drawSprite(gui, sprite, (int) (vehicle.getPosition().getX() * tileSize),
                 (int) (vehicle.getPosition().getY() * tileSize));
-
     }
 }

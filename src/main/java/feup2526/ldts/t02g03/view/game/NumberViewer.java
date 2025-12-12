@@ -1,8 +1,7 @@
 package feup2526.ldts.t02g03.view.game;
 
-import com.googlecode.lanterna.TextCharacter;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
+import feup2526.ldts.t02g03.view.GUI;
+import feup2526.ldts.t02g03.view.GUIImage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -12,85 +11,52 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NumberViewer {
-    private final Map<Integer, TextCharacter[][]> numberSprites;
+    private final Map<Integer, GUIImage> numberSprites;
 
     public NumberViewer() {
         this.numberSprites = new HashMap<>();
-        loadSprites();
     }
 
-    private void loadSprites() {
-        for (int i = 0; i <= 9; i++) {
+    private GUIImage getSprite(GUI gui, int number) {
+        if (!numberSprites.containsKey(number)) {
             try {
-                BufferedImage image = ImageIO.read(new File("docs/images/sprites/numbers/nr" + i + ".png"));
-                numberSprites.put(i, convertToTextCharacters(image));
+                BufferedImage image = ImageIO.read(new File("docs/images/sprites/numbers/nr" + number + ".png"));
+                GUIImage guiImage = convertToGUIImage(gui, image);
+                numberSprites.put(number, guiImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        return numberSprites.get(number);
     }
 
-    private TextCharacter[][] convertToTextCharacters(BufferedImage sprite) {
-        int width = sprite.getWidth();
-        int height = sprite.getHeight();
-        TextCharacter[][] characters = new TextCharacter[width][height];
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                int a = sprite.getRGB(x, y);
-                int alpha = (a >> 24) & 0xff;
-                int red = (a >> 16) & 255;
-                int green = (a >> 8) & 255;
-                int blue = a & 255;
-
-                if (alpha != 0) {
-                    characters[x][y] = TextCharacter.fromCharacter(' ',
-                            new TextColor.RGB(red, green, blue), new TextColor.RGB(red, green, blue))[0];
-                } else {
-                    characters[x][y] = null;
-                }
-            }
-        }
-        return characters;
+    private GUIImage convertToGUIImage(GUI gui, BufferedImage sprite) {
+        return SpriteViewer.convertToGUIImage(gui, sprite);
     }
 
-    public int getWidth(int number) {
+    public int getWidth(GUI gui, int number) {
         String numberStr = String.valueOf(number);
         int width = 0;
         for (char digitChar : numberStr.toCharArray()) {
             int digit = Character.getNumericValue(digitChar);
-            TextCharacter[][] sprite = numberSprites.get(digit);
+            GUIImage sprite = getSprite(gui, digit);
             if (sprite != null) {
-                width += sprite.length;
+                width += sprite.getWidth();
             }
         }
         return width;
     }
 
-    public void draw(TextGraphics tg, int number, int x, int y) {
+    public void draw(GUI gui, int number, int x, int y) {
         String numberStr = String.valueOf(number);
         int currentX = x;
 
         for (char digitChar : numberStr.toCharArray()) {
             int digit = Character.getNumericValue(digitChar);
-            TextCharacter[][] sprite = numberSprites.get(digit);
+            GUIImage sprite = getSprite(gui, digit);
             if (sprite != null) {
-                drawSprite(tg, sprite, currentX, y);
-                currentX += sprite.length;
-            }
-        }
-    }
-
-    private void drawSprite(TextGraphics graphics, TextCharacter[][] sprite, int xPos, int yPos) {
-        if (sprite == null)
-            return;
-
-        for (int x = 0; x < sprite.length; x++) {
-            for (int y = 0; y < sprite[0].length; y++) {
-                TextCharacter c = sprite[x][y];
-                if (c != null) {
-                    graphics.setCharacter(xPos + x, yPos + y, c);
-                }
+                gui.drawImage(currentX, y, sprite);
+                currentX += sprite.getWidth();
             }
         }
     }
