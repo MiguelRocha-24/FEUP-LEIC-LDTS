@@ -12,12 +12,12 @@ public class ShopState extends State<Shop> {
     }
 
     @Override
-    protected Viewer<Shop> getViewer() {
+    protected Viewer<Shop> createViewer() {
         return new ShopViewer(getModel());
     }
 
     @Override
-    protected Controller<Shop> getController() {
+    protected Controller<Shop> createController() {
         return new ShopController(getModel());
     }
 }
