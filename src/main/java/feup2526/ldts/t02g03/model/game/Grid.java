@@ -14,6 +14,6 @@ public final class Grid {
     public int getH() {return this.h;}
 
     public boolean isInside(Position p) {
-        return (p.getX() >= 0) && (p.getX() < this.w) && (p.getY() >= 0) && (p.getY() < this.h);
+        return (p.getX() >= 0) && (p.getX() < this.w);
     }
 }

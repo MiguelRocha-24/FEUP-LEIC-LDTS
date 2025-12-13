@@ -10,9 +10,8 @@ public class LogViewer extends SpriteViewer<Log> {
     }
 
     @Override
-    public void draw(GUI gui, Log log, int tileSize) {
+    public void draw(GUI gui, Log log, int tileSize, int yPos) {
         GUIImage sprite = getSprite(gui);
-        drawSprite(gui, sprite, (int) (log.getPosition().getX() * tileSize),
-                (int) (log.getPosition().getY() * tileSize)+3);
+        drawSprite(gui, sprite, (int) (log.getPosition().getX() * tileSize), yPos + 3);
     }
 }

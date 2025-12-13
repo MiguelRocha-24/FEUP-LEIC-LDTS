@@ -16,11 +16,11 @@ public class RiverViewer extends SpriteViewer<River> {
     }
 
     @Override
-    public void draw(GUI gui, River river, int tileSize) {
+    public void draw(GUI gui, River river, int tileSize, int yPos) {
         String path = (river.getDirection() == Direction.LEFT) ? LEFT_SPRITE : RIGHT_SPRITE;
         GUIImage sprite = getSprite(gui, path);
         for (int i = 0; i < width; i++) {
-            drawSprite(gui, sprite, i * tileSize, river.getRow() * tileSize);
+            drawSprite(gui, sprite, i * tileSize, yPos);
         }
     }
 }

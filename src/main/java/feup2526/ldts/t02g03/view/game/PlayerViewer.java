@@ -10,9 +10,8 @@ public class PlayerViewer extends SpriteViewer<Player> {
     }
 
     @Override
-    public void draw(GUI gui, Player player, int tileSize) {
+    public void draw(GUI gui, Player player, int tileSize, int yPos) {
         GUIImage sprite = getSprite(gui);
-        drawSprite(gui, sprite, (int) (player.getPosition().getX() * tileSize),
-                (int) (player.getPosition().getY() * tileSize));
+        drawSprite(gui, sprite, (int) (player.getPosition().getX() * tileSize), yPos - 1);
     }
 }
