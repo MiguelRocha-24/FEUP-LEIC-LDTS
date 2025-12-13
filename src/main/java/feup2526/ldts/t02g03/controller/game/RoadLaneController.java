@@ -43,24 +43,32 @@ public class RoadLaneController extends BaseLaneController {
 
     private void spawnVehicles(RoadLane lane, int gridWidth) {
         if (rng.nextDouble() < spawnChance) {
+            // Determine vehicle type first to know the width
+            boolean isBus = rng.nextDouble() < 0.1;
+            double vehicleWidth = isBus ? 2.6 : 1.8;
+
+            double spawnX;
+            if (lane.getDirection() == Direction.RIGHT) {
+                spawnX = -vehicleWidth-1;
+            } else {
+                spawnX = gridWidth+1;
+            }
+
             // Check if there is space to spawn a new vehicle
             boolean canSpawn = true;
-            double spawnX = (lane.getDirection() == Direction.RIGHT) ? 0 : gridWidth - 1;
-
             for (Vehicle v : lane.getVehicles()) {
-                if (Math.abs(v.getPosition().getX() - spawnX) < 2.0) { // Minimum distance between vehicles
+                if (Math.abs(v.getPosition().getX() - spawnX) < vehicleWidth + 2.0) {
                     canSpawn = false;
                     break;
                 }
             }
 
             if (canSpawn) {
-                // Randomly choose a vehicle type (Car or Bus)
                 Vehicle newVehicle;
-                if (rng.nextBoolean()) {
-                    newVehicle = new Car(new Position(spawnX, lane.getRow()), lane.getDirection());
-                } else {
+                if (isBus) {
                     newVehicle = new Bus(new Position(spawnX, lane.getRow()), lane.getDirection());
+                } else {
+                    newVehicle = new Car(new Position(spawnX, lane.getRow()), lane.getDirection());
                 }
                 lane.addVehicle(newVehicle);
             }
@@ -70,7 +78,7 @@ public class RoadLaneController extends BaseLaneController {
     private void removeOffScreenVehicles(RoadLane lane, int gridWidth) {
         lane.getVehicles().removeIf(v -> {
             double x = v.getPosition().getX();
-            return x < -2 || x > gridWidth + 2;
+            return x < -4 || x > gridWidth + 4;
         });
     }
 
