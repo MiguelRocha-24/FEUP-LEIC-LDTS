@@ -37,7 +37,7 @@ public class ShopViewer extends Viewer<Shop> {
         gui.drawText(nameX, nameY, skinName, "#FFFFFF");
 
         try {
-            GUIImage skinImage = getSprite(gui, currentSkin.getName());
+            GUIImage skinImage = getSprite(gui, currentSkin.getName() + "Right");
             if (skinImage != null) {
                 int imgX = (terminalWidth - skinImage.getWidth()) / 2;
                 int imgY = nameY + 2;
@@ -59,7 +59,7 @@ public class ShopViewer extends Viewer<Shop> {
         } else {
             priceText = currentSkin.getPrice() + " COINS";
             if (user.getCoins() >= currentSkin.getPrice()) {
-                priceColor = "#FFFFFF";
+                priceColor = "#00FF00";
             } else {
                 priceColor = "#FF0000"; // Red if can't afford
             }

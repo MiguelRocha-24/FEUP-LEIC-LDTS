@@ -108,6 +108,8 @@ public class GameViewer extends Viewer<Level> {
     private void drawPlayer(GUI gui, Player player) {
         double cameraY = getModel().getCamera().getY();
         int drawY = (int) ((player.getPosition().getY() - cameraY) * TILE_SIZE);
-        playerViewer.draw(gui, player, TILE_SIZE, drawY);
+        boolean isCollision = getModel().isCollisionDetected();
+        long collisionTime = getModel().getCollisionTime();
+        playerViewer.draw(gui, player, TILE_SIZE, drawY, isCollision, collisionTime);
     }
 }

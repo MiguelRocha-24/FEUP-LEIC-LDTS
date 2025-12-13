@@ -37,10 +37,19 @@ public class LanternaGUIFactory implements GUIFactory {
 
     @Override
     public GUI createMenuGUI() throws IOException {
+        return createGUI(menuFont, menuFontConfig);
+    }
+
+    @Override
+    public GUI createGameGUI() throws IOException {
+        return createGUI(gameFont, gameFontConfig);
+    }
+
+    private GUI createGUI(Font font, AWTTerminalFontConfiguration fontConfig) throws IOException {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle maxBounds = ge.getMaximumWindowBounds();
 
-        FontMetrics fm = new Canvas().getFontMetrics(menuFont);
+        FontMetrics fm = new Canvas().getFontMetrics(font);
         int charWidth = fm.charWidth('W');
         int charHeight = fm.getHeight();
         int cols = maxBounds.width / charWidth;
@@ -48,30 +57,7 @@ public class LanternaGUIFactory implements GUIFactory {
 
         Terminal terminal = new DefaultTerminalFactory()
                 .setInitialTerminalSize(new TerminalSize(cols, rows))
-                .setTerminalEmulatorFontConfiguration(menuFontConfig)
-                .setForceAWTOverSwing(true)
-                .createTerminal();
-
-        Screen screen = new TerminalScreen(terminal);
-        screen.setCursorPosition(null);
-        screen.startScreen();
-
-        return new LanternaGUI(screen);
-    }
-
-    @Override
-    public GUI createGameGUI() throws IOException {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        Rectangle maxBounds = ge.getMaximumWindowBounds();
-
-        FontMetrics fm = new Canvas().getFontMetrics(gameFont);
-        int charSize = fm.charWidth('W');
-        int cols = maxBounds.width / charSize;
-        int rows = maxBounds.height / charSize;
-
-        Terminal terminal = new DefaultTerminalFactory()
-                .setInitialTerminalSize(new TerminalSize(cols, rows))
-                .setTerminalEmulatorFontConfiguration(gameFontConfig)
+                .setTerminalEmulatorFontConfiguration(fontConfig)
                 .setForceAWTOverSwing(true)
                 .createTerminal();
 
