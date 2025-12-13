@@ -1,6 +1,5 @@
 package feup2526.ldts.t02g03.controller.game;
 
-import feup2526.ldts.t02g03.model.game.HighestScore;
 import feup2526.ldts.t02g03.model.game.Level;
 import feup2526.ldts.t02g03.model.game.RunScore;
 import feup2526.ldts.t02g03.model.menu.User;
@@ -9,7 +8,6 @@ import feup2526.ldts.t02g03.model.menu.UserManager;
 public class ScoreManager {
     private final Level level;
     private final RunScore runScore;
-    private final HighestScore highestScore;
     private final UserManager userManager;
     private int minRowReached;
 
@@ -17,7 +15,6 @@ public class ScoreManager {
         this.level = level;
         this.userManager = userManager;
         this.runScore = level.getRunScore();
-        this.highestScore = new HighestScore();
         this.minRowReached = (int) level.getPlayer().getPosition().getY();
     }
 
@@ -46,9 +43,5 @@ public class ScoreManager {
 
     public RunScore getRunScore() {
         return runScore;
-    }
-
-    public HighestScore getHighestScore() {
-        return highestScore;
     }
 }
