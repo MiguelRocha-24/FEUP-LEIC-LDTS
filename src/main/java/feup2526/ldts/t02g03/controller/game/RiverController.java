@@ -95,7 +95,7 @@ public class RiverController extends BaseLaneController {
         for (Log log : river.getLogs()) {
             double lMin = log.getPosition().getX();
             double lMax = lMin + log.getWidth();
-            if (centered < lMax && centered > lMin) {
+            if (centered <= lMax && centered >= lMin) {
                 return log;
             }
         }
@@ -131,14 +131,14 @@ public class RiverController extends BaseLaneController {
         Log log = getLogAt(river, position);
 
         if (log != null) {
-            double speed = river.getSpeed();
-            if (river.getDirection() == Direction.LEFT) {
-                speed = -speed;
-            }
+            // Center position on the log
+            double centeredX = log.getPosition().getX();
+            
             if (isPlayerBody) {
-                Position current = level.getPlayer().getPosition();
-                Position newPos = new Position(current.getX() + speed, current.getY());
+                // Keep player centered on the log
+                Position newPos = new Position(centeredX, level.getPlayer().getPosition().getY());
                 level.getPlayer().setPosition(newPos);
+
 
                 // Check if player went off-screen while on log
                 Player player = level.getPlayer();
@@ -146,8 +146,9 @@ public class RiverController extends BaseLaneController {
                     level.handleCollision();
                 }
             } else {
+                // Keep target position centered on the log too
                 Position target = level.getPlayer().getTargetPosition();
-                level.getPlayer().setTargetPosition(new Position(target.getX() + speed, target.getY()));
+                level.getPlayer().setTargetPosition(new Position(centeredX, target.getY()));
             }
         } else if (isPlayerBody) {
             if (level.getPlayer().getPosition().distance(level.getPlayer().getTargetPosition()) < 0.2) {
