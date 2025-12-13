@@ -9,12 +9,21 @@ import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LanternaGUI implements GUI {
     private final Screen screen;
+    private final TextGraphics tg;
+    private final Map<String, TextColor> colorCache = new HashMap<>();
 
     public LanternaGUI(Screen screen) {
         this.screen = screen;
+        this.tg = screen.newTextGraphics();
+    }
+
+    private TextColor getCachedColor(String color) {
+        return colorCache.computeIfAbsent(color, TextColor.Factory::fromString);
     }
 
     @Override
@@ -27,8 +36,6 @@ public class LanternaGUI implements GUI {
         if (image instanceof LanternaGUIImage) {
             LanternaGUIImage lanternaImage = (LanternaGUIImage) image;
             TextImage textImage = lanternaImage.getTextImage();
-            TextGraphics tg = screen.newTextGraphics();
-
             if (!lanternaImage.hasTransparency()) {
                 tg.drawImage(new TerminalPosition(x, y), textImage);
             } else {
@@ -57,8 +64,7 @@ public class LanternaGUI implements GUI {
 
     @Override
     public void drawText(int x, int y, String text, String color) {
-        TextGraphics tg = screen.newTextGraphics();
-        tg.setForegroundColor(com.googlecode.lanterna.TextColor.Factory.fromString(color));
+        tg.setForegroundColor(getCachedColor(color));
         tg.putString(x, y, text);
     }
 
