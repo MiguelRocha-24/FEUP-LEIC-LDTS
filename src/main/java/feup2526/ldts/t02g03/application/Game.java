@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import feup2526.ldts.t02g03.model.menu.User;
 import feup2526.ldts.t02g03.states.NewUserState;
+import feup2526.ldts.t02g03.states.ShopState;
 
 public class Game {
     private final GUIFactory starter;
@@ -19,13 +20,10 @@ public class Game {
     private State<?> state;
     private User currentUser;
 
-    private final MenuState menuState;
-
     public Game(LanternaGUIFactory guiFactory) throws IOException, FontFormatException, URISyntaxException {
         this.starter = guiFactory;
         this.gui = guiFactory.createMenuGUI();
-        this.menuState = new MenuState(new Menu());
-        this.state = this.menuState;
+        this.state = new MenuState(new Menu());
     }
 
     public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
@@ -41,8 +39,8 @@ public class Game {
         boolean currentIsGame = (this.state instanceof GameState);
         boolean nextIsGame = (state instanceof GameState);
 
-        boolean currentIsMenu = (this.state instanceof MenuState || this.state instanceof NewUserState);
-        boolean nextIsMenu = (state instanceof MenuState || state instanceof NewUserState);
+        boolean currentIsMenu = (this.state instanceof MenuState || this.state instanceof NewUserState || this.state instanceof ShopState);
+        boolean nextIsMenu = (state instanceof MenuState || state instanceof NewUserState || state instanceof ShopState);
 
         try {
             if (this.state != null) {
@@ -83,7 +81,15 @@ public class Game {
     }
 
     public void returnToMenu() {
-        setState(menuState);
+        Menu menu = new Menu();
+        if (currentUser != null) {
+            feup2526.ldts.t02g03.model.menu.UserManager um = menu.getUserManager();
+            feup2526.ldts.t02g03.model.menu.User freshUser = um.getUser(currentUser.getName());
+            if (freshUser != null) {
+                menu.setCurrentUser(freshUser);
+            }
+        }
+        setState(new MenuState(menu));
     }
 
     public void startGameState() {

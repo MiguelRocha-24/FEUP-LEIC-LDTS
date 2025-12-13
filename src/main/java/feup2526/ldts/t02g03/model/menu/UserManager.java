@@ -25,12 +25,25 @@ public class UserManager {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 3) {
-                    String name = parts[0];
-                    int coins = Integer.parseInt(parts[1]);
-                    int highScore = Integer.parseInt(parts[2]);
-                    users.add(new User(name, coins, highScore));
+                String[] parts = line.split(",(?![^\\[]*\\])"); // Split by comma, but not inside brackets
+                if (parts.length == 5) {
+                    String name = parts[0].trim();
+                    int coins = Integer.parseInt(parts[1].trim());
+                    int highScore = Integer.parseInt(parts[2].trim());
+                    String equippedSkin = parts[3].trim();
+                    String skinsString = parts[4].trim();
+                    ArrayList<String> ownedSkins = new ArrayList<>();
+                    if (skinsString.startsWith("[") && skinsString.endsWith("]")) {
+                        String skinsContent = skinsString.substring(1, skinsString.length() - 1);
+                        if (!skinsContent.isEmpty()) {
+                            String[] skinArray = skinsContent.split(",");
+                            for (String skin : skinArray) {
+                                ownedSkins.add(skin.trim());
+                            }
+                        }
+                    }
+
+                    users.add(new User(name, coins, highScore, equippedSkin, ownedSkins));
                 }
             }
         } catch (IOException e) {
@@ -41,7 +54,8 @@ public class UserManager {
     public void saveUsers() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             for (User user : users) {
-                bw.write(user.getName() + "," + user.getCoins() + "," + user.getHighScore());
+                String skinsFormatted = "[" + String.join(",", user.getOwnedSkins()) + "]";
+                bw.write(user.getName() + "," + user.getCoins() + "," + user.getHighScore() + "," + user.getEquippedSkin() + "," + skinsFormatted);
                 bw.newLine();
             }
         } catch (IOException e) {
@@ -60,7 +74,9 @@ public class UserManager {
                 return;
             }
         }
-        users.add(new User(name, 0, 0));
+        ArrayList<String> defaultSkins = new ArrayList<>();
+        defaultSkins.add("chicken");
+        users.add(new User(name, 0, 0,"chicken",defaultSkins));
         saveUsers();
     }
 
@@ -69,6 +85,8 @@ public class UserManager {
             if (user.getName().equals(updatedUser.getName())) {
                 user.setCoins(updatedUser.getCoins());
                 user.setHighScore(updatedUser.getHighScore());
+                user.setEquippedSkin(updatedUser.getEquippedSkin());
+                user.setOwnedSkins(updatedUser.getOwnedSkins());
                 saveUsers();
                 return;
             }

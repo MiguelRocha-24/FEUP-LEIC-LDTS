@@ -12,7 +12,7 @@ public class Menu {
     private User currentUser;
 
     public Menu() {
-        this.entries = Arrays.asList("Start", "Change User", "Exit");
+        this.entries = Arrays.asList("Start", "Shop", "Change User", "Exit");
         this.userManager = new UserManager();
         if (!userManager.getUsers().isEmpty()) {
             this.currentUser = userManager.getUsers().get(0);
