@@ -11,9 +11,9 @@ public class Shop {
     public Shop(User user) {
         this.skins = new ArrayList<Skin>();
         skins.add(new Skin("chicken",0));
-        skins.add(new Skin("duck",10));
-        skins.add(new Skin("frog",50));
-        skins.add(new Skin("pikachu",100));
+        skins.add(new Skin("frog",10));
+        skins.add(new Skin("dog",50));
+        skins.add(new Skin("rabbit",100));
         this.user = user;
     }
 
