@@ -5,8 +5,20 @@ import feup2526.ldts.t02g03.view.GUI;
 import feup2526.ldts.t02g03.view.GUIImage;
 
 public class PlayerViewer extends SpriteViewer<Player> {
+    private String skinName;
+
     public PlayerViewer() {
-        super("docs/images/sprites/chicken-1.png");
+        super("docs/images/sprites/chicken.png");
+        this.skinName = "chicken";
+    }
+
+    public void setSkinName(String skinName) {
+        this.skinName = skinName;
+    }
+
+    @Override
+    protected GUIImage getSprite(GUI gui) {
+        return super.getSprite(gui, "docs/images/sprites/" + skinName + ".png");
     }
 
     @Override
