@@ -137,7 +137,14 @@ public class RiverController extends BaseLaneController {
             }
             if (isPlayerBody) {
                 Position current = level.getPlayer().getPosition();
-                level.getPlayer().setPosition(new Position(current.getX() + speed, current.getY()));
+                Position newPos = new Position(current.getX() + speed, current.getY());
+                level.getPlayer().setPosition(newPos);
+
+                // Check if player went off-screen while on log
+                Player player = level.getPlayer();
+                if (player.getPosition().getX() < -1 || player.getPosition().getX() >= level.getGrid().getW()) {
+                    level.handleCollision();
+                }
             } else {
                 Position target = level.getPlayer().getTargetPosition();
                 level.getPlayer().setTargetPosition(new Position(target.getX() + speed, target.getY()));

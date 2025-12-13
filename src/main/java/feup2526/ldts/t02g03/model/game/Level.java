@@ -32,7 +32,7 @@ public class Level {
         // Generate initial safe zone
         for (int i = 0; i < 2; i++) {
             int row = grid.getH() - 1 - i;
-            SafeLane lane = new SafeLane(row, grid.getW(), i == 0);
+            SafeLane lane = new SafeLane(row, grid.getW(), false); 
             if (i == 0) {
                 for (int x = 0; x < grid.getW(); x++) {
                     lane.addTree(new Tree(new Position(x, row)));

@@ -17,7 +17,7 @@ public class SafeLane extends Lane {
                     this.addTree(new Tree(new Position(x, row)));
                 }
             }
-            if (Math.random() < 0.25) {
+            if (Math.random() < 0.75) {
                 List<Integer> emptySpots = new ArrayList<>();
                 for (int x = 0; x < width; x++) {
                     boolean occupied = false;
