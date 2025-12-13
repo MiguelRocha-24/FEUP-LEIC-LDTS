@@ -32,6 +32,10 @@ public class GameViewer extends Viewer<Level> {
         this.numberViewer = new NumberViewer();
     }
 
+    public void setPlayerSkin(String skin) {
+        playerViewer.setSkinName(skin);
+    }
+
     @Override
     protected void drawElements(GUI gui) throws IOException {
         drawLanes(gui, getModel());

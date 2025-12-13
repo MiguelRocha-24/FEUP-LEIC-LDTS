@@ -2,21 +2,18 @@ package feup2526.ldts.t02g03.model.menu;
 
 public class Skin {
     private String name;
-    private int cost;
+    private int price;
 
-    public Skin(String name, int cost) {
+    public Skin(String name, int price) {
         this.name = name;
-        this.cost = cost;
+        this.price = price;
     }
 
     public String getName() {return name;}
 
-    public int getCost() {return cost;}
+    public int getPrice() {return price;}
 
     public void setName(String name) {this.name = name;}
 
-    public void setCost(int cost) {this.cost = cost;}
-
-    @Override
-    public String toString() {return String.format("%s C:%d", name, cost);}
+    public void setPrice(int price) {this.price = price;}
 }

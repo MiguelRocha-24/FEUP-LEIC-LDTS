@@ -63,6 +63,8 @@ public class MenuController extends Controller<Menu> {
                     }
                     if (getModel().isSelected("Change User"))
                         getModel().setUserListActive(true);
+                    if (getModel().isSelected("Shop"))
+                        game.setState(new feup2526.ldts.t02g03.states.ShopState(new feup2526.ldts.t02g03.model.menu.Shop(getModel().getCurrentUser())));
                     break;
                 case EOF:
                     game.setState(null);

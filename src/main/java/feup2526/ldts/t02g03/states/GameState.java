@@ -13,9 +13,14 @@ import java.util.*;
 
 public class GameState extends State<Level> {
         private GameController controller;
+        private GameViewer viewer;
 
         public GameState(Game game) {
                 super(new Level(game.getTerminalGridWidth() + 1, game.getTerminalGridHeight()));
+
+                if (viewer != null && game.getCurrentUser() != null) {
+                        viewer.setPlayerSkin(game.getCurrentUser().getEquippedSkin());
+                }
 
                 Map<Class<?>, LaneController> controllerMap = new HashMap<>();
                 controllerMap.put(RoadLane.class,
@@ -39,7 +44,8 @@ public class GameState extends State<Level> {
 
         @Override
         protected Viewer<Level> getViewer() {
-                return new GameViewer(getModel());
+                viewer = new GameViewer(getModel());
+                return viewer;
         }
 
         @Override
