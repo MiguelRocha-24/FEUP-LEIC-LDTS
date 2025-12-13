@@ -45,9 +45,14 @@ public class GameState extends State<Level> {
                         InputHandler inputHandler = new InputHandler(getModel(), playerController, controllerMap);
                         UserManager userManager = new UserManager();
                         ScoreManager scoreManager = new ScoreManager(getModel(), userManager);
+                        LaneGenerationManager laneGenerationManager = new LaneGenerationManager(getModel());
+                        PhysicsManager physicsManager = new PhysicsManager(getModel(), controllerMap);
+                        CollisionManager collisionManager = new CollisionManager(getModel(), controllerMap);
+                        CameraManager cameraManager = new CameraManager(getModel());
 
                         controller = new GameController(getModel(), playerController, inputHandler, scoreManager,
-                                        controllerMap);
+                                        controllerMap, laneGenerationManager, physicsManager, collisionManager,
+                                        cameraManager);
                         // Pre-generate lanes
                         for (int i = 0; i < 300; i++) {
                                 controller.update();
