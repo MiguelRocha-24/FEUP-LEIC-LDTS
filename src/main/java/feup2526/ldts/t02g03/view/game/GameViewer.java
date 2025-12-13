@@ -16,6 +16,7 @@ public class GameViewer extends Viewer<Level> {
     private final TreeViewer treeViewer;
     private final CoinViewer coinViewer;
     private final NumberViewer numberViewer;
+    private final BusViewer busViewer;
     private static final int TILE_SIZE = 16;
 
     public GameViewer(Level model) {
@@ -30,6 +31,7 @@ public class GameViewer extends Viewer<Level> {
         this.treeViewer = new TreeViewer();
         this.coinViewer = new CoinViewer();
         this.numberViewer = new NumberViewer();
+        this.busViewer = new BusViewer();
     }
 
     public void setPlayerSkin(String skin) {
@@ -77,7 +79,11 @@ public class GameViewer extends Viewer<Level> {
 
     private void drawVehicles(GUI gui, RoadLane lane, int yPos) {
         for (Vehicle v : lane.getVehicles()) {
-            carViewer.draw(gui, v, TILE_SIZE, yPos);
+            if (v instanceof Car) {
+                carViewer.draw(gui, (Car) v, TILE_SIZE, yPos);
+            } else if (v instanceof Bus) {
+                busViewer.draw(gui, (Bus) v, TILE_SIZE, yPos);
+            }
         }
     }
 
