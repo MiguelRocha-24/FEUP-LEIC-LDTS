@@ -6,13 +6,12 @@ import feup2526.ldts.t02g03.view.GUIImage;
 
 public class LogViewer extends SpriteViewer<Log> {
     public LogViewer() {
-        super("docs/images/sprites/log2.png");
+        super("docs/images/sprites/log.png");
     }
 
     @Override
-    public void draw(GUI gui, Log log, int tileSize) {
+    public void draw(GUI gui, Log log, int tileSize, int yPos) {
         GUIImage sprite = getSprite(gui);
-        drawSprite(gui, sprite, (int) (log.getPosition().getX() * tileSize),
-                (int) (log.getPosition().getY() * tileSize));
+        drawSprite(gui, sprite, (int) (log.getPosition().getX() * tileSize), yPos + 3);
     }
 }

@@ -20,13 +20,10 @@ public class Game {
     private State<?> state;
     private User currentUser;
 
-    private final MenuState menuState;
-
     public Game(LanternaGUIFactory guiFactory) throws IOException, FontFormatException, URISyntaxException {
         this.starter = guiFactory;
         this.gui = guiFactory.createMenuGUI();
-        this.menuState = new MenuState(new Menu());
-        this.state = this.menuState;
+        this.state = new MenuState(new Menu());
     }
 
     public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
@@ -84,7 +81,15 @@ public class Game {
     }
 
     public void returnToMenu() {
-        setState(menuState);
+        Menu menu = new Menu();
+        if (currentUser != null) {
+            feup2526.ldts.t02g03.model.menu.UserManager um = menu.getUserManager();
+            feup2526.ldts.t02g03.model.menu.User freshUser = um.getUser(currentUser.getName());
+            if (freshUser != null) {
+                menu.setCurrentUser(freshUser);
+            }
+        }
+        setState(new MenuState(menu));
     }
 
     public void startGameState() {

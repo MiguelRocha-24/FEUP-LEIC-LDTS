@@ -18,10 +18,9 @@ public class CoinViewer extends SpriteViewer<Coin> {
     }
 
     @Override
-    public void draw(GUI gui, Coin coin, int tileSize) {
+    public void draw(GUI gui, Coin coin, int tileSize, int yPos) {
         int frame = (int) ((System.currentTimeMillis() / 200) % spritePaths.size());
         GUIImage sprite = getSprite(gui, spritePaths.get(frame));
-        drawSprite(gui, sprite, (int) (coin.getPosition().getX() * tileSize),
-                (int) (coin.getPosition().getY() * tileSize));
+        drawSprite(gui, sprite, (int) (coin.getPosition().getX() * tileSize), yPos);
     }
 }

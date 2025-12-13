@@ -1,12 +1,15 @@
 package feup2526.ldts.t02g03.model.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Level {
     private final Grid grid;
     private final Player player;
-    private final List<Lane> lanes;
+    private final Map<Integer, Lane> lanes;
+    private final Camera camera;
     private boolean quit = false;
     private boolean gameOver = false;
     private boolean collisionDetected = false;
@@ -17,34 +20,34 @@ public class Level {
     public Level(int width, int height) {
         this.grid = new Grid(width, height);
         this.player = new Player(new Position(width / 2, height - 2));
-        this.lanes = new ArrayList<>();
+        this.lanes = new HashMap<>();
         this.coinCounter = new CoinCounter();
         this.runScore = new RunScore();
+        this.camera = new Camera(0);
+
         initializeLevel();
     }
 
     private void initializeLevel() {
-        for (int i = 0; i < grid.getH() - 2; i++) {
-            Direction dir = (i % 2 == 0) ? Direction.RIGHT : Direction.LEFT;
-            double speed = 0.05;
-            double choseLane = Math.random();
-            if (choseLane < 0.33) {
-                RoadLane lane = new RoadLane(dir, speed, i);
-                lanes.add(lane);
-            } else if (choseLane < 0.66) {
-                River lane = new River(i, dir, speed);
-                lanes.add(lane);
-            } else {
-                SafeLane lane = new SafeLane(i, grid.getW(), true);
-                lanes.add(lane);
+        // Generate initial safe zone
+        for (int i = 0; i < 2; i++) {
+            int row = grid.getH() - 1 - i;
+            SafeLane lane = new SafeLane(row, grid.getW(), i == 0);
+            if (i == 0) {
+                for (int x = 0; x < grid.getW(); x++) {
+                    lane.addTree(new Tree(new Position(x, row)));
+                }
             }
+            lanes.put(row, lane);
         }
-        lanes.add(new SafeLane(grid.getH() - 2, grid.getW(), false));
-        SafeLane lastLane = new SafeLane(grid.getH() - 1, grid.getW(), false);
-        for (int i = 0; i < grid.getW(); i++) {
-            lastLane.addTree(new Tree(new Position(i, grid.getH() - 1)));
-        }
-        lanes.add(lastLane);
+    }
+
+    public void addLane(int row, Lane lane) {
+        lanes.put(row, lane);
+    }
+
+    public void removeLane(int row) {
+        lanes.remove(row);
     }
 
     public void quit() {
@@ -68,12 +71,10 @@ public class Level {
     }
 
     public List<Lane> getLanes() {
-        return lanes;
+        return new ArrayList<>(lanes.values());
     }
 
     public Lane getLane(int row) {
-        if (row < 0 || row >= grid.getH())
-            return null;
         return lanes.get(row);
     }
 
@@ -96,5 +97,9 @@ public class Level {
 
     public RunScore getRunScore() {
         return runScore;
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 }

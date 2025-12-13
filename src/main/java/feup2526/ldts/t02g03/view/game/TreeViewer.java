@@ -11,9 +11,8 @@ public class TreeViewer extends SpriteViewer<Tree> {
     }
 
     @Override
-    public void draw(GUI gui, Tree tree, int tileSize) {
+    public void draw(GUI gui, Tree tree, int tileSize, int yPos) {
         GUIImage sprite = getSprite(gui);
-        drawSprite(gui, sprite, (int) (tree.getPosition().getX() * tileSize),
-                (int) (tree.getPosition().getY() * tileSize));
+        drawSprite(gui, sprite, (int) (tree.getPosition().getX() * tileSize), yPos);
     }
 }

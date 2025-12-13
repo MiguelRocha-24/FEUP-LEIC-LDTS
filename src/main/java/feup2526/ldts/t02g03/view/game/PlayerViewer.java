@@ -5,10 +5,11 @@ import feup2526.ldts.t02g03.view.GUI;
 import feup2526.ldts.t02g03.view.GUIImage;
 
 public class PlayerViewer extends SpriteViewer<Player> {
-    private String skinName = "chicken";
+    private String skinName;
 
     public PlayerViewer() {
         super("docs/images/sprites/chicken.png");
+        this.skinName = "chicken";
     }
 
     public void setSkinName(String skinName) {
@@ -16,10 +17,13 @@ public class PlayerViewer extends SpriteViewer<Player> {
     }
 
     @Override
-    public void draw(GUI gui, Player player, int tileSize) {
-        String path = "docs/images/sprites/" + skinName + ".png";
-        GUIImage sprite = getSprite(gui, path);
-        drawSprite(gui, sprite, (int) (player.getPosition().getX() * tileSize),
-                (int) (player.getPosition().getY() * tileSize));
+    protected GUIImage getSprite(GUI gui) {
+        return super.getSprite(gui, "docs/images/sprites/" + skinName + ".png");
+    }
+
+    @Override
+    public void draw(GUI gui, Player player, int tileSize, int yPos) {
+        GUIImage sprite = getSprite(gui);
+        drawSprite(gui, sprite, (int) (player.getPosition().getX() * tileSize), yPos - 1);
     }
 }

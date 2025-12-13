@@ -3,9 +3,7 @@ package feup2526.ldts.t02g03.model.game;
 public abstract class Lane {
     protected int row;
 
-    public Lane(int row){
-        if (row < 0)
-            throw new IllegalArgumentException("Row cannot be negative");
+    public Lane(int row) {
         this.row = row;
     }
 

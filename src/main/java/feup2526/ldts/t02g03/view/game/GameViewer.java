@@ -48,46 +48,60 @@ public class GameViewer extends Viewer<Level> {
     }
 
     private void drawLanes(GUI gui, Level level) {
-        for (Lane lane : level.getLanes()) {
+        double cameraY = level.getCamera().getY();
+        int visibleRows = gui.getTerminalHeight() / TILE_SIZE;
+
+        int startRow = (int) Math.floor(cameraY);
+        int endRow = startRow + visibleRows + 3; // +3 to cover partial tiles at top/bottom and prevent flickering
+
+        for (int row = startRow; row < endRow; row++) {
+            Lane lane = level.getLane(row);
+            if (lane == null)
+                continue;
+
+            int drawY = (int) ((row - cameraY) * TILE_SIZE);
+
             if (lane instanceof RoadLane) {
-                roadViewer.draw(gui, (RoadLane) lane, TILE_SIZE);
-                drawVehicles(gui, (RoadLane) lane);
+                roadViewer.draw(gui, (RoadLane) lane, TILE_SIZE, drawY);
+                drawVehicles(gui, (RoadLane) lane, drawY);
             } else if (lane instanceof River) {
-                riverViewer.draw(gui, (River) lane, TILE_SIZE);
-                drawLogs(gui, (River) lane);
+                riverViewer.draw(gui, (River) lane, TILE_SIZE, drawY);
+                drawLogs(gui, (River) lane, drawY);
             } else if (lane instanceof SafeLane) {
-                safeLaneViewer.draw(gui, (SafeLane) lane, TILE_SIZE);
-                drawTrees(gui, (SafeLane) lane);
-                drawCoins(gui, (SafeLane) lane);
+                safeLaneViewer.draw(gui, (SafeLane) lane, TILE_SIZE, drawY);
+                drawTrees(gui, (SafeLane) lane, drawY);
+                drawCoins(gui, (SafeLane) lane, drawY);
             }
         }
     }
 
-    private void drawVehicles(GUI gui, RoadLane lane) {
+    private void drawVehicles(GUI gui, RoadLane lane, int yPos) {
         for (Vehicle v : lane.getVehicles()) {
-            carViewer.draw(gui, v, TILE_SIZE);
+            carViewer.draw(gui, v, TILE_SIZE, yPos);
         }
     }
 
-    private void drawLogs(GUI gui, River river) {
+    private void drawLogs(GUI gui, River river, int yPos) {
         for (Log l : river.getLogs()) {
-            logViewer.draw(gui, l, TILE_SIZE);
+            logViewer.draw(gui, l, TILE_SIZE, yPos);
         }
     }
 
-    private void drawTrees(GUI gui, SafeLane lane) {
+    private void drawTrees(GUI gui, SafeLane lane, int yPos) {
         for (Tree t : lane.getTrees()) {
-            treeViewer.draw(gui, t, TILE_SIZE);
+            treeViewer.draw(gui, t, TILE_SIZE, yPos);
         }
     }
 
-    private void drawCoins(GUI gui, SafeLane lane) {
+    private void drawCoins(GUI gui, SafeLane lane, int yPos) {
         for (Coin c : lane.getCoins()) {
-            coinViewer.draw(gui, c, TILE_SIZE);
+            coinViewer.draw(gui, c, TILE_SIZE, yPos);
         }
     }
 
     private void drawPlayer(GUI gui, Player player) {
-        playerViewer.draw(gui, player, TILE_SIZE);
+        double cameraY = getModel().getCamera().getY();
+        int drawY = (int) ((player.getPosition().getY() - cameraY) * TILE_SIZE);
+        playerViewer.draw(gui, player, TILE_SIZE, drawY);
     }
 }
