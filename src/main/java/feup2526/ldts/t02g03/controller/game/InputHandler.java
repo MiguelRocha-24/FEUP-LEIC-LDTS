@@ -88,11 +88,16 @@ public class InputHandler {
             tp = new Position((double) Math.round(tp.getX()), (int) Math.round(tp.getY()));
         }
 
+        // Check lateral boundaries for RoadLane and SafeLane
+        if (destLane instanceof RoadLane || destLane instanceof SafeLane) {
+            if (!level.getGrid().isInside(tp)) {
+                return false;
+            }
+        }
         if (!isBlocked(tp)) {
             playerController.moveTo(tp);
             return true;
         }
-
         return false;
     }
 
