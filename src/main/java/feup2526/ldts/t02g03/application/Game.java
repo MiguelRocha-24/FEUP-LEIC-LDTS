@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import feup2526.ldts.t02g03.model.menu.User;
 import feup2526.ldts.t02g03.states.NewUserState;
+import feup2526.ldts.t02g03.states.RemoveUserState;
 import feup2526.ldts.t02g03.states.ShopState;
 import feup2526.ldts.t02g03.states.GameOverState;
 
@@ -42,8 +43,8 @@ public class Game {
         boolean currentIsGame = (this.state instanceof GameState);
         boolean nextIsGame = (state instanceof GameState);
 
-        boolean currentIsMenu = (this.state instanceof MenuState || this.state instanceof NewUserState || this.state instanceof ShopState || this.state instanceof GameOverState);
-        boolean nextIsMenu = (state instanceof MenuState || state instanceof NewUserState || state instanceof ShopState || state instanceof GameOverState);
+        boolean currentIsMenu = (this.state instanceof MenuState || this.state instanceof NewUserState || this.state instanceof ShopState || this.state instanceof GameOverState || this.state instanceof RemoveUserState);
+        boolean nextIsMenu = (state instanceof MenuState || state instanceof NewUserState || state instanceof ShopState || state instanceof GameOverState || state instanceof RemoveUserState);
 
         try {
             if (this.state != null) {
