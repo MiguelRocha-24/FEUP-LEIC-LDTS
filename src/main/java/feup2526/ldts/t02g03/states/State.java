@@ -9,18 +9,16 @@ import java.io.IOException;
 
 public abstract class State<T> {
     private final T model;
-    private final Controller<T> controller;
-    private final Viewer<T> viewer;
+    private Controller<T> controller;
+    private Viewer<T> viewer;
 
     public State(T model) {
         this.model = model;
-        this.viewer = getViewer();
-        this.controller = getController();
     }
 
-    protected abstract Viewer<T> getViewer();
+    protected abstract Viewer<T> createViewer();
 
-    protected abstract Controller<T> getController();
+    protected abstract Controller<T> createController();
 
     public T getModel() {
         return model;
@@ -28,6 +26,12 @@ public abstract class State<T> {
 
     public void step(Game game, GUI gui, long time)
             throws IOException {
+        if (controller == null) {
+            controller = createController();
+        }
+        if (viewer == null) {
+            viewer = createViewer();
+        }
         KeyStroke key = gui.readInput();
         controller.step(game, key, time);
         viewer.draw(gui);

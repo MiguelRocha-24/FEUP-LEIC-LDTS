@@ -161,9 +161,7 @@ Considering the current state of the game, the amount of abstract classes may se
 
 ## Known-code smells
 
-Currently the input needs to be done 1 character at a time, and needs "enter" to be pressed to be registered. The view testing is also very basic, as it only tests the console viewer. Using Lanterna in the future will allow for a better input experience, and a more advanced testing system.
-
-There is also the presence of hardcoded values, such as the size of the grid, RoadLanes spawnChance and offset values and more. This is something that will be changed in the future, when logic for increasing difficulty is implemented and the size of different entities is taken into account.
+Instance of in view of movement of vehicles
 ## Testing
 
 ### Screenshot of coverage report

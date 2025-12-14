@@ -5,33 +5,30 @@ import feup2526.ldts.t02g03.view.Viewer;
 import feup2526.ldts.t02g03.model.game.*;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class GameViewer extends Viewer<Level> {
     private final PlayerViewer playerViewer;
-    private final CarViewer carViewer;
-    private final RoadViewer roadViewer;
-    private final RiverViewer riverViewer;
-    private final SafeLaneViewer safeLaneViewer;
-    private final LogViewer logViewer;
-    private final TreeViewer treeViewer;
-    private final CoinViewer coinViewer;
     private final NumberViewer numberViewer;
-    private final BusViewer busViewer;
+    private final Map<Class<?>, LaneViewer> viewerMap;
     private static final int TILE_SIZE = 16;
 
     public GameViewer(Level model) {
         super(model);
         int width = model.getGrid().getW();
         this.playerViewer = new PlayerViewer();
-        this.carViewer = new CarViewer();
-        this.roadViewer = new RoadViewer(width);
-        this.riverViewer = new RiverViewer(width);
-        this.safeLaneViewer = new SafeLaneViewer(width);
-        this.logViewer = new LogViewer();
-        this.treeViewer = new TreeViewer();
-        this.coinViewer = new CoinViewer();
         this.numberViewer = new NumberViewer();
-        this.busViewer = new BusViewer();
+        this.viewerMap = createViewerMap(width);
+    }
+
+    private Map<Class<?>, LaneViewer> createViewerMap(int width) {
+        Map<Class<?>, LaneViewer> map = new HashMap<>();
+        map.put(RoadLane.class, new RoadViewer(width));
+        map.put(River.class, new RiverViewer(width));
+        map.put(SafeLane.class, new SafeLaneViewer(width));
+        return map;
     }
 
     public void setPlayerSkin(String skin) {
@@ -63,45 +60,10 @@ public class GameViewer extends Viewer<Level> {
 
             int drawY = (int) ((row - cameraY) * TILE_SIZE);
 
-            if (lane instanceof RoadLane) {
-                roadViewer.draw(gui, (RoadLane) lane, TILE_SIZE, drawY);
-                drawVehicles(gui, (RoadLane) lane, drawY);
-            } else if (lane instanceof River) {
-                riverViewer.draw(gui, (River) lane, TILE_SIZE, drawY);
-                drawLogs(gui, (River) lane, drawY);
-            } else if (lane instanceof SafeLane) {
-                safeLaneViewer.draw(gui, (SafeLane) lane, TILE_SIZE, drawY);
-                drawTrees(gui, (SafeLane) lane, drawY);
-                drawCoins(gui, (SafeLane) lane, drawY);
+            LaneViewer viewer = viewerMap.get(lane.getClass());
+            if (viewer != null) {
+                viewer.draw(gui, lane, TILE_SIZE, drawY);
             }
-        }
-    }
-
-    private void drawVehicles(GUI gui, RoadLane lane, int yPos) {
-        for (Vehicle v : lane.getVehicles()) {
-            if (v instanceof Car) {
-                carViewer.draw(gui, (Car) v, TILE_SIZE, yPos);
-            } else if (v instanceof Bus) {
-                busViewer.draw(gui, (Bus) v, TILE_SIZE, yPos);
-            }
-        }
-    }
-
-    private void drawLogs(GUI gui, River river, int yPos) {
-        for (Log l : river.getLogs()) {
-            logViewer.draw(gui, l, TILE_SIZE, yPos);
-        }
-    }
-
-    private void drawTrees(GUI gui, SafeLane lane, int yPos) {
-        for (Tree t : lane.getTrees()) {
-            treeViewer.draw(gui, t, TILE_SIZE, yPos);
-        }
-    }
-
-    private void drawCoins(GUI gui, SafeLane lane, int yPos) {
-        for (Coin c : lane.getCoins()) {
-            coinViewer.draw(gui, c, TILE_SIZE, yPos);
         }
     }
 
