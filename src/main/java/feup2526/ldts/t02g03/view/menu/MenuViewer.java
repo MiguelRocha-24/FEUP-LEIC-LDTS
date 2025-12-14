@@ -53,6 +53,13 @@ public class MenuViewer extends Viewer<Menu> {
             int newUserX = (terminalWidth - newUserText.length()) / 2;
             String color = (users.size() == getModel().getSelectedUserIndex()) ? "#FFD700" : "#FFFFFF";
             gui.drawText(newUserX, listY + users.size(), newUserText, color);
+
+
+            // Remove User option
+            String removeUserText = "Remove User";
+            int removeUserX = (terminalWidth - removeUserText.length()) / 2;
+            String removeUserColor = (users.size() + 1 == getModel().getSelectedUserIndex()) ? "#FFD700" : "#FFFFFF";
+            gui.drawText(removeUserX, listY + users.size() + 1, removeUserText, removeUserColor);
         } else {
             int startY = terminalHeight / 2;
             for (int i = 0; i < getModel().getNumberEntries(); i++) {
