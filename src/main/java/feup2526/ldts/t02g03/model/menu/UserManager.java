@@ -93,6 +93,11 @@ public class UserManager {
         }
     }
 
+    public void removeUser(String name) {
+        users.removeIf(user -> user.getName().equals(name));
+        saveUsers();
+    }
+
     public User getUser(String name) {
         for (User user : users) {
             if (user.getName().equals(name)) {
