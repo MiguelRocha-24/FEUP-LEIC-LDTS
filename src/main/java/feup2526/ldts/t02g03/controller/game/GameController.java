@@ -7,6 +7,9 @@ import feup2526.ldts.t02g03.model.game.*;
 import feup2526.ldts.t02g03.application.*;
 import java.io.IOException;
 import java.util.Map;
+import feup2526.ldts.t02g03.states.GameOverState;
+import feup2526.ldts.t02g03.model.menu.GameOver;
+import feup2526.ldts.t02g03.model.menu.User;
 
 public class GameController extends Controller<Level> {
     private final Level level;
@@ -49,7 +52,13 @@ public class GameController extends Controller<Level> {
 
     private void returnToMenu(Game game) throws IOException {
         scoreManager.updateUserStats(game);
-        game.returnToMenu();
+
+        User user = game.getCurrentUser();
+        int score = scoreManager.getRunScore().getCount();
+        int highScore = (user != null) ? user.getHighScore() : 0;
+        int coins = (user != null) ? user.getCoins() : 0;
+
+        game.setState(new GameOverState(new GameOver(score, highScore, coins)));
     }
 
     public void update() {
