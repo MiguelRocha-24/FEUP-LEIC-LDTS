@@ -21,14 +21,14 @@ public class GameOverViewer extends Viewer<GameOver> {
         int titleY = terminalHeight / 4;
         gui.drawText(titleX, titleY, title, "#FF0000"); // Red color for urgency/failure
 
-        int statsY = titleY + 4;
+        int statsY = terminalHeight / 2;
         String scoreText = "Score: " + getModel().getScore();
         int scoreX = (terminalWidth - scoreText.length()) / 2;
         gui.drawText(scoreX, statsY, scoreText, "#FFFFFF");
 
         String highScoreText = "High Score: " + getModel().getHighScore();
         int highScoreX = (terminalWidth - highScoreText.length()) / 2;
-        gui.drawText(highScoreX, statsY + 2, highScoreText, "#FFFFFF"); // Spaced out
+        gui.drawText(highScoreX, statsY + 2, highScoreText, "#FFFFFF");
 
         String coinsText = "Coins: " + getModel().getCoins();
         int coinsX = (terminalWidth - coinsText.length()) / 2;
