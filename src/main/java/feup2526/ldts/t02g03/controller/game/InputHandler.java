@@ -95,6 +95,7 @@ public class InputHandler {
             }
         }
         if (!isBlocked(tp)) {
+            level.getPlayer().setDirection(dir);
             playerController.moveTo(tp);
             return true;
         }
