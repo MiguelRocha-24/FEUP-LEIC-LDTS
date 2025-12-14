@@ -12,12 +12,12 @@ public class GameOverState extends State<GameOver> {
     }
 
     @Override
-    protected Viewer<GameOver> getViewer() {
+    protected Viewer<GameOver> createViewer() {
         return new GameOverViewer(getModel());
     }
 
     @Override
-    protected Controller<GameOver> getController() {
+    protected Controller<GameOver> createController() {
         return new GameOverController(getModel());
     }
 }

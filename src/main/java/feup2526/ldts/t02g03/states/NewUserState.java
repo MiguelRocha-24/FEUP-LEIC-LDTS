@@ -12,12 +12,12 @@ public class NewUserState extends State<Menu> {
     }
 
     @Override
-    protected Viewer<Menu> getViewer() {
+    protected Viewer<Menu> createViewer() {
         return new NewUserViewer(getModel());
     }
 
     @Override
-    protected Controller<Menu> getController() {
+    protected Controller<Menu> createController() {
         return new NewUserController(getModel());
     }
 }

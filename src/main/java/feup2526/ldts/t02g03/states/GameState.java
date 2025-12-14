@@ -14,58 +14,50 @@ import java.util.*;
 public class GameState extends State<Level> {
         private GameController controller;
         private GameViewer viewer;
+        private final Game game;
 
         public GameState(Game game) {
                 super(new Level(game.getTerminalGridWidth() + 1, game.getTerminalGridHeight()));
+                this.game = game;
+        }
 
-                if (viewer != null && game.getCurrentUser() != null) {
-                        viewer.setPlayerSkin(game.getCurrentUser().getEquippedSkin());
-                }
-
+        private Map<Class<?>, LaneController> createControllerMap() {
                 Map<Class<?>, LaneController> controllerMap = new HashMap<>();
-                controllerMap.put(RoadLane.class,
-                                new RoadLaneController(0.01, 1, 3, 2));
-                controllerMap.put(River.class,
-                                new RiverController(0.05, 3, 2, 2));
-                controllerMap.put(SafeLane.class,
-                                new SafeLaneController(0.3));
-
-                PlayerController playerController = new PlayerController(getModel().getPlayer());
-                InputHandler inputHandler = new InputHandler(getModel(), playerController, controllerMap);
-                UserManager userManager = new UserManager();
-                ScoreManager scoreManager = new ScoreManager(getModel(), userManager);
-
-                this.controller = new GameController(getModel(), playerController, inputHandler, scoreManager,
-                                controllerMap);
-                for (int i = 0; i < 300; i++) {
-                        controller.update();
-                }
+                controllerMap.put(RoadLane.class, new RoadLaneController(0.01, 1, 3, 2));
+                controllerMap.put(River.class, new RiverController(0.05, 3, 2, 2));
+                controllerMap.put(SafeLane.class, new SafeLaneController(0.3));
+                return controllerMap;
         }
 
         @Override
-        protected Viewer<Level> getViewer() {
+        protected Viewer<Level> createViewer() {
                 viewer = new GameViewer(getModel());
+                if (game.getCurrentUser() != null) {
+                        viewer.setPlayerSkin(game.getCurrentUser().getEquippedSkin());
+                }
                 return viewer;
         }
 
         @Override
-        protected Controller<Level> getController() {
+        protected Controller<Level> createController() {
                 if (controller == null) {
-                        Map<Class<?>, LaneController> controllerMap = new HashMap<>();
-                        controllerMap.put(RoadLane.class,
-                                        new RoadLaneController(0.01, 1, 3, 2));
-                        controllerMap.put(River.class,
-                                        new RiverController(0.05, 3, 2, 2));
-                        controllerMap.put(SafeLane.class,
-                                        new SafeLaneController(0.3));
-
+                        Map<Class<?>, LaneController> controllerMap = createControllerMap();
                         PlayerController playerController = new PlayerController(getModel().getPlayer());
                         InputHandler inputHandler = new InputHandler(getModel(), playerController, controllerMap);
                         UserManager userManager = new UserManager();
                         ScoreManager scoreManager = new ScoreManager(getModel(), userManager);
+                        LaneGenerationManager laneGenerationManager = new LaneGenerationManager(getModel());
+                        PhysicsManager physicsManager = new PhysicsManager(getModel(), controllerMap);
+                        CollisionManager collisionManager = new CollisionManager(getModel(), controllerMap);
+                        CameraManager cameraManager = new CameraManager(getModel());
 
                         controller = new GameController(getModel(), playerController, inputHandler, scoreManager,
-                                        controllerMap);
+                                        controllerMap, laneGenerationManager, physicsManager, collisionManager,
+                                        cameraManager);
+                        // Pre-generate lanes
+                        for (int i = 0; i < 300; i++) {
+                                controller.update();
+                        }
                 }
                 return controller;
         }

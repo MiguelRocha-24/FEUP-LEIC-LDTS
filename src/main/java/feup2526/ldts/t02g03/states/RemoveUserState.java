@@ -12,12 +12,12 @@ public class RemoveUserState extends State<RemoveUser> {
     }
 
     @Override
-    protected Viewer<RemoveUser> getViewer() {
+    protected Viewer<RemoveUser> createViewer() {
         return new RemoveUserViewer(getModel());
     }
 
     @Override
-    protected Controller<RemoveUser> getController() {
+    protected Controller<RemoveUser> createController() {
         return new RemoveUserController(getModel());
     }
 }
