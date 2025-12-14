@@ -19,8 +19,7 @@ public class GameOverViewer extends Viewer<GameOver> {
         String title = "GAME OVER";
         int titleX = (terminalWidth - title.length()) / 2;
         int titleY = terminalHeight / 4;
-        gui.drawText(titleX, titleY, title, "#FF0000"); // Red color for urgency/failure
-
+        gui.drawText(titleX, titleY, title, "#FF0000");
         int statsY = terminalHeight / 2;
         String scoreText = "Score: " + getModel().getScore();
         int scoreX = (terminalWidth - scoreText.length()) / 2;
@@ -32,7 +31,7 @@ public class GameOverViewer extends Viewer<GameOver> {
 
         String coinsText = "Coins: " + getModel().getCoins();
         int coinsX = (terminalWidth - coinsText.length()) / 2;
-        gui.drawText(coinsX, statsY + 4, coinsText, "#FFD700"); // Gold color
+        gui.drawText(coinsX, statsY + 4, coinsText, "#FFFFFF");
 
         int menuY = statsY + 8;
         for (int i = 0; i < getModel().getNumberEntries(); i++) {

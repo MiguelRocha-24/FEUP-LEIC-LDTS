@@ -24,7 +24,9 @@ public class Game {
     public Game(LanternaGUIFactory guiFactory) throws IOException, FontFormatException, URISyntaxException {
         this.starter = guiFactory;
         this.gui = guiFactory.createMenuGUI();
-        this.state = new MenuState(new Menu());
+        Menu menu = new Menu();
+        menu.setUserListActive(true);
+        this.state = new MenuState(menu);
     }
 
     public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
