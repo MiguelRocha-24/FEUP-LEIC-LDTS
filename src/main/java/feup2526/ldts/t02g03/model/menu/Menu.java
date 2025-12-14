@@ -22,8 +22,8 @@ public class Menu {
     public void nextEntry() {
         if (isUserListActive) {
             selectedUserIndex++;
-            // +1 for "New User" option
-            if (selectedUserIndex > userManager.getUsers().size())
+            // +2 for "New User" and "Remove User" options
+            if (selectedUserIndex > userManager.getUsers().size() + 1)
                 selectedUserIndex = 0;
         } else {
             currentEntry++;
@@ -36,7 +36,7 @@ public class Menu {
         if (isUserListActive) {
             selectedUserIndex--;
             if (selectedUserIndex < 0)
-                selectedUserIndex = userManager.getUsers().size();
+                selectedUserIndex = userManager.getUsers().size() + 1;
         } else {
             currentEntry--;
             if (currentEntry < 0)
