@@ -37,8 +37,8 @@ public class LaneGenerationManager {
         if (level.getLane(row) != null)
             return;
 
-        Direction dir = (Math.abs(row) % 2 == 0) ? Direction.RIGHT : Direction.LEFT;
-        double speed = 0.05 + (Math.abs(row) * 0.0001);
+        Direction dir = (Math.random() < 0.5) ? Direction.RIGHT : Direction.LEFT;
+        double speed = 0.03 + (Math.random() * 0.04) + (Math.abs(row) * 0.0002);
         double choseLane = Math.random();
 
         Lane lane;
