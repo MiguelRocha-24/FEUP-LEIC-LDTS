@@ -2,7 +2,7 @@
 
 ## Game Description
 
-Crossy Roads is an endless arcade hopper game where you guide a character across busy roads, train tracks, and rivers while avoiding various obstacles. Your goal is to travel as far as possible without getting hit by vehicles, trains, or falling into the water.
+Crossy Roads is an endless arcade hopper game where you guide a character across busy roads, train tracks, and rivers while avoiding various obstacles. Your goal is to travel as far as possible without getting hit by vehicles or falling into the water.
 As you progress, the difficulty increases with faster-moving traffic and more challenging patterns.
 
 This project was developed by João Barros (up202406502@edu.fe.up.pt), Miguel Rocha (up202405484@edu.fe.up.pt) and Rosa Chilengue (up202109257@edu.fe.up.pt) for LDTS 2025-26.
@@ -11,17 +11,20 @@ This project was developed by João Barros (up202406502@edu.fe.up.pt), Miguel Ro
 
 - **Player control** - The player moves using the keyboard. (WASD)
 - **Collision detection** - Collisions between player and car objects are verified.
-
-## Planned Features
-
-- **Connected Menus** - The user will have the capability of browsing through the different menus including in game ones. (Ex: Main Menu, Play, Shop and Pause).
-- **Buttons** - Functional and interactive buttons.
-- **Mouse and Keyboard control** - The mouse and keyboard inputs will be received through the respective events and interpreted according to the current game state.
+- **Connected Menus** - The user has the ability to browse through the different menus; most of them are connected to the main menu, like the Shop, User Selection, and GameOver Menu.
+- **Keyboard control** - The keyboard inputs are received through the respective events and interpreted according to the current game state. 
 - **Score** - Each run will have a score, storing the highest score upon death.
-- **Increase of difficulty** - As the game goes on, the difficulty will increase with faster-moving traffic and more challenging patterns.
-- **Shop interaction and coins** - The player will be able to buy new skins for the character in the in-game shop, with coins that will be earned by playing.
-- **Animations** - Several animations will be incorporated in the game, from the character walking to the movement of the vehicles and the animation of the character dying.
+- **Increase of difficulty** - As the game goes on, the difficulty increases with faster-moving traffic and more challenging patterns.
+- **Shop interaction and coins** - The user is able to buy new skins for the character in the in-game shop, with coins earned by playing.
+- **Animations** - Several animations are incorporated in the game, like the character dying, the character changing direction (sprite) with input and the "glowing" of coins.
 - **Multiple users** - The game will support multiple users, each one with their own highest score and their coins.
+## Planned Features
+All planned features were either implemented, or a decision was made against implementing them as justified below
+## Not Implemented Features
+
+- **Buttons** - Functional and interactive buttons. Reason: A keyboard-focused navigation system for menus proved to be easier to implement and user-friendly enough so that it was not necessary to implement buttons.
+- **Mouse control** - The mouse inputs will be received through the respective events and interpreted according to the current game state. Reason: Same as above.
+
 
 ## Mockups
 
