@@ -5,18 +5,10 @@ import feup2526.ldts.t02g03.model.game.*;
 import java.util.Random;
 
 public class RoadLaneController extends BaseLaneController {
-    private int minSpeed;
-    private int maxSpeed;
-
-    public RoadLaneController(double spawnChance, int minSpeed, int maxSpeed, long seed) {
+    public RoadLaneController(double spawnChance, long seed) {
         super(spawnChance, seed);
         if (spawnChance < 0 || spawnChance > 1)
             throw new IllegalArgumentException("Spawn chance must be between 0 and 1");
-        if (minSpeed <= 0 || maxSpeed <= 0 || minSpeed > maxSpeed)
-            throw new IllegalArgumentException("Invalid speed range");
-
-        this.minSpeed = minSpeed;
-        this.maxSpeed = maxSpeed;
     }
 
     @Override
@@ -111,14 +103,6 @@ public class RoadLaneController extends BaseLaneController {
 
     public double getSpawnChance() {
         return spawnChance;
-    }
-
-    public int getMinSpeed() {
-        return minSpeed;
-    }
-
-    public int getMaxSpeed() {
-        return maxSpeed;
     }
 
     public void setRandom(Random rng) {

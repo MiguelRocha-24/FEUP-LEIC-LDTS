@@ -117,33 +117,34 @@ The following images show the different menus, as well as in-game features in-de
 ### General Structure
 #### Problem in Context:
 
-Following the given recommendations, the project will follow an MVC architecture, which divided the game in three parts, which store the logic and data (model), the visual effects (view) and the control of the game (controller).
+Following the given recommendations, the project follows an MVC architecture, which divides the game in three parts, which store the logic and data (model), the visual effects (view) and the control of the game (controller).
 
 #### The Pattern:
-As described before, regarding the "Architectural Pattern", the project will follow the Model-View-Controller style. This ensures the concerns are separate: 
-- Model: stores the logic and data. Completely independent of user interface.
-- View: Handles visalization. Reads from model and draws to screen using implemented GUI.
-- Controller: Processes input and dictates the flow of the game.
+As described before, regarding the "Architectural Pattern", the project follows the Model-View-Controller style. This ensures the concerns are separate: 
+- **Model**: stores the logic and data. Completely independent of user interface.
+- **View**: Handles visualization. Reads from model and draws to screen using implemented GUI.
+- **Controller**: Processes input and dictates the flow of the game.
 
-Our project will also have a "State" pattern, which will allow us to separate the main menu (with options to start gameplay, open shop, switch "skin" and switcv user) from the actual Gameplay state.
+#### View Implementation:
+The View component is structured to separate the game's visual logic from the specific rendering library used. This is achieved through the following organization:
 
-#### Implementation:
-Our specific implementation will have (we hope) the view separated in 2 main packages. One (the GUI) which will dictate how objects should be drawn, and the other (LanternaGUI) which will hold the logic for the specific GUI.
-#### Consequences:
-Using these design patterns has the following benefits:
-- Ease of implementation of new features.
-- Clear separation of concerns.
-- Ease of changing the GUI interface. 
+- **GUI Interface**: Interface of all graphical operations (e.g., `drawText`, `clear`, `refresh`). It serves as an abstraction layer, ensuring that the rest of the application does not depend on a specific library - Application of the Dependency Inversion Principle of SOLID rules. 
+- **LanternaGUI**: A concrete implementation of the `GUI` interface **Lanterna** to render graphics in the terminal. It handles the low-level details of interacting with the screen and processing input.
+- **Viewer Classes**: Located in `view.game` and `view.menu`, these classes are responsible for rendering specific models. They rely solely on the `GUI` interface, making a future possible change of rendering library easier.
 
+#### Main Consequences:
+- **Interchangeability**: Lanterna can easily be replaced simply by creating a new implementation of the `GUI` interface, without modifying the game logic or viewer classes.
+- **Testability**: Viewers can be tested in isolation by mocking the `GUI` interface, removing the need for a real graphical environment during testing (as seen in our testing packages).
+- **Modularity**: New visual elements can be added by creating new Viewer classes, keeping the rendering logic organized and manageable. 
 
-#### Problem in Context:
+#### Controller Implementation:
+The Controller package is responsible for handling user input and updating the game state. It acts as the bridge between the Model and the View. The main classes of this package do the following: 
+- **GameController**: The central controller for the gameplay state. It orchestrates the game loop, managing the player's movement, lane generation, collision detection, and score updates. It delegates specific tasks to specialized sub-controllers.
+- **LaneController**: An interface for handling logic specific to different types of lanes.
+- **PlayerController**: Dedicated to handling player-specific logic, such as movement validation and position updates based on keyboard input.
+- **MenuController**: Manages navigation and interaction within the various menu screens (Main Menu, Shop, Game Over), allowing users to select options and switch states.
 
-Separation of concerns through the use of the MVC strategy.
-
-#### Implementation:
-
-The project is split into 3 main packages: Model, View and Controller. It also has the application package, which is the main class that starts the game. 
-Considering the Controller, our current implementation is centered around the GameController class, which updates the player based on input given by the user, and also updates the Lanes (with their entities) that constitute the game.
+This structure ensures that the game logic is modular and that input handling is separated from the core game rules. 
 
 ### Screenshot of Controller package
 <p align="center" justify="center">

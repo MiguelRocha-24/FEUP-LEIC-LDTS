@@ -24,7 +24,7 @@ public class GameState extends State<Level> {
 
                 Map<Class<?>, LaneController> controllerMap = new HashMap<>();
                 controllerMap.put(RoadLane.class,
-                                new RoadLaneController(0.01, 1, 3, 2));
+                                new RoadLaneController(0.01, 2));
                 controllerMap.put(River.class,
                                 new RiverController(0.05, 3, 2, 2));
                 controllerMap.put(SafeLane.class,
@@ -53,7 +53,7 @@ public class GameState extends State<Level> {
                 if (controller == null) {
                         Map<Class<?>, LaneController> controllerMap = new HashMap<>();
                         controllerMap.put(RoadLane.class,
-                                        new RoadLaneController(0.01, 1, 3, 2));
+                                        new RoadLaneController(0.01, 2));
                         controllerMap.put(River.class,
                                         new RiverController(0.05, 3, 2, 2));
                         controllerMap.put(SafeLane.class,
