@@ -26,7 +26,7 @@ public class GameState extends State<Level> {
                 controllerMap.put(RoadLane.class,
                                 new RoadLaneController(0.01, 2));
                 controllerMap.put(River.class,
-                                new RiverController(0.05, 3, 2, 2));
+                                new RiverController(0.05));
                 controllerMap.put(SafeLane.class,
                                 new SafeLaneController(0.3));
 
@@ -55,7 +55,7 @@ public class GameState extends State<Level> {
                         controllerMap.put(RoadLane.class,
                                         new RoadLaneController(0.01, 2));
                         controllerMap.put(River.class,
-                                        new RiverController(0.05, 3, 2, 2));
+                                        new RiverController(0.05));
                         controllerMap.put(SafeLane.class,
                                         new SafeLaneController(0.3));
 

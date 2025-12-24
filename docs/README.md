@@ -146,14 +146,19 @@ The Controller package is responsible for handling user input and updating the g
 
 This structure ensures that the game logic is modular and that input handling is separated from the core game rules. 
 
-### Screenshot of Controller package
+### Main Controllers in the package
 <p align="center" justify="center">
-  <img src="images/UML/controllerPackage.png" height="750"/>
+  <img src="images/UML/Controllers.png" width="1000"/>
 </p>
 <p align="center">
-  <b><i>Fig 7. Controller package</i></b>
+  <b><i>Fig 7. Main controllers</i></b>
 </p>
-
+<p align="center" justify="center">
+  <img src="images/UML/GameController.png" width="1500"/>
+</p>
+<p align="center">
+  <b><i>Fig 8. Main Game Controller</i></b>
+</p>
 
 Regarding the Model, every class uses some sort of Position's attributes, so we decided not to clutter the UML model with Position's connections. The same happened with our Direction enum. Model is centered around Level class which holds the Grid, Lane, and Players. Indirectly, The types of Lane are Conneced to types of entities -> MovableLanes will holf MovableEntities, and StaticLanes will hold StaticEntities, however that connection isnt explicit in code so is not shown in UML diagram. 
 
@@ -162,7 +167,7 @@ Regarding the Model, every class uses some sort of Position's attributes, so we 
   <img src="images/UML/modelPackage.png"/>
 </p>
 <p align="center">
-  <b><i>Fig 8. Model package</i></b>
+  <b><i>Fig 9. Model package</i></b>
 </p>
 
 Finally, there is the viewer, which is very simple for now: Simply prints to the console / terminal empty spaces as "." and the entities as their respective symbols.
@@ -173,7 +178,7 @@ For now, it doesn't use Lanterna, but it will be implemented in the future.
   <img src="images/UML/viewPackage.png"/>
 </p>
 <p align="center">
-  <b><i>Fig 9. View package</i></b>
+  <b><i>Fig 10. View package</i></b>
 </p>
 
 #### Problem in Context:

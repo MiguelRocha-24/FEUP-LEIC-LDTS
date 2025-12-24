@@ -109,7 +109,4 @@ public class RoadLaneController extends BaseLaneController {
         this.rng = rng;
     }
 
-    @Override
-    public void handlePhysics(Lane lane, Level level, Position position, boolean isPlayerBody) {
-    }
 }
