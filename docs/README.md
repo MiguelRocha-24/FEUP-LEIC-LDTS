@@ -369,10 +369,18 @@ The sprite cache is shared across all viewer instances, ensuring each image is l
 
 ## Known-code smells
 
-Currently the input needs to be done 1 character at a time, and needs "enter" to be pressed to be registered. The view testing is also very basic, as it only tests the console viewer. Using Lanterna in the future will allow for a better input experience, and a more advanced testing system.
+Throughout the development of the game, lots of value were hardcoded, such as the tilesize, player speed, camera speed, spawn chances, lenghts of vehicles, etc. This is something that was achieved throughout testing and a feel for gameplay, and although are not the best practice, they allowed for a faster development process and a better feel for the player of the game.
 
-There is also the presence of hardcoded values, such as the size of the grid, RoadLanes spawnChance and offset values and more. This is something that will be changed in the future, when logic for increasing difficulty is implemented and the size of different entities is taken into account.
+Our Game.java class also has a lot of instanceof checks that determine whether the state is of game type or menu type. We know it is not the best practice, but was the only way we found during development window to allow not to recreate the GUI every time the state changes.
+
+There are also some "god" methods spread throughout the code, such as input handling in various controllers, that spread dozens of lines inside a switch case, but we found no other way to handle the multiple possible inputs from user. Same for the ShopViewer drawElements method, which is also a "god" method. 
+Input handling could have been implemented through the command pattern, but we found it overcomplicated for the goal. Also, its main benefits of "undoing" and "redoing" actions are not needed for the game.
+
+There's also duplicate caches for the skins between shop and SpriteViewer, but we don't consider it important enough to justify adding the dependency between them, as currently the shop only has 4 skins, and at most one of them will be stored by the main game cache. 
+
+We are also aware that the error handling is not the best, as we only catch IOExceptions and print the stack trace, but we don't really expect any other exceptions to be thrown, due to the testing. 
 ## Testing
+
 
 ### Screenshot of coverage report
 <p align="center" justify="center">
@@ -385,9 +393,9 @@ There is also the presence of hardcoded values, such as the size of the grid, Ro
 
 ## Self-evaluation
 
-The work was divided in a way that felt fair to every member.
-Therefore:
+One of the members almost did not participate in the development. In the first delivery, we looked aside as motivation was shown. No contact since. 
+Therefore, we consider the rest of the work to have been like:
 
-- João Barros: 33.3%
-- Miguel Rocha: 33.3%
-- Rosa Chilengue: 33.3%
+- João Barros: 49%
+- Miguel Rocha: 49%
+- Rosa Chilengue: 2%

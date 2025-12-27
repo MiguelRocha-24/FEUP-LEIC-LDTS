@@ -22,13 +22,7 @@ public class GameState extends State<Level> {
                         viewer.setPlayerSkin(game.getCurrentUser().getEquippedSkin());
                 }
 
-                Map<Class<?>, LaneController> controllerMap = new HashMap<>();
-                controllerMap.put(RoadLane.class,
-                                new RoadLaneController(0.01, 2));
-                controllerMap.put(River.class,
-                                new RiverController(0.05));
-                controllerMap.put(SafeLane.class,
-                                new SafeLaneController(0.3));
+                Map<Class<?>, LaneController> controllerMap = createControllerMap();
 
                 PlayerController playerController = new PlayerController(getModel().getPlayer());
                 InputHandler inputHandler = new InputHandler(getModel(), playerController, controllerMap);
@@ -42,6 +36,14 @@ public class GameState extends State<Level> {
                 }
         }
 
+        private Map<Class<?>, LaneController> createControllerMap() {
+                Map<Class<?>, LaneController> controllerMap = new HashMap<>();
+                controllerMap.put(RoadLane.class, new RoadLaneController(0.01, 2));
+                controllerMap.put(River.class, new RiverController(0.05));
+                controllerMap.put(SafeLane.class, new SafeLaneController(0.3));
+                return controllerMap;
+        }
+
         @Override
         protected Viewer<Level> getViewer() {
                 viewer = new GameViewer(getModel());
@@ -51,17 +53,12 @@ public class GameState extends State<Level> {
         @Override
         protected Controller<Level> getController() {
                 if (controller == null) {
-                        Map<Class<?>, LaneController> controllerMap = new HashMap<>();
-                        controllerMap.put(RoadLane.class,
-                                        new RoadLaneController(0.01, 2));
-                        controllerMap.put(River.class,
-                                        new RiverController(0.05));
-                        controllerMap.put(SafeLane.class,
-                                        new SafeLaneController(0.3));
+                        Map<Class<?>, LaneController> controllerMap = createControllerMap();
 
                         PlayerController playerController = new PlayerController(getModel().getPlayer());
                         InputHandler inputHandler = new InputHandler(getModel(), playerController, controllerMap);
                         UserManager userManager = new UserManager();
+                   
                         ScoreManager scoreManager = new ScoreManager(getModel(), userManager);
 
                         controller = new GameController(getModel(), playerController, inputHandler, scoreManager,
