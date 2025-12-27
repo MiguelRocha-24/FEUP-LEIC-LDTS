@@ -39,7 +39,7 @@ public class GameController extends Controller<Level> {
     }
 
     @Override
-    public void step(Game game, KeyStroke key, long time) throws IOException {
+    public void step(Game game, KeyStroke key) throws IOException {
         if (key != null) {
             if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q')) {
                 returnToMenu(game);

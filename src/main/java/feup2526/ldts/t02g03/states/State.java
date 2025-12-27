@@ -33,7 +33,7 @@ public abstract class State<T> {
             viewer = createViewer();
         }
         KeyStroke key = gui.readInput();
-        controller.step(game, key, time);
+        controller.step(game, key);
         viewer.draw(gui);
     }
 }

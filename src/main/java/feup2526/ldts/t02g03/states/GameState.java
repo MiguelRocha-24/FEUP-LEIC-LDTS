@@ -19,12 +19,13 @@ public class GameState extends State<Level> {
         public GameState(Game game) {
                 super(new Level(game.getTerminalGridWidth() + 1, game.getTerminalGridHeight()));
                 this.game = game;
+
         }
 
         private Map<Class<?>, LaneController> createControllerMap() {
                 Map<Class<?>, LaneController> controllerMap = new HashMap<>();
-                controllerMap.put(RoadLane.class, new RoadLaneController(0.01, 1, 3, 2));
-                controllerMap.put(River.class, new RiverController(0.05, 3, 2, 2));
+                controllerMap.put(RoadLane.class, new RoadLaneController(0.01, 2));
+                controllerMap.put(River.class, new RiverController(0.05));
                 controllerMap.put(SafeLane.class, new SafeLaneController(0.3));
                 return controllerMap;
         }
@@ -42,9 +43,11 @@ public class GameState extends State<Level> {
         protected Controller<Level> createController() {
                 if (controller == null) {
                         Map<Class<?>, LaneController> controllerMap = createControllerMap();
+
                         PlayerController playerController = new PlayerController(getModel().getPlayer());
                         InputHandler inputHandler = new InputHandler(getModel(), playerController, controllerMap);
                         UserManager userManager = new UserManager();
+
                         ScoreManager scoreManager = new ScoreManager(getModel(), userManager);
                         LaneGenerationManager laneGenerationManager = new LaneGenerationManager(getModel());
                         PhysicsManager physicsManager = new PhysicsManager(getModel(), controllerMap);

@@ -1,7 +1,5 @@
 package feup2526.ldts.t02g03.controller.game;
 
-import feup2526.ldts.t02g03.model.game.Direction;
-import feup2526.ldts.t02g03.model.game.Grid;
 import feup2526.ldts.t02g03.model.game.Player;
 import feup2526.ldts.t02g03.model.game.Position;
 
@@ -44,50 +42,9 @@ public class PlayerController {
     // In PlayerController.java
 
     // Move ONLY the body (for when standing on a log)
-    public void moveBody(double dx) {
-        Position pos = player.getPosition();
-        player.setPosition(new Position(pos.getX() + dx, pos.getY()));
-    }
-
-    // Move ONLY the target (for when the target is on a log)
-    public void moveTarget(double dx) {
-        Position pos = player.getTargetPosition();
-        player.setTargetPosition(new Position(pos.getX() + dx, pos.getY()));
-    }
-
     public void moveTo(Position target) {
         player.setOnLog(false);
         player.setTargetPosition(target);
-    }
-
-    public boolean changeTargetPosition(Direction dir, Grid grid) {
-        if (dir == null) {
-            throw new IllegalArgumentException("Direction cannot be null");
-        }
-        if (grid == null) {
-            throw new IllegalArgumentException("Grid cannot be null");
-        }
-        player.setOnLog(false);
-        player.setDirection(dir);
-        Position nextPos;
-        if (dir == Direction.LEFT) {
-            nextPos = new Position(player.getTargetPosition().getX() - 1.0, player.getTargetPosition().getY());
-        } else if (dir == Direction.RIGHT) {
-            nextPos = new Position(player.getTargetPosition().getX() + 1.0, player.getTargetPosition().getY());
-        } else {
-            nextPos = switch (dir) {
-                case UP -> player.getTargetPosition().up();
-                case DOWN -> player.getTargetPosition().down();
-                default -> player.getTargetPosition();
-            };
-        }
-
-        if (grid.isInside(nextPos)) {
-            player.setTargetPosition(nextPos);
-            return true;
-        }
-
-        return false;
     }
 
     public double getDistanceToTarget() {
