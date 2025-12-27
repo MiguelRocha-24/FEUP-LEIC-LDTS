@@ -5,6 +5,8 @@ import feup2526.ldts.t02g03.application.Game;
 import feup2526.ldts.t02g03.controller.Controller;
 import feup2526.ldts.t02g03.model.menu.RemoveUser;
 import feup2526.ldts.t02g03.model.menu.User;
+import feup2526.ldts.t02g03.model.menu.Menu;
+import feup2526.ldts.t02g03.states.MenuState;
 import java.io.IOException;
 
 public class RemoveUserController extends Controller<RemoveUser> {
@@ -45,7 +47,9 @@ public class RemoveUserController extends Controller<RemoveUser> {
                         }
                     }
                 }
-                game.returnToMenu();
+                Menu menu = new Menu();
+                menu.setUserListActive(true);
+                game.setState(new MenuState(menu));
                 break;
             case Escape:
                 getModel().setConfirming(false);

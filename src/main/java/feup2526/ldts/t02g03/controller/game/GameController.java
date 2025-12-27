@@ -17,20 +17,25 @@ public class GameController extends Controller<Level> {
     private final PlayerController playerController;
     private final InputHandler inputHandler;
     private final ScoreManager scoreManager;
-    private int minGeneratedRow;
-    private int maxGeneratedRow;
+    private final LaneGenerationManager laneGenerationManager;
+    private final PhysicsManager physicsManager;
+    private final CollisionManager collisionManager;
+    private final CameraManager cameraManager;
 
     public GameController(Level level, PlayerController playerController, InputHandler inputHandler,
-            ScoreManager scoreManager, Map<Class<?>, LaneController> controllerMap) {
+            ScoreManager scoreManager, Map<Class<?>, LaneController> controllerMap,
+            LaneGenerationManager laneGenerationManager, PhysicsManager physicsManager,
+            CollisionManager collisionManager, CameraManager cameraManager) {
         super(level);
         this.level = level;
         this.controllerMap = controllerMap;
         this.playerController = playerController;
         this.inputHandler = inputHandler;
         this.scoreManager = scoreManager;
-
-        this.maxGeneratedRow = level.getGrid().getH() - 1;
-        this.minGeneratedRow = level.getGrid().getH() - 2;
+        this.laneGenerationManager = laneGenerationManager;
+        this.physicsManager = physicsManager;
+        this.collisionManager = collisionManager;
+        this.cameraManager = cameraManager;
     }
 
     @Override
@@ -71,111 +76,17 @@ public class GameController extends Controller<Level> {
         if (level.isGameOver())
             return;
 
-        // Update Camera
-        Camera camera = level.getCamera();
-        Player player = level.getPlayer();
-
-        // Start camera on first movement
-        if (!camera.isMoving() && player.getPosition().getY() < level.getGrid().getH() - 2) {
-            camera.startMoving();
-        }
-
-        camera.update(player.getPosition().getY(), level.getGrid().getH());
-
-        // Check death condition (player below screen)
-        if (player.getPosition().getY() > camera.getY() + level.getGrid().getH()) {
-            level.setGameOver(true);
-        }
-
-        // Generate new lanes
-        // Generate new lanes
-        updateLanesGeneration();
-
+        cameraManager.update();
+        laneGenerationManager.update();
         updateLanes();
         playerController.update();
-        resolvePlatformPhysics();
-        checkCollisions();
+        physicsManager.resolvePlatformPhysics();
+        collisionManager.checkCollisions();
         scoreManager.updateScore();
-    }
-
-    private void updateLanesGeneration() {
-        Camera camera = level.getCamera();
-        int cameraTopRow = (int) camera.getY();
-        int generationBuffer = 6;
-        int targetMinRow = cameraTopRow - generationBuffer;
-
-
-        while (minGeneratedRow > targetMinRow) {
-            minGeneratedRow--;
-            generateLane(minGeneratedRow);
-        }
-
-        int cameraBottomRow = (int) (camera.getY() + level.getGrid().getH());
-        int cleanupThreshold = cameraBottomRow + 2;
-
-        while (maxGeneratedRow > cleanupThreshold) {
-            level.removeLane(maxGeneratedRow);
-            maxGeneratedRow--;
-        }
-    }
-
-    private void generateLane(int row) {
-        if (level.getLane(row) != null)
-            return;
-
-        Direction dir = (Math.abs(row) % 2 == 0) ? Direction.RIGHT : Direction.LEFT;
-        //aumenta dificuldade -> para ser ajustado
-        double speed = 0.05 + (Math.abs(row) * 0.0001);
-        double choseLane = Math.random();
-
-        Lane lane;
-        if (choseLane < 0.33) {
-            lane = new RoadLane(dir, speed, row);
-        } else if (choseLane < 0.66) {
-            lane = new River(row, dir, speed);
-        } else {
-            lane = new SafeLane(row, level.getGrid().getW(), true);
-        }
-        level.addLane(row, lane);
-    }
-
-    // Test the players current and target position against logs
-    private void resolvePlatformPhysics() {
-        Player player = level.getPlayer();
-        movePointWithLog(player.getPosition(), true);
-        movePointWithLog(player.getTargetPosition(), false);
-    }
-
-    private void checkCollisions() {
-        int playerRow = (int) Math.round(level.getPlayer().getPosition().getY());
-
-        // Check current lane and adjacent lanes (just in case of overlap or movement)
-        for (int row = playerRow - 1; row <= playerRow + 1; row++) {
-            Lane lane = level.getLane(row);
-            if (lane != null) {
-                getController(lane).handleCollision(lane, level);
-            }
-        }
     }
 
     private LaneController getController(Lane lane) {
         return controllerMap.get(lane.getClass());
-    }
-
-    /*
-     * Somewhat confusing method,
-     * getting coordinates, we get if there is a log on not
-     * If there is a log, We check if theres a player there:
-     * If yes, move actual player position.
-     * If not, its because the input was the target destination of the player when
-     * jump was made,
-     * So update the target position
-     */
-    private void movePointWithLog(Position p, boolean isPlayerBody) {
-        int row = (int) Math.round(p.getY());
-        Lane lane = level.getLane(row);
-        LaneController controller = getController(lane);
-        controller.handlePhysics(lane, level, p, isPlayerBody);
     }
 
     public void updateLanes() {

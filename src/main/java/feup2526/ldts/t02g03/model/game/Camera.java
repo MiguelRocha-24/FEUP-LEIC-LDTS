@@ -42,8 +42,8 @@ public class Camera {
             return;
 
         double playerScreenY = playerY - y;
-        double startThreshold = screenHeight * 0.75;
-        double maxThreshold = screenHeight * 0.25;
+        double startThreshold = screenHeight * 0.65;
+        double maxThreshold = screenHeight * 0.35;
 
         //Camera acceleration
         if (playerScreenY > startThreshold) {

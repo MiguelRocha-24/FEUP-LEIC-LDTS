@@ -14,13 +14,12 @@ import java.util.*;
 public class GameState extends State<Level> {
         private GameController controller;
         private GameViewer viewer;
+        private final Game game;
 
         public GameState(Game game) {
                 super(new Level(game.getTerminalGridWidth() + 1, game.getTerminalGridHeight()));
-
-                if (viewer != null && game.getCurrentUser() != null) {
-                        viewer.setPlayerSkin(game.getCurrentUser().getEquippedSkin());
-                }
+                this.game = game;
+        }
 
                 Map<Class<?>, LaneController> controllerMap = createControllerMap();
 
@@ -45,13 +44,16 @@ public class GameState extends State<Level> {
         }
 
         @Override
-        protected Viewer<Level> getViewer() {
+        protected Viewer<Level> createViewer() {
                 viewer = new GameViewer(getModel());
+                if (game.getCurrentUser() != null) {
+                        viewer.setPlayerSkin(game.getCurrentUser().getEquippedSkin());
+                }
                 return viewer;
         }
 
         @Override
-        protected Controller<Level> getController() {
+        protected Controller<Level> createController() {
                 if (controller == null) {
                         Map<Class<?>, LaneController> controllerMap = createControllerMap();
 
@@ -60,9 +62,18 @@ public class GameState extends State<Level> {
                         UserManager userManager = new UserManager();
                    
                         ScoreManager scoreManager = new ScoreManager(getModel(), userManager);
+                        LaneGenerationManager laneGenerationManager = new LaneGenerationManager(getModel());
+                        PhysicsManager physicsManager = new PhysicsManager(getModel(), controllerMap);
+                        CollisionManager collisionManager = new CollisionManager(getModel(), controllerMap);
+                        CameraManager cameraManager = new CameraManager(getModel());
 
                         controller = new GameController(getModel(), playerController, inputHandler, scoreManager,
-                                        controllerMap);
+                                        controllerMap, laneGenerationManager, physicsManager, collisionManager,
+                                        cameraManager);
+                        // Pre-generate lanes
+                        for (int i = 0; i < 300; i++) {
+                                controller.update();
+                        }
                 }
                 return controller;
         }
