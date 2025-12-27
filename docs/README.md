@@ -125,17 +125,7 @@ As described before, regarding the "Architectural Pattern", the project follows 
 - **View**: Handles visualization. Reads from model and draws to screen using implemented GUI.
 - **Controller**: Processes input and dictates the flow of the game.
 
-#### View Implementation:
-The View component is structured to separate the game's visual logic from the specific rendering library used. This is achieved through the following organization:
 
-- **GUI Interface**: Interface of all graphical operations (e.g., `drawText`, `clear`, `refresh`). It serves as an abstraction layer, ensuring that the rest of the application does not depend on a specific library - Application of the Dependency Inversion Principle of SOLID rules. 
-- **LanternaGUI**: A concrete implementation of the `GUI` interface **Lanterna** to render graphics in the terminal. It handles the low-level details of interacting with the screen and processing input.
-- **Viewer Classes**: Located in `view.game` and `view.menu`, these classes are responsible for rendering specific models. They rely solely on the `GUI` interface, making a future possible change of rendering library easier.
-
-#### Main Consequences:
-- **Interchangeability**: Lanterna can easily be replaced simply by creating a new implementation of the `GUI` interface, without modifying the game logic or viewer classes.
-- **Testability**: Viewers can be tested in isolation by mocking the `GUI` interface, removing the need for a real graphical environment during testing (as seen in our testing packages).
-- **Modularity**: New visual elements can be added by creating new Viewer classes, keeping the rendering logic organized and manageable. 
 
 #### Controller Implementation:
 The Controller package is responsible for handling user input and updating the game state. It acts as the bridge between the Model and the View. The main classes of this package do the following: 
@@ -160,37 +150,222 @@ This structure ensures that the game logic is modular and that input handling is
   <b><i>Fig 8. Main Game Controller</i></b>
 </p>
 
-Regarding the Model, every class uses some sort of Position's attributes, so we decided not to clutter the UML model with Position's connections. The same happened with our Direction enum. Model is centered around Level class which holds the Grid, Lane, and Players. Indirectly, The types of Lane are Conneced to types of entities -> MovableLanes will holf MovableEntities, and StaticLanes will hold StaticEntities, however that connection isnt explicit in code so is not shown in UML diagram. 
+#### Model Package UML Design Decisions
 
-### Screenshot of Model package
+The Model package is split into two domains: **Game** (gameplay entities) and **Menu** (user interface data). To keep them understable / maintain relevancy, we decided to remove from the UMLs:
+
+- **Position and Direction**: Used by almost every game entity. Including them would clutter the UML and make it less readable.
+- **GameOver and RemoveUser**: These classes are just to help the state, and have no relevant relationships to other model classes. `GameOver` is standalone, and `RemoveUser` is a thin wrapper around Menu.
+
+The **Game Model** also holds a camera, to make sure the entities are drawn in their correct locations - a helper to the viewer.
+
+
+### Game Model UML
 <p align="center" justify="center">
-  <img src="images/UML/modelPackage.png"/>
+  <img src="images/UML/GameModel.png"/>
 </p>
 <p align="center">
-  <b><i>Fig 9. Model package</i></b>
+  <b><i>Fig 9. Game Model</i></b>
 </p>
 
-Finally, there is the viewer, which is very simple for now: Simply prints to the console / terminal empty spaces as "." and the entities as their respective symbols.
-For now, it doesn't use Lanterna, but it will be implemented in the future.
+<br>
 
-### Screenshot of View package
+### Menu Model UML
 <p align="center" justify="center">
-  <img src="images/UML/viewPackage.png"/>
+  <img src="images/UML/MenusModel.png"/>
 </p>
 <p align="center">
-  <b><i>Fig 10. View package</i></b>
+  <b><i>Fig 10. Menu Model</i></b>
 </p>
 
-#### Problem in Context:
-The development of this game and the planning we made has showed that the large variety of distinc entities (vehicles, coins, logs) as well as diferent types of lanes (rivers, roads, safe) would have required a large amount of copied code.
+### View Package
 
-#### Implementation:
-In order to solve this, we decided to use abstract classes and interfaces to reduce the amount of copied code.
+The View component separates the game's visual logic from the rendering library through a layered architecture:
 
-#### Consequences:
+#### GUI Abstraction
+- **`GUI` Interface**: Abstracts all graphical operations (`drawText`, `clear`, `refresh`), ensuring the application doesn't depend on a specific library - following SOLID's Dependency Inversion Principle.
+- **`LanternaGUI`**: Implementation of Lanterna.
 
-Considering the current state of the game, the amount of abstract classes may seem excessive. This is something that will be changed in the future.
+#### Viewer Hierarchy
+- **`Viewer<T>`**: Abstract base class holding a model reference and defining `draw(GUI gui)`. Each `State<T>` holds a corresponding `Viewer<T>`.
+- **Game Viewers** (`view.game`): `GameViewer` orchestrates all gameplay rendering; `SpriteViewer<T>` provides sprite-based rendering with caching.
+- **Menu Viewers** (`view.menu`): `MenuViewer`, `GameOverViewer`, `ShopViewer`, `NewUserViewer`, `RemoveUserViewer`
 
+#### Benefits
+- **Interchangeability**: Lanterna can be replaced by implementing a new `GUI`, without modifying viewers.
+- **Testability**: Viewers can be tested by mocking the `GUI` interface.
+- **Modularity**: New visuals are added by creating new Viewer classes.
+
+
+### View Package UML
+<p align="center" justify="center">
+  <img src="images/UML/ViewPackage.png"/>
+</p>
+<p align="center">
+  <b><i>Fig 11. View package</i></b>
+</p>
+
+## Design Patterns
+
+This section details the main design patterns used throughout the project, explaining the problem each one solves and how it was implemented.
+
+---
+
+### 1. State Pattern
+
+#### Problem in Context
+The game has multiple states (Main Menu and its options, and the main Gameplay), with different behaviours and input handling. Managing these with conditionals would lead to complex, hard-to-maintain code. The fact that text would also require sprites, or become almost unreadable due to the font of the main game, we proceeded with the State Pattern, also to allow different terminals to have different GUIs.
+
+#### The Pattern
+"The **State Pattern** allows an object to alter its behavior when its internal state changes. The object will appear to change its class".
+
+#### Implementation
+- **`State<T>`**: Abstract base class that encapsulates a model, viewer, and controller (MVC architecture, as mentioned previously)
+- **Concrete States**: `MenuState`, `GameState`, `ShopState`, `GameOverState`, `NewUserState`, `RemoveUserState`
+- **Context**: The `Game` class holds the current `State<?>` and delegates `step()` calls to it
+
+#### Consequences
+- **Encapsulation**: Each state manages its own behavior completely
+- **Extensibility**: New screens/ states can easily be added.
+- **Flexibility**: Different GUIs can be used for different states.
+
+### 2. Factory Method Pattern
+
+#### Problem in Context
+The game needs different GUI configurations for menus (larger font) and gameplay (smaller font for pixel graphics). Creating these directly would couple the application to specific implementation details.
+
+#### The Pattern
+"The **Factory Method** pattern defines an interface for creating objects, but lets subclasses decide which classes to instantiate".
+
+#### Implementation
+- **`GUIFactory`**: Interface defining `createMenuGUI()` and `createGameGUI()`
+- **`LanternaGUIFactory`**: Concrete factory that creates `LanternaGUI` instances with appropriate font configurations
+
+
+#### Consequences
+- **Abstraction**: The `Game` class doesn't know about Lanterna specifics
+- **Flexibility**: Different GUI implementations can be swapped by changing the factory, keeping an easy to change design. 
+
+---
+
+### 3. Template Method Pattern
+
+#### Problem in Context
+All viewers need to follow the same drawing sequence (clear screen -> draw elements in the buffer -> refresh), but each viewer draws different elements. Duplicating this logic would generate lots of code, making it hard to maintain.
+
+#### The Pattern
+The **Template Method** defines the skeleton of an algorithm in a base class, letting subclasses override specific steps without changing the algorithm's structure.
+
+#### Implementation
+- **`Viewer<T>`**: Defines the template method `draw(GUI gui)` with the fixed sequence
+- **`drawElements(GUI gui)`**: Abstract method that subclasses implement
+
+
+
+#### Consequences
+- **Code reuse**: Common algorithm defined once in base class
+- **Consistency**: All viewers follow the same rendering lifecycle
+- **Extensibility**: New viewers only implement `drawElements()`
+
+---
+
+### 4. Strategy Pattern
+
+#### Problem in Context
+Different lanes have different physics and collision handling, so it is determined at run-time which strategy to use.
+
+#### The Pattern
+"The **Strategy Pattern** defines a family of algorithms, encapsulates each one, and makes them interchangeable".
+
+#### Implementation
+- **`LaneController`**: Interface defining lane behavior (`update()`, `handleCollision()`, `isBlocked()`, `handlePhysics()`)
+- **`BaseLaneController`**: Abstract base class with common functionality
+- **Concrete Strategies**: `RoadLaneController`, `RiverController`, `SafeLaneController`
+
+The `GameController` uses the appropriate controller based on lane type, allowing each lane to have its own update and collision logic.
+
+#### Consequences
+- **Separation of concerns**: Each lane type's logic is isolated
+- **Open/Closed Principle**: New lane types can be added without modifying existing code
+
+---
+
+### 5. Composite Pattern
+#### Problem in Context
+The game has many related entities (Cars and Buses are Vehicles, Rivers and Roads are Lanes) that share common properties but have distinct behaviors. Without proper structuring, this leads to code duplication.
+
+#### The Pattern
+The **Composite Pattern** and inheritance hierarchies allow treating individual objects and compositions uniformly, while enabling shared behavior through base classes.
+
+#### Implementation
+**Lane Hierarchy:**
+- `Lane` (abstract)
+  - `RoadLane`
+  - `River`
+  - `SafeLane`
+
+**Vehicle Hierarchy:**
+- `Vehicle` (abstract)
+  - `Car`
+  - `Bus`
+
+**Viewer Hierarchy:**
+- `SpriteViewer<T>` (abstract, implements `ElementViewer<T>`)
+  - `PlayerViewer`
+  - `CarViewer`
+  - `BusViewer`
+  - `LogViewer`
+  - `TreeViewer`
+  - `CoinViewer`
+  - `RoadViewer`
+  - `RiverViewer`
+  - `SafeLaneViewer`
+
+
+#### Consequences
+- **Code reuse**: Common attributes (position, size) defined in base classes
+- **Polymorphism**; 
+- **Extensibility**;
+
+---
+
+### 6. Update Method Pattern
+
+#### Problem in Context
+The game has many entities (player, vehicles, logs, camera) that need to update their state each frame. Without a unified approach, the game loop would need to know the specific update logic for each entity type, leading to tightly coupled and hard-to-maintain code.
+
+#### The Pattern
+"The **Update Method** pattern simulates a collection of independent objects by telling each to process one frame of behavior at a time".
+
+#### Implementation
+- **`GameController.update()`**: Calls `update()` on all entities
+
+#### Consequences
+- **Encapsulation**: Each entity manages its own per-frame behavior
+- **Decoupling**: The game loop doesn't need to know entity-specific update logic
+- **Open/Closed**: New entity types can easily be added
+
+---
+
+### 7. Flyweight Pattern
+
+#### Problem in Context
+Lanterna drawing isn't very efficient, and there are many sprites in the game, leading to a laggy gameplay.
+
+#### The Pattern
+"The **Flyweight Pattern** uses sharing to support large numbers of fine-grained objects efficiently". 
+
+#### Implementation
+- **`SpriteViewer.cache`**: A static `Map<String, GUIImage>` that stores loaded sprites by their file path
+- **`getSprite(GUI gui, String path)`**: Checks the cache before loading; returns cached sprite if available
+- **`LanternaGUI.colorCache`**: A `Map<String, TextColor>` that caches parsed colors
+
+The sprite cache is shared across all viewer instances, ensuring each image is loaded only once regardless of how many entities use it, improving performance.
+
+#### Consequences
+- **Memory efficiency**: Sprites are loaded once and shared across all instances
+- **Performance**: Eliminates redundant file I/O and image processing
+---
 
 ## Known-code smells
 
@@ -204,7 +379,7 @@ There is also the presence of hardcoded values, such as the size of the grid, Ro
   <img src="images/testCoverage/jacoco.png"/>
 </p>
 <p align="center">
-  <b><i>Fig 10. Code coverage screenshot</i></b>
+  <b><i>Fig 12. Code coverage screenshot</i></b>
 </p>
 
 
