@@ -19,20 +19,7 @@ public class GameState extends State<Level> {
         public GameState(Game game) {
                 super(new Level(game.getTerminalGridWidth() + 1, game.getTerminalGridHeight()));
                 this.game = game;
-        }
 
-                Map<Class<?>, LaneController> controllerMap = createControllerMap();
-
-                PlayerController playerController = new PlayerController(getModel().getPlayer());
-                InputHandler inputHandler = new InputHandler(getModel(), playerController, controllerMap);
-                UserManager userManager = new UserManager();
-                ScoreManager scoreManager = new ScoreManager(getModel(), userManager);
-
-                this.controller = new GameController(getModel(), playerController, inputHandler, scoreManager,
-                                controllerMap);
-                for (int i = 0; i < 300; i++) {
-                        controller.update();
-                }
         }
 
         private Map<Class<?>, LaneController> createControllerMap() {
@@ -60,7 +47,7 @@ public class GameState extends State<Level> {
                         PlayerController playerController = new PlayerController(getModel().getPlayer());
                         InputHandler inputHandler = new InputHandler(getModel(), playerController, controllerMap);
                         UserManager userManager = new UserManager();
-                   
+
                         ScoreManager scoreManager = new ScoreManager(getModel(), userManager);
                         LaneGenerationManager laneGenerationManager = new LaneGenerationManager(getModel());
                         PhysicsManager physicsManager = new PhysicsManager(getModel(), controllerMap);
