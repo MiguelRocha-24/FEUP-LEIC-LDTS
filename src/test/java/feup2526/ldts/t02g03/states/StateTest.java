@@ -41,7 +41,7 @@ class StateTest {
         state.step(mockGame, mockGUI, time);
 
         // Verify that controller.step and viewer.draw were called
-        verify(mockController).step(mockGame, mockGUI.readInput(), time);
+        verify(mockController).step(mockGame, mockGUI.readInput());
         verify(mockViewer).draw(mockGUI);
     }
 }

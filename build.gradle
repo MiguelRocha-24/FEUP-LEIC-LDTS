@@ -45,13 +45,15 @@ pitest {
     // Selective mutation testing - only controllers
     // Excluding Game class due to threading and System.exit() issues
     targetClasses = [
-        'feup2526.ldts.t02g03.controller.*'
+        'feup2526.ldts.t02g03.controller.*',
+        'feup2526.ldts.t02g03.model.*'
     ]
     excludedClasses = [
         'feup2526.ldts.t02g03.application.Game'
     ]
     targetTests = [
-        'feup2526.ldts.t02g03.controller.*'
+        'feup2526.ldts.t02g03.controller.*',
+        'feup2526.ldts.t02g03.model.*'
     ]
     mutators = ['DEFAULTS']
     outputFormats = ['HTML', 'XML']
