@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
-import feup2526.ldts.t02g03.model.game.*;
+import static org.mockito.Mockito.mock;
 
 public class LevelTest{
     private Level level;
@@ -21,15 +21,10 @@ public class LevelTest{
         assertNotNull(level.getGrid());
         assertNotNull(level.getPlayer());
         assertNotNull(level.getLanes());
-
         assertEquals(width, level.getGrid().getW());
         assertEquals(height, level.getGrid().getH());
-
-        // Assuming default start position is width/2, height-2 as per Level.java
         assertEquals(new Position(width / 2, height - 2), level.getPlayer().getPosition());
-
         List<Lane> lanes = level.getLanes();
-        // Initial lanes: 2 safe lanes
         assertFalse(lanes.isEmpty());
     }
 
@@ -53,5 +48,20 @@ public class LevelTest{
         level.handleCollision();
         assertTrue(level.isCollisionDetected());
         assertTrue(level.getCollisionTime() > 0);
+    }
+
+    @Test
+    void testAddLane() {
+        Lane mockLane = mock(Lane.class);
+        level.addLane(5, mockLane);
+        assertEquals(mockLane, level.getLane(5));
+    }
+
+    @Test
+    void testRemoveLane() {
+        Lane mockLane = mock(Lane.class);
+        level.addLane(5, mockLane);
+        level.removeLane(5);
+        assertNull(level.getLane(5));
     }
 }
