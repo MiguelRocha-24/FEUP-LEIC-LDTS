@@ -36,15 +36,15 @@ class ShopControllerTest {
 
     @Test
     void testNavigation() throws IOException {
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowRight), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowRight));
         Mockito.verify(mockShop).nextSkin();
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowLeft), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowLeft));
         Mockito.verify(mockShop).previousSkin();
     }
 
     @Test
     void testReturnToMenu() throws IOException {
-        controller.step(mockGame, new KeyStroke(KeyType.Escape), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Escape));
         Mockito.verify(mockGame).setState(Mockito.any());
     }
 
@@ -55,7 +55,7 @@ class ShopControllerTest {
         owned.add("chicken");
 
         Mockito.when(mockUser.getOwnedSkins()).thenReturn(owned);
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockUser).setEquippedSkin("chicken");
         Mockito.verify(mockUserManager).updateUser(mockUser);
     }
@@ -68,7 +68,7 @@ class ShopControllerTest {
 
         ArrayList<String> owned = new ArrayList<>();
         Mockito.when(mockUser.getOwnedSkins()).thenReturn(owned);
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
 
         Mockito.verify(mockUser).setCoins(100);
         assert (owned.contains("rabbit"));
@@ -82,7 +82,7 @@ class ShopControllerTest {
         Mockito.when(mockUser.getCoins()).thenReturn(50);
         Mockito.when(mockUser.getOwnedSkins()).thenReturn(new ArrayList<>());
 
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
 
         Mockito.verify(mockUser, Mockito.never()).setCoins(Mockito.anyInt());
         Mockito.verify(mockUser, Mockito.never()).setEquippedSkin(Mockito.anyString());

@@ -40,16 +40,21 @@ class RemoveUserControllerTest {
     void testNavigation() throws IOException {
         when(mockModel.isConfirming()).thenReturn(false);
 
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowDown), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowDown));
         verify(mockModel).nextEntry();
 
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowUp), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowUp));
         verify(mockModel).previousEntry();
 
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         verify(mockModel).setConfirming(true);
 
-        controller.step(mockGame, new KeyStroke(KeyType.Escape), 0);
+        clearInvocations(mockModel);
+        controller.step(mockGame, new KeyStroke(KeyType.Insert)); // Random key
+        verify(mockModel, never()).nextEntry();
+        verify(mockModel, never()).previousEntry();
+
+        controller.step(mockGame, new KeyStroke(KeyType.Escape));
         verify(mockGame).returnToMenu();
     }
 
@@ -57,10 +62,14 @@ class RemoveUserControllerTest {
     void testConfirmationNavigation() throws IOException {
         when(mockModel.isConfirming()).thenReturn(true);
 
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowRight), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowRight));
         verify(mockModel).toggleConfirmOption();
 
-        controller.step(mockGame, new KeyStroke(KeyType.Escape), 0);
+        clearInvocations(mockModel);
+        controller.step(mockGame, new KeyStroke(KeyType.Insert)); // Random key
+        verify(mockModel, never()).toggleConfirmOption();
+
+        controller.step(mockGame, new KeyStroke(KeyType.Escape));
         verify(mockModel).setConfirming(false);
     }
 
@@ -68,7 +77,7 @@ class RemoveUserControllerTest {
     void testRemoveUserCancel() throws IOException {
         when(mockModel.isConfirming()).thenReturn(true);
         when(mockModel.getConfirmOptionIndex()).thenReturn(1);
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
 
         verify(mockUserManager, never()).removeUser(anyString());
         verify(mockGame).setState(any(MenuState.class));
@@ -85,7 +94,7 @@ class RemoveUserControllerTest {
         when(mockModel.getUserToRemove()).thenReturn(userToRemove);
         when(mockParentMenu.getCurrentUser()).thenReturn(currentUser);
 
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
 
         verify(mockUserManager).removeUser("UserToRemove");
         verify(mockParentMenu, never()).setCurrentUser(any());
@@ -101,7 +110,7 @@ class RemoveUserControllerTest {
         when(mockModel.getUserToRemove()).thenReturn(userToRemove);
         when(mockParentMenu.getCurrentUser()).thenReturn(userToRemove);
         when(mockModel.getUsers()).thenReturn(new ArrayList<>());
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         verify(mockUserManager).removeUser("LastUser");
         verify(mockParentMenu).setCurrentUser(null);
         verify(mockGame).setCurrentUser(null);

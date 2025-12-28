@@ -14,11 +14,10 @@ class GameOverControllerTest {
         GameOver mockModel = Mockito.mock(GameOver.class);
         GameOverController controller = new GameOverController(mockModel);
         Game mockGame = Mockito.mock(Game.class);
-        
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowUp), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowUp));
         Mockito.verify(mockModel).previousEntry();
         
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowDown), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowDown));
         Mockito.verify(mockModel).nextEntry();
     }
     
@@ -29,12 +28,12 @@ class GameOverControllerTest {
         Game mockGame = Mockito.mock(Game.class);
         
         Mockito.when(mockModel.isSelected("Play Again")).thenReturn(true);
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockGame).startGameState();
         
         Mockito.when(mockModel.isSelected("Play Again")).thenReturn(false);
         Mockito.when(mockModel.isSelected("Main Menu")).thenReturn(true);
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockGame).returnToMenu();
     }
 }

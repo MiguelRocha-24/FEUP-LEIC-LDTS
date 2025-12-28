@@ -29,17 +29,17 @@ class MenuControllerTest {
 
     @Test
     void testNullKeyHandling() throws IOException {
-        controller.step(mockGame, null, 0);
+        controller.step(mockGame, null);
         Mockito.verifyNoInteractions(mockGame);
     }
 
     @Test
     void testNavigation() throws IOException {
         // Test ArrowDown -> nextEntry
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowDown), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowDown));
         Mockito.verify(mockMenu).nextEntry();
         // Test ArrowUp -> previousEntry
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowUp), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowUp));
         Mockito.verify(mockMenu).previousEntry();
     }
 
@@ -48,7 +48,7 @@ class MenuControllerTest {
         Mockito.when(mockMenu.isSelected("Start")).thenReturn(true);
         User mockUser = Mockito.mock(User.class);
         Mockito.when(mockMenu.getCurrentUser()).thenReturn(mockUser);
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockGame).setCurrentUser(mockUser);
         Mockito.verify(mockGame).startGameState();
     }
@@ -57,14 +57,14 @@ class MenuControllerTest {
     void testEnterExit() throws IOException {
         // Test Exit option
         Mockito.when(mockMenu.isSelected("Exit")).thenReturn(true);
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockGame).setState(null);
     }
 
     @Test
     void testEnterChangeUser() throws IOException {
         Mockito.when(mockMenu.isSelected("Change User")).thenReturn(true);
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockMenu).setUserListActive(true);
     }
 
@@ -73,16 +73,16 @@ class MenuControllerTest {
         User mockUser = Mockito.mock(User.class);
         Mockito.when(mockMenu.isSelected("Shop")).thenReturn(true);
         Mockito.when(mockMenu.getCurrentUser()).thenReturn(mockUser);
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockGame).setState(any());
     }
 
     @Test
     void testUserListNavigation() throws IOException {
         Mockito.when(mockMenu.isUserListActive()).thenReturn(true);
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowDown), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowDown));
         Mockito.verify(mockMenu).nextEntry();
-        controller.step(mockGame, new KeyStroke(KeyType.ArrowUp), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.ArrowUp));
         Mockito.verify(mockMenu).previousEntry();
     }
 
@@ -95,7 +95,7 @@ class MenuControllerTest {
         Mockito.when(mockMenu.getUserManager()).thenReturn(mockUserManager);
         Mockito.when(mockUserManager.getUsers()).thenReturn(Arrays.asList(mockUser));
 
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockGame).setCurrentUser(mockUser);
         Mockito.verify(mockMenu).setCurrentUser(mockUser);
         Mockito.verify(mockMenu).setUserListActive(false);
@@ -108,7 +108,7 @@ class MenuControllerTest {
         Mockito.when(mockMenu.getSelectedUserIndex()).thenReturn(2);
         Mockito.when(mockMenu.getUserManager()).thenReturn(mockUserManager);
         Mockito.when(mockUserManager.getUsers()).thenReturn(Arrays.asList(Mockito.mock(User.class), Mockito.mock(User.class)));
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockGame).setState(any());
     }
 
@@ -119,7 +119,7 @@ class MenuControllerTest {
         Mockito.when(mockMenu.getSelectedUserIndex()).thenReturn(3);
         Mockito.when(mockMenu.getUserManager()).thenReturn(mockUserManager);
         Mockito.when(mockUserManager.getUsers()).thenReturn(Arrays.asList(Mockito.mock(User.class), Mockito.mock(User.class)));
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockGame).setState(any());
     }
 
@@ -132,14 +132,14 @@ class MenuControllerTest {
         Mockito.when(mockMenu.getUserManager()).thenReturn(mockUserManager);
         Mockito.when(mockUserManager.getUsers()).thenReturn(new ArrayList<>());
 
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
         Mockito.verify(mockGame, Mockito.never()).setState(any());
     }
 
     @Test
     void testUserListEscape() throws IOException {
         Mockito.when(mockMenu.isUserListActive()).thenReturn(true);
-        controller.step(mockGame, new KeyStroke(KeyType.Escape), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Escape));
         Mockito.verify(mockMenu).setUserListActive(false);
     }
 }

@@ -28,10 +28,8 @@ class NewUserControllerTest {
         mockMenu = mock(Menu.class);
         mockGame = mock(Game.class);
         mockUserManager = mock(UserManager.class);
-        
         when(mockMenu.getUserManager()).thenReturn(mockUserManager);
         controller = new NewUserController(mockMenu);
-        
         // Ensure clean state
         NewUserViewer.clearInput();
     }
@@ -48,42 +46,42 @@ class NewUserControllerTest {
         NewUserViewer.append('e');
         NewUserViewer.append('s');
         NewUserViewer.append('t');
-        
+
         java.util.ArrayList<String> skins = new java.util.ArrayList<>();
         skins.add("chicken");
         User mockUser = new User("Test", 0, 0, "chicken", skins);
-        
+
         when(mockUserManager.getUser("Test")).thenReturn(mockUser);
-        
-        controller.step(mockGame, new KeyStroke(KeyType.Enter), 0);
-        
+
+        controller.step(mockGame, new KeyStroke(KeyType.Enter));
+
         verify(mockUserManager).addUser("Test");
         verify(mockGame).setCurrentUser(any(User.class));
         verify(mockGame).returnToMenu();
-        
+
         assertEquals("", NewUserViewer.getCurrentInput());
     }
-    
+
     @Test
     void testEscape() throws IOException {
         NewUserViewer.append('A');
-        
-        controller.step(mockGame, new KeyStroke(KeyType.Escape), 0);
-        
+
+        controller.step(mockGame, new KeyStroke(KeyType.Escape));
+
         assertEquals("", NewUserViewer.getCurrentInput());
         verify(mockGame).returnToMenu();
     }
-    
+
     @Test
     void testTyping() throws IOException {
-        controller.step(mockGame, new KeyStroke('a', false, false), 0);
+        controller.step(mockGame, new KeyStroke('a', false, false));
         assertEquals("a", NewUserViewer.getCurrentInput());
     }
-    
+
     @Test
     void testBackspace() throws IOException {
         NewUserViewer.append('a');
-        controller.step(mockGame, new KeyStroke(KeyType.Backspace), 0);
+        controller.step(mockGame, new KeyStroke(KeyType.Backspace));
         assertEquals("", NewUserViewer.getCurrentInput());
     }
 }
