@@ -13,18 +13,15 @@ class RiverControllerTest {
 
     @BeforeEach
     void setUp() {
-        controller = new RiverController(0.5, 2, 1, 1);
+        controller = new RiverController(0.5);
         river = new River(1, Direction.RIGHT, 1.0);
         level = new Level(10, 10);
     }
 
     @Test
     void testConstructorValidation() {
-        assertThrows(IllegalArgumentException.class, () -> new RiverController(-0.1, 2, 1, 1));
-        assertThrows(IllegalArgumentException.class, () -> new RiverController(1.1, 2, 1, 1));
-        assertThrows(IllegalArgumentException.class, () -> new RiverController(0.5, 0, 1, 1));
-        assertThrows(IllegalArgumentException.class, () -> new RiverController(0.5, 2, 0, 1));
-        assertThrows(IllegalArgumentException.class, () -> new RiverController(0.5, 2, 1, 0));
+        assertThrows(IllegalArgumentException.class, () -> new RiverController(-0.1));
+        assertThrows(IllegalArgumentException.class, () -> new RiverController(1.1));
     }
 
     @Test
@@ -37,9 +34,9 @@ class RiverControllerTest {
 
     @Test
     void testCleanupRemovesOutOfBounds() {
-        RiverController noSpawnController = new RiverController(0.0, 2, 1, 1);
+        RiverController noSpawnController = new RiverController(0.0);
         Log inBoundsLog = new Log(new Position(5, 1), Direction.RIGHT);
-        Log outOfBoundsLog = new Log(new Position(11, 1), Direction.RIGHT);
+        Log outOfBoundsLog = new Log(new Position(13, 1), Direction.RIGHT);
         river.addLog(inBoundsLog);
         river.addLog(outOfBoundsLog);
         noSpawnController.update(river, level);
@@ -49,10 +46,10 @@ class RiverControllerTest {
 
     @Test
     void testCleanupLeftDirection() {
-        RiverController noSpawnController = new RiverController(0.0, 2, 1, 1);
+        RiverController noSpawnController = new RiverController(0.0);
         River leftRiver = new River(1, Direction.LEFT, 1.0);
         Log inBoundsLog = new Log(new Position(5, 1), Direction.LEFT);
-        Log outOfBoundsLog = new Log(new Position(-1, 1), Direction.LEFT);
+        Log outOfBoundsLog = new Log(new Position(-3, 1), Direction.LEFT);
         leftRiver.addLog(outOfBoundsLog);
         leftRiver.addLog(inBoundsLog);
         noSpawnController.update(leftRiver, level);

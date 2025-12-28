@@ -15,29 +15,19 @@ public class RoadLaneControllerTest {
     @Test
     void testBuilder() {
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            new RoadLaneController(-0.1, 1, 1, 1);
+            new RoadLaneController(-0.1, 1);
         });
         assertTrue(thrown.getMessage().contains("Spawn chance"));
 
         IllegalArgumentException thrown2 = assertThrows(IllegalArgumentException.class, () -> {
-            new RoadLaneController(1.1, 1, 1, 1);
+            new RoadLaneController(1.1, 1);
         });
         assertTrue(thrown2.getMessage().contains("Spawn chance"));
-
-        IllegalArgumentException thrown3 = assertThrows(IllegalArgumentException.class, () -> {
-            new RoadLaneController(0.5, 0, 1, 1);
-        });
-        assertTrue(thrown3.getMessage().contains("Invalid speed"));
-
-        IllegalArgumentException thrown4 = assertThrows(IllegalArgumentException.class, () -> {
-            new RoadLaneController(0.5, 2, 1, 1);
-        });
-        assertTrue(thrown4.getMessage().contains("Invalid speed"));
     }
 
     @Test
     void testMoveVehicle() {
-        RoadLaneController RLC = new RoadLaneController(0.0, 1, 1, 1);
+        RoadLaneController RLC = new RoadLaneController(0.0, 1);
         roadLane.addVehicle(new Vehicle(new Position(2, 1), Direction.LEFT));
         roadLane.addVehicle(new Vehicle(new Position(5, 1), Direction.LEFT));
         RLC.update(roadLane, level);
@@ -47,7 +37,7 @@ public class RoadLaneControllerTest {
 
     @Test
     void testCleanupLeft() {
-        RoadLaneController RLC = new RoadLaneController(0.0, 1, 1, 1); // 0 spawn chance to isolate cleanup
+        RoadLaneController RLC = new RoadLaneController(0.0, 1); // 0 spawn chance to isolate cleanup
         roadLane.addVehicle(new Vehicle(new Position(-4, 1), Direction.LEFT));
         assertEquals(1, roadLane.getVehicles().size());
         RLC.update(roadLane, level);
@@ -57,7 +47,7 @@ public class RoadLaneControllerTest {
     @Test
     void testMaybeSpawn() {
         Random mockRandom = Mockito.mock(Random.class);
-        RoadLaneController controller = new RoadLaneController(0.5, 1, 1, 1);
+        RoadLaneController controller = new RoadLaneController(0.5, 1);
         controller.setRandom(mockRandom);
         // Less than means spawn, more means no spawn
 
@@ -81,7 +71,7 @@ public class RoadLaneControllerTest {
         Mockito.when(mockPlayer.getWidth()).thenReturn(1.0);
 
         roadLane.addVehicle(new Vehicle(new Position(5, 1), Direction.LEFT));
-        RoadLaneController controller = new RoadLaneController(0.5, 1, 1, 1);
+        RoadLaneController controller = new RoadLaneController(0.5, 1);
         controller.handleCollision(roadLane, mockLevel);
 
         Mockito.verify(mockLevel).handleCollision();
@@ -89,7 +79,7 @@ public class RoadLaneControllerTest {
 
     @Test
     void testHandleCollisionNotDetected() {
-        RoadLaneController controller = new RoadLaneController(0.5, 1, 1, 1);
+        RoadLaneController controller = new RoadLaneController(0.5, 1);
         roadLane.addVehicle(new Vehicle(new Position(5, 1), Direction.LEFT));
 
         // Wrong row - no collision
@@ -114,7 +104,7 @@ public class RoadLaneControllerTest {
     @Test
     void testSpawnVehicles() {
         Random mockRandom = Mockito.mock(Random.class);
-        RoadLaneController controller = new RoadLaneController(0.5, 1, 1, 1);
+        RoadLaneController controller = new RoadLaneController(0.5, 1);
         controller.setRandom(mockRandom);
 
         // Spawn Car
@@ -138,9 +128,7 @@ public class RoadLaneControllerTest {
 
     @Test
     void testGetters() {
-        RoadLaneController controller = new RoadLaneController(0.1, 1, 2, 1);
+        RoadLaneController controller = new RoadLaneController(0.1, 1);
         assertEquals(0.1, controller.getSpawnChance());
-        assertEquals(1, controller.getMinSpeed());
-        assertEquals(2, controller.getMaxSpeed());
     }
 }

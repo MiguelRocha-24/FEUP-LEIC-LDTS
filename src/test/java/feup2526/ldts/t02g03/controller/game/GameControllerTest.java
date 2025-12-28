@@ -70,7 +70,7 @@ class GameControllerTest {
     void testGameOverTransition() throws IOException {
         when(level.isGameOver()).thenReturn(true);
         when(scoreManager.getRunScore()).thenReturn(mock(RunScore.class));
-        gameController.step(game, null, 100);
+        gameController.step(game, null);
         verify(game).setState(any(GameOverState.class));
     }
 
@@ -80,7 +80,7 @@ class GameControllerTest {
         when(level.isCollisionDetected()).thenReturn(false);
         when(scoreManager.getRunScore()).thenReturn(mock(RunScore.class));
         KeyStroke qKey = new KeyStroke('q', false, false);
-        gameController.step(game, qKey, 100);
+        gameController.step(game, qKey);
         verify(game).setState(any(GameOverState.class));
     }
 
@@ -90,7 +90,7 @@ class GameControllerTest {
         when(level.isCollisionDetected()).thenReturn(false);
         when(scoreManager.getRunScore()).thenReturn(mock(RunScore.class));
         KeyStroke escKey = new KeyStroke(KeyType.Escape);
-        gameController.step(game, escKey, 100);
+        gameController.step(game, escKey);
         verify(game).setState(any(GameOverState.class));
     }
 
@@ -99,7 +99,7 @@ class GameControllerTest {
         when(level.isGameOver()).thenReturn(false);
         when(level.isCollisionDetected()).thenReturn(false);
         KeyStroke wKey = new KeyStroke('w', false, false);
-        gameController.step(game, wKey, 100);
+        gameController.step(game, wKey);
         verify(inputHandler).handleInput(wKey);
     }
 
