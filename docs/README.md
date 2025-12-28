@@ -225,9 +225,9 @@ The game has multiple states (Main Menu and its options, and the main Gameplay),
 - **Context**: The `Game` class holds the current `State<?>` and delegates `step()` calls to it
 
 #### Consequences
-- **Encapsulation**: Each state manages its own behavior completely
-- **Extensibility**: New screens/ states can easily be added.
-- **Flexibility**: Different GUIs can be used for different states.
+- **Single Responsibility Principle (SRP)**: Each state encapsulates its own behavior and logic, preventing a "God Class" that handles all game states.
+- **Open/Closed Principle (OCP)**: New states can be introduced without modifying the existing `Game` class or other states.
+- **Simplicity**: Eliminates complex conditional logic (switch/case) in the main game loop related to state management.
 
 ### 2. Factory Method Pattern
 
@@ -243,8 +243,8 @@ The game needs different GUI configurations for menus (larger font) and gameplay
 
 
 #### Consequences
-- **Abstraction**: The `Game` class doesn't know about Lanterna specifics
-- **Flexibility**: Different GUI implementations can be swapped by changing the factory, keeping an easy to change design. 
+- **Dependency Inversion Principle (DIP)**: The high-level `Game` class depends on the `GUIFactory` abstraction, not on the concrete `LanternaGUI` implementation.
+- **Open/Closed Principle (OCP)**: Other GUI libraries can easily be implemented. 
 
 ---
 

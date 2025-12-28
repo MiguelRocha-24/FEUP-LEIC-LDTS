@@ -1,6 +1,6 @@
 package feup2526.ldts.t02g03.model.menu;
 
-import java.io.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
