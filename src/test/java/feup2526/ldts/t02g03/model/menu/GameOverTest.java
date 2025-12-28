@@ -26,9 +26,9 @@ class GameOverTest {
         assertTrue(gameOver.isSelected(1));
         
         gameOver.nextEntry();
-        assertTrue(gameOver.isSelected(0)); // Loop back
+        assertTrue(gameOver.isSelected(0));
         
         gameOver.previousEntry();
-        assertTrue(gameOver.isSelected(1)); // Loop back
+        assertTrue(gameOver.isSelected(1));
     }
 }
