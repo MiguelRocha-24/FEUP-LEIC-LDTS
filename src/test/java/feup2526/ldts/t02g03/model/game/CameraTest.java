@@ -15,6 +15,16 @@ class CameraTest {
     }
 
     @Test
+    void testSetters() {
+        Camera camera = new Camera(10.0);
+        camera.setY(20.0);
+        assertEquals(20.0, camera.getY());
+
+        camera.setSpeed(5.5);
+        assertEquals(5.5, camera.getSpeed());
+    }
+
+    @Test
     void testStartMoving() {
         Camera camera = new Camera(100.0);
         camera.startMoving();
@@ -32,18 +42,18 @@ class CameraTest {
     void testUpdateMoving() {
         Camera camera = new Camera(100.0);
         camera.startMoving();
-        
-        // Player is far up (screenY is small)
-        // camera y = 100
-        // player y = 20
-        // playerScreenY = 20 - 100 = -80
-        // startThreshold = 100 * 0.65 = 65
-        // playerScreenY < startThreshold -> should move
-        
         double initialY = camera.getY();
         camera.update(20.0, 100);
-        
         assertTrue(camera.getY() < initialY);
         assertTrue(camera.getSpeed() > 0);
+    }
+
+    @Test
+    void testUpdateSpeedReducedToZero() {
+        Camera camera = new Camera(100.0);
+        camera.startMoving();
+        camera.setSpeed(5.0);
+        camera.update(170.0, 100);
+        assertEquals(0.0, camera.getSpeed());
     }
 }

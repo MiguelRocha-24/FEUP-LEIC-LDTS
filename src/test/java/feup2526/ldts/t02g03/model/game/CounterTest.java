@@ -9,7 +9,13 @@ class CounterTest {
         public ConcreteCounter() { super(); }
         public ConcreteCounter(int count) { super(count); }
     }
-
+    
+    @Test
+    void testConstructor() {
+        Counter c = new ConcreteCounter(50);
+        assertEquals(50, c.getCount());
+    }
+    
     @Test
     void testLogic() {
         Counter c = new ConcreteCounter();
@@ -26,7 +32,7 @@ class CounterTest {
 
         c.decrement(2);
         assertEquals(3, c.getCount());
-        
+
         c.setCount(10);
         assertEquals(10, c.getCount());
     }

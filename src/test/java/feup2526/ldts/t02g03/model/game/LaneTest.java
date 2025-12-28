@@ -1,7 +1,6 @@
 package feup2526.ldts.t02g03.model.game;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import feup2526.ldts.t02g03.model.game.Lane;
 
 public class LaneTest {
     private class TestLane extends Lane {

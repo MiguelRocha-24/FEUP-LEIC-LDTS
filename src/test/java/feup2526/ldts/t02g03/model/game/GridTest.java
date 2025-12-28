@@ -1,8 +1,6 @@
 package feup2526.ldts.t02g03.model.game;
 
 import org.junit.jupiter.api.Test;
-import feup2526.ldts.t02g03.model.game.Grid;
-import feup2526.ldts.t02g03.model.game.Position;
 
 import static org.junit.jupiter.api.Assertions.*;
 
