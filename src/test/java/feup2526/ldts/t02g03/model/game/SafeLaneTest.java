@@ -9,7 +9,7 @@ class SafeLaneTest {
 
     @BeforeEach
     void setUp() {
-        safeLane = new SafeLane(1, 10, false); // No random spawn for deterministic tests
+        safeLane = new SafeLane(1, 10, false);
     }
 
     @Test
