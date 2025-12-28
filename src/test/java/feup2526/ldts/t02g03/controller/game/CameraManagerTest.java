@@ -4,8 +4,6 @@ import feup2526.ldts.t02g03.model.game.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class CameraManagerTest {
     @Test
     void testUpdateStartsMoving() {
