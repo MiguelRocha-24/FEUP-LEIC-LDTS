@@ -17,7 +17,7 @@ public class NumberViewer {
         this.numberSprites = new HashMap<>();
     }
 
-    private GUIImage getSprite(GUI gui, int number) {
+    protected GUIImage getSprite(GUI gui, int number) {
         if (!numberSprites.containsKey(number)) {
             try {
                 BufferedImage image = ImageIO.read(new File("docs/images/sprites/numbers/nr" + number + ".png"));

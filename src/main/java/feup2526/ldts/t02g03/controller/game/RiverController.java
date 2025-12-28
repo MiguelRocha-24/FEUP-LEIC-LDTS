@@ -37,13 +37,13 @@ public class RiverController extends BaseLaneController {
         if (river.getDirection() == Direction.LEFT) {
             // Logs leave screen after passing left barrier (x=0-removeBuffer)
             int cutoff = -REMOVE_BUFFER;
-            while (river.getLogs().getFirst().getPosition().getX() < cutoff) {
+            while (!river.getLogs().isEmpty() && river.getLogs().getFirst().getPosition().getX() < cutoff) {
                 river.getLogs().removeFirst();
             }
         } else {
             // Logs leave screen after passing right barrier (x=grid width+removeBuffer)
             int cutoff = grid.getW() + REMOVE_BUFFER;
-            while (river.getLogs().getLast().getPosition().getX() > cutoff) {
+            while (!river.getLogs().isEmpty() && river.getLogs().getLast().getPosition().getX() > cutoff) {
                 river.getLogs().removeLast();
             }
         }
@@ -80,6 +80,7 @@ public class RiverController extends BaseLaneController {
     }
 
     public Log getLogAt(River river, Position pos) {
+        // adds 0.5 due to player drawing being in the center of a 16x16 tile.
         double centered = pos.getX() + 0.5;
         for (Log log : river.getLogs()) {
             double lMin = log.getPosition().getX();

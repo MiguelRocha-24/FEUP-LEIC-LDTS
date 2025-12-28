@@ -374,11 +374,14 @@ Throughout the development of the game, lots of value were hardcoded, such as th
 Our Game.java class also has a lot of instanceof checks that determine whether the state is of game type or menu type. We know it is not the best practice, but was the only way we found during development window to allow not to recreate the GUI every time the state changes.
 
 There are also some "god" methods spread throughout the code, such as input handling in various controllers, that spread dozens of lines inside a switch case, but we found no other way to handle the multiple possible inputs from user. Same for the ShopViewer drawElements method, which is also a "god" method. 
+
 Input handling could have been implemented through the command pattern, but we found it overcomplicated for the goal. Also, its main benefits of "undoing" and "redoing" actions are not needed for the game.
 
 There's also duplicate caches for the skins between shop and SpriteViewer, but we don't consider it important enough to justify adding the dependency between them, as currently the shop only has 4 skins, and at most one of them will be stored by the main game cache. 
 
-We are also aware that the error handling is not the best, as we only catch IOExceptions and print the stack trace, but we don't really expect any other exceptions to be thrown, due to the testing. 
+We are also aware that the error handling is not the best, as we only catch IOExceptions and print the stack trace, but we don't really expect any other exceptions to be thrown, due to the testing.
+
+NewUserController and NewUserViewer are also tightly coupled, and we are aware of this Code-Smell. We decided to accept this trade-off, as NewUserViewer is very simple, and the benefits of decoupling are not worth the added complexity, at least considering our specific use case. 
 ## Testing
 
 

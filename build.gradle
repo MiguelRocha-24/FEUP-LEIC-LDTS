@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'jacoco'
+    id 'info.solidsoft.pitest' version '1.15.0'
 }
 
 group = 'com.MiguelRocha-24.hero'
@@ -37,4 +38,25 @@ tasks.jacocoTestReport {
         xml.required = true
         html.required = true
     }
+}
+
+pitest {
+    junit5PluginVersion = '1.2.1'
+    // Selective mutation testing - only controllers
+    // Excluding Game class due to threading and System.exit() issues
+    targetClasses = [
+        'feup2526.ldts.t02g03.controller.*'
+    ]
+    excludedClasses = [
+        'feup2526.ldts.t02g03.application.Game'
+    ]
+    targetTests = [
+        'feup2526.ldts.t02g03.controller.*'
+    ]
+    mutators = ['DEFAULTS']
+    outputFormats = ['HTML', 'XML']
+    timestampedReports = true
+    threads = 4
+    excludedMethods = ['main']
+    verbose = false
 }

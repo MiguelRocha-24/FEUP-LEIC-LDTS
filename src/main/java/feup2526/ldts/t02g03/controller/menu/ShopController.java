@@ -58,9 +58,13 @@ public class ShopController extends Controller<Shop> {
         }
 
         if (changed) {
-            UserManager userManager = new UserManager();
+            UserManager userManager = createUserManager();
             userManager.updateUser(user);
         }
+    }
+
+    protected UserManager createUserManager() {
+        return new UserManager();
     }
 
     private void returnToMenu(Game game) {
