@@ -3,24 +3,13 @@ package feup2526.ldts.t02g03.controller.game;
 import feup2526.ldts.t02g03.model.game.*;
 
 public class RiverController extends BaseLaneController {
-    private int minGap;
-    private int removeBuffer;
-    private int spawnOffset;
+    private static final int MIN_GAP = 3;
+    private static final int REMOVE_BUFFER = 2;
 
-    public RiverController(double spawnChance, int minGap, int removeBuffer, int spawnOffset) {
+    public RiverController(double spawnChance) {
         super(spawnChance);
         if (spawnChance < 0 || spawnChance > 1)
             throw new IllegalArgumentException("Spawn chance must be between 0 and 1");
-        if (minGap <= 0)
-            throw new IllegalArgumentException("Min gap must be > 0");
-        if (removeBuffer <= 0)
-            throw new IllegalArgumentException("Remove buffer must be > 0");
-        if (spawnOffset <= 0)
-            throw new IllegalArgumentException("Spawn offset must be > 0");
-
-        this.minGap = minGap;
-        this.removeBuffer = removeBuffer;
-        this.spawnOffset = spawnOffset;
     }
 
     @Override
@@ -47,13 +36,13 @@ public class RiverController extends BaseLaneController {
 
         if (river.getDirection() == Direction.LEFT) {
             // Logs leave screen after passing left barrier (x=0-removeBuffer)
-            int cutoff = -removeBuffer;
+            int cutoff = -REMOVE_BUFFER;
             while (!river.getLogs().isEmpty() && river.getLogs().getFirst().getPosition().getX() < cutoff) {
                 river.getLogs().removeFirst();
             }
         } else {
             // Logs leave screen after passing right barrier (x=grid width+removeBuffer)
-            int cutoff = grid.getW() + removeBuffer;
+            int cutoff = grid.getW() + REMOVE_BUFFER;
             while (!river.getLogs().isEmpty() && river.getLogs().getLast().getPosition().getX() > cutoff) {
                 river.getLogs().removeLast();
             }
@@ -67,9 +56,9 @@ public class RiverController extends BaseLaneController {
             return;
         int entryX;
         if (river.getDirection() == Direction.RIGHT) {
-            entryX = -spawnOffset;
+            entryX = -1;
         } else {
-            entryX = grid.getW() + spawnOffset;
+            entryX = grid.getW() + 1;
         }
 
         if (!isSpaceForSpawn(river, entryX))
@@ -83,10 +72,10 @@ public class RiverController extends BaseLaneController {
             return true;
         if (river.getDirection() == Direction.RIGHT) {
             double firstX = river.getLogs().getFirst().getPosition().getX();
-            return (firstX - entryX) >= (minGap + 1);
+            return (firstX - entryX) >= (MIN_GAP + 1);
         } else {
             double lastX = river.getLogs().getLast().getPosition().getX();
-            return (entryX - lastX) >= (minGap + 1);
+            return (entryX - lastX) >= (MIN_GAP + 1);
         }
     }
 
@@ -134,12 +123,11 @@ public class RiverController extends BaseLaneController {
         if (log != null) {
             // Center position on the log
             double centeredX = log.getPosition().getX();
-            
+
             if (isPlayerBody) {
                 // Keep player centered on the log
                 Position newPos = new Position(centeredX, level.getPlayer().getPosition().getY());
                 level.getPlayer().setPosition(newPos);
-
 
                 // Check if player went off-screen while on log
                 Player player = level.getPlayer();

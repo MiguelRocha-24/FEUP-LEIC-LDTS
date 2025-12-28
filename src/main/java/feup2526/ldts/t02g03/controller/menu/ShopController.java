@@ -18,8 +18,9 @@ public class ShopController extends Controller<Shop> {
     }
 
     @Override
-    public void step(Game game, KeyStroke key, long time) throws IOException {
-        if (key == null) return;
+    public void step(Game game, KeyStroke key) throws IOException {
+        if (key == null)
+            return;
 
         switch (key.getKeyType()) {
             case ArrowLeft:

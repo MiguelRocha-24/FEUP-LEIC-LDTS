@@ -15,7 +15,7 @@ public class RemoveUserController extends Controller<RemoveUser> {
     }
 
     @Override
-    public void step(Game game, KeyStroke key, long time) throws IOException {
+    public void step(Game game, KeyStroke key) throws IOException {
         if (key == null)
             return;
 

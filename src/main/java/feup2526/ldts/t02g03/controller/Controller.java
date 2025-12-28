@@ -15,5 +15,5 @@ public abstract class Controller<T> {
         return model;
     }
 
-    public abstract void step(Game game, KeyStroke key, long time) throws IOException;
+    public abstract void step(Game game, KeyStroke key) throws IOException;
 }

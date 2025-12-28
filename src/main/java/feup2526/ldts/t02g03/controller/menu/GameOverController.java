@@ -14,8 +14,9 @@ public class GameOverController extends Controller<GameOver> {
     }
 
     @Override
-    public void step(Game game, KeyStroke key, long time) throws IOException {
-        if (key == null) return;
+    public void step(Game game, KeyStroke key) throws IOException {
+        if (key == null)
+            return;
 
         if (key.getKeyType() == KeyType.ArrowUp) {
             getModel().previousEntry();
