@@ -1,57 +1,89 @@
 package feup2526.ldts.t02g03.application;
 
-import feup2526.ldts.t02g03.states.GameState;
-import feup2526.ldts.t02g03.states.MenuState;
-import feup2526.ldts.t02g03.states.State;
 import feup2526.ldts.t02g03.view.GUI;
 import feup2526.ldts.t02g03.view.LanternaGUIFactory;
+import feup2526.ldts.t02g03.model.menu.User;
+import feup2526.ldts.t02g03.model.menu.UserManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class GameTest {
-    @Test
-    void testConstructorSetsInitialState() throws Exception {
-        LanternaGUIFactory mockFactory = Mockito.mock(LanternaGUIFactory.class);
-        GUI mockGUI = Mockito.mock(GUI.class);
-        Mockito.when(mockFactory.createMenuGUI()).thenReturn(mockGUI);
-        
-        Game game = new Game(mockFactory);
-        
-        // Cannot access state directly, but can try step().
-        // Or setter/getter if available. Game only has setState.
-        // But constructor sets new MenuState.
-        // We can verify mockFactory.createMenuGUI was called.
-        Mockito.verify(mockFactory).createMenuGUI();
+    private LanternaGUIFactory mockFactory;
+    private GUI mockMenuGUI;
+    private GUI mockGameGUI;
+
+    @BeforeEach
+    void setUp() {
+        mockFactory = mock(LanternaGUIFactory.class);
+        mockMenuGUI = mock(GUI.class);
+        mockGameGUI = mock(GUI.class);
     }
 
     @Test
-    void testSetState() throws Exception {
-        LanternaGUIFactory mockFactory = Mockito.mock(LanternaGUIFactory.class);
-        GUI mockGUI = Mockito.mock(GUI.class);
-        Mockito.when(mockFactory.createMenuGUI()).thenReturn(mockGUI);
-        
-        Game game = new Game(mockFactory);
-        State mockState = Mockito.mock(State.class);
-        
-        game.setState(mockState);
-        // If state is not null, loop runs. Use null to stop.
-        // We can verify behavior of transition.
-        
-        // Transition from Menu to null.
-        // Logic: if currentIsMenu && !nextIsMenu -> close gui.
-        // Next is null (neither).
-        // If passed mockState is MenuState...
+    void testConstructorCreatesMenuGUI() throws Exception {
+        when(mockFactory.createMenuGUI()).thenReturn(mockMenuGUI);
+        new Game(mockFactory);
+        verify(mockFactory, times(1)).createMenuGUI();
     }
-    
+
     @Test
-    void testExit() throws Exception {
-        LanternaGUIFactory mockFactory = Mockito.mock(LanternaGUIFactory.class);
-        GUI mockGUI = Mockito.mock(GUI.class);
-        Mockito.when(mockFactory.createMenuGUI()).thenReturn(mockGUI);
-        
+    void testExitGameSetsStateToNull() throws Exception {
+        when(mockFactory.createMenuGUI()).thenReturn(mockMenuGUI);
         Game game = new Game(mockFactory);
         game.setState(null);
-        // Should not throw.
+        verify(mockFactory, times(1)).createMenuGUI();
+        verifyNoMoreInteractions(mockFactory);
+    }
+
+    @Test
+    void testGetCurrentUserInitiallyNull() throws Exception {
+        when(mockFactory.createMenuGUI()).thenReturn(mockMenuGUI);
+        Game game = new Game(mockFactory);
+        assertNull(game.getCurrentUser());
+    }
+
+    @Test
+    void testSetCurrentUser() throws Exception {
+        when(mockFactory.createMenuGUI()).thenReturn(mockMenuGUI);
+        Game game = new Game(mockFactory);
+        User mockUser = mock(User.class);
+        game.setCurrentUser(mockUser);
+        assertEquals(mockUser, game.getCurrentUser());
+    }
+
+    @Test
+    void testReturnToMenu() throws Exception {
+        when(mockFactory.createMenuGUI()).thenReturn(mockMenuGUI);
+        Game game = new Game(mockFactory);
+        UserManager userManager = new UserManager();
+        User user = userManager.getUser("TestUser");
+        game.setCurrentUser(user);
+        game.returnToMenu();
+        verify(mockFactory, times(1)).createMenuGUI();
+    }
+
+    @Test
+    void testStartGameClosesGUI() throws Exception {
+        when(mockFactory.createMenuGUI()).thenReturn(mockMenuGUI);
+        when(mockFactory.createGameGUI()).thenReturn(mockGameGUI);
+        when(mockFactory.getGridWidth(mockGameGUI)).thenReturn(20);
+        when(mockFactory.getGridHeight(mockGameGUI)).thenReturn(20);
+        Game game = new Game(mockFactory);
+        game.startGameState();
+        verify(mockMenuGUI, times(1)).close();
+    }
+
+    @Test
+    void testStartGameStateCreatesGameGUI() throws Exception {
+        when(mockFactory.createMenuGUI()).thenReturn(mockMenuGUI);
+        when(mockFactory.createGameGUI()).thenReturn(mockGameGUI);
+        when(mockFactory.getGridWidth(mockGameGUI)).thenReturn(20);
+        when(mockFactory.getGridHeight(mockGameGUI)).thenReturn(20);
+        Game game = new Game(mockFactory);
+        game.startGameState();
+        verify(mockFactory, times(1)).createGameGUI();
     }
 }
