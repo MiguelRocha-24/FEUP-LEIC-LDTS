@@ -18,12 +18,20 @@ public class GameViewer extends Viewer<Level> {
     public GameViewer(Level model) {
         super(model);
         int width = model.getGrid().getW();
-        this.playerViewer = new PlayerViewer();
-        this.numberViewer = new NumberViewer();
+        this.playerViewer = createPlayerViewer();
+        this.numberViewer = createNumberViewer();
         this.viewerMap = createViewerMap(width);
     }
 
-    private Map<Class<?>, LaneViewer> createViewerMap(int width) {
+    protected PlayerViewer createPlayerViewer() {
+        return new PlayerViewer();
+    }
+
+    protected NumberViewer createNumberViewer() {
+        return new NumberViewer();
+    }
+
+    protected Map<Class<?>, LaneViewer> createViewerMap(int width) {
         Map<Class<?>, LaneViewer> map = new HashMap<>();
         map.put(RoadLane.class, new RoadViewer(width));
         map.put(River.class, new RiverViewer(width));

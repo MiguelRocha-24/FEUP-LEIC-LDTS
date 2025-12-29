@@ -97,7 +97,7 @@ public class ShopViewer extends Viewer<Shop> {
         gui.drawText(1, 1, coinsInfo, "#FFD700");
     }
 
-    private GUIImage getSprite(GUI gui, String skinName) {
+    protected GUIImage getSprite(GUI gui, String skinName) {
         if (spriteCache.containsKey(skinName)) {
             return spriteCache.get(skinName);
         }

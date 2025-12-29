@@ -51,7 +51,6 @@ class RoadViewerTest {
         List<Vehicle> vehicles = Arrays.asList(car, bus);
         
         Mockito.when(mockLane.getVehicles()).thenReturn(vehicles);
-        // Correct mock to accept ints for width/height
         Mockito.when(mockGUI.createOffScreenImage(anyInt(), anyInt())).thenReturn(mockImage);
 
         viewer.draw(mockGUI, mockLane, 16, 32);

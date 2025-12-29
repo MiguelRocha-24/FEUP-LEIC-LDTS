@@ -21,8 +21,7 @@ class MenuViewerTest {
         Mockito.when(mockMenu.getEntry(0)).thenReturn("Start");
         Mockito.when(mockMenu.getEntry(1)).thenReturn("Exit");
         Mockito.when(mockMenu.isSelected(0)).thenReturn(true);
-        
-        // Mock currentUser
+
         User mockUser = new User("Test", 10, 100, "A", null);
         Mockito.when(mockMenu.getCurrentUser()).thenReturn(mockUser);
         

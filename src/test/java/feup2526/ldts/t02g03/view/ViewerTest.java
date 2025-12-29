@@ -1,6 +1,7 @@
 package feup2526.ldts.t02g03.view;
 
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
 
 import java.io.IOException;
@@ -16,7 +17,6 @@ class ViewerTest {
 
         @Override
         protected void drawElements(GUI gui) {
-            // Do nothing
         }
     }
 
@@ -29,8 +29,13 @@ class ViewerTest {
         viewer.draw(mockGUI);
 
         Mockito.verify(mockGUI).clear();
-        // drawElements call logic is implicit since we are in a subclass that overrides it, 
-        // but checking the template method calls refresh is key.
         Mockito.verify(mockGUI).refresh();
+    }
+
+    @Test
+    void testGetModel() {
+        Object model = new Object();
+        Viewer<Object> viewer = new ConcreteViewer(model);
+        assertSame(model, viewer.getModel());
     }
 }

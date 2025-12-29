@@ -46,4 +46,11 @@ class NumberViewerTest {
         Mockito.verify(mockGUI).drawImage(eq(10), eq(10), eq(mockImage));
         Mockito.verify(mockGUI).drawImage(eq(20), eq(10), eq(mockImage));
     }
+    
+    @Test
+    void testGetWidth() {
+        int width = viewer.getWidth(mockGUI, 123);
+        // 3 digits, each 10 width -> 30
+        org.junit.jupiter.api.Assertions.assertEquals(30, width);
+    }
 }

@@ -53,6 +53,42 @@ class LanternaGUITest {
     }
     
     @Test
+    void testDrawImageOpaque() {
+        LanternaGUIImage image = new LanternaGUIImage(5, 5);
+        image.setTransparency(false);
+        
+        gui.drawImage(1, 1, image);
+        
+        verify(tg).drawImage(eq(new com.googlecode.lanterna.TerminalPosition(1, 1)), any());
+    }
+
+    @Test
+    void testDrawImageTransparent() {
+        LanternaGUIImage image = new LanternaGUIImage(2, 2);
+        image.setTransparency(true);
+        image.setPixel(0, 0, "#FFFFFF");
+        
+        gui.drawImage(1, 1, image);
+
+        verify(tg, atLeastOnce()).setCharacter(anyInt(), anyInt(), any());
+    }
+
+    @Test
+    void testReadInput() throws IOException {
+        com.googlecode.lanterna.input.KeyStroke keyStroke = new com.googlecode.lanterna.input.KeyStroke(com.googlecode.lanterna.input.KeyType.Enter);
+        when(screen.pollInput()).thenReturn(keyStroke);
+        
+        assertEquals(keyStroke, gui.readInput());
+    }
+
+    @Test
+    void testCreateTextGraphics() {
+        TextGraphics newTg = gui.createTextGraphics();
+        assertNotNull(newTg);
+        verify(screen, times(2)).newTextGraphics();
+    }
+
+    @Test
     void testGetTerminalDimensions() {
         TerminalSize size = new TerminalSize(80, 24);
         when(screen.getTerminalSize()).thenReturn(size);
