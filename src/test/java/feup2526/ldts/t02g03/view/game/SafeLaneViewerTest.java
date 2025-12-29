@@ -14,8 +14,7 @@ import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+
 
 class SafeLaneViewerTest {
     private SafeLaneViewer viewer;
@@ -47,7 +46,6 @@ class SafeLaneViewerTest {
 
         Mockito.when(mockLane.getTrees()).thenReturn(Collections.singletonList(tree));
         Mockito.when(mockLane.getCoins()).thenReturn(Collections.singletonList(coin));
-        // Correct mock to accept ints for width/height
         Mockito.when(mockGUI.createOffScreenImage(anyInt(), anyInt())).thenReturn(mockImage);
 
         viewer.draw(mockGUI, mockLane, 16, 16);

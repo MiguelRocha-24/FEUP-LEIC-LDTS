@@ -24,9 +24,12 @@ class LanternaGUIImageTest {
     @Test
     void testSetPixel() {
         LanternaGUIImage image = new LanternaGUIImage(10, 5);
-        // Just verify it doesn't throw and sets something internally
-        // Since we can't easily inspect the internal TextImage without dependencies, 
-        // we rely on the fact that getTextImage returns the modified object.
-        assertDoesNotThrow(() -> image.setPixel(0, 0, "#FFFFFF"));
+        image.setPixel(0, 0, "#FFFFFF");
+        
+        com.googlecode.lanterna.graphics.TextImage textImage = image.getTextImage();
+        com.googlecode.lanterna.TextCharacter tc = textImage.getCharacterAt(0, 0);
+        
+        assertNotNull(tc);
+        assertNotEquals(com.googlecode.lanterna.TextColor.ANSI.DEFAULT, tc.getBackgroundColor());
     }
 }

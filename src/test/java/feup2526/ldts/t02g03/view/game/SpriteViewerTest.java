@@ -24,6 +24,6 @@ class SpriteViewerTest {
         
         assertNotNull(result);
         Mockito.verify(mockGUI).createOffScreenImage(10, 10);
-        Mockito.verify(mockImage).setTransparency(true); // Default image has 0 alpha, so transparency true
+        Mockito.verify(mockImage).setTransparency(true);
     }
 }

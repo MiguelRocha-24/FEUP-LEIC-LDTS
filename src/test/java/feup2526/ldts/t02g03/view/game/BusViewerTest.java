@@ -9,44 +9,50 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 
 class BusViewerTest {
+    private static final int TILESIZE = 16;
     private BusViewer viewer;
     private GUI mockGUI;
-    private GUIImage mockImage;
+    private GUIImage mockLeftImage;
+    private GUIImage mockRightImage;
 
     private class TestableBusViewer extends BusViewer {
+        private String lastRequestedPath;
+
         @Override
         public GUIImage getSprite(GUI gui, String path) {
-            return mockImage;
+            lastRequestedPath = path;
+            return path.equals("docs/images/sprites/Bus-Left.png") ? mockLeftImage : mockRightImage;
+        }
+
+        public String getLastRequestedPath() {
+            return lastRequestedPath;
         }
     }
 
     @BeforeEach
     void setUp() {
         mockGUI = Mockito.mock(GUI.class);
-        mockImage = Mockito.mock(GUIImage.class);
+        mockLeftImage = Mockito.mock(GUIImage.class);
+        mockRightImage = Mockito.mock(GUIImage.class);
         viewer = new TestableBusViewer();
     }
 
     @Test
     void testDrawLeft() {
         Bus bus = new Bus(new Position(10, 5), Direction.LEFT);
-        
-        viewer.draw(mockGUI, bus, 16, 80);
-
-        Mockito.verify(mockGUI).drawImage(eq(160), eq(80), eq(mockImage));
+        viewer.draw(mockGUI, bus, TILESIZE, 80);
+        assert "docs/images/sprites/Bus-Left.png".equals(((TestableBusViewer) viewer).getLastRequestedPath());
+        Mockito.verify(mockGUI).drawImage(eq(160), eq(80), eq(mockLeftImage));
     }
 
     @Test
     void testDrawRight() {
         Bus bus = new Bus(new Position(10, 5), Direction.RIGHT);
-        
-        viewer.draw(mockGUI, bus, 16, 80);
-
-        Mockito.verify(mockGUI).drawImage(eq(160), eq(80), eq(mockImage));
+        viewer.draw(mockGUI, bus, TILESIZE, 80);
+        assert "docs/images/sprites/Bus-Right.png".equals(((TestableBusViewer) viewer).getLastRequestedPath());
+        Mockito.verify(mockGUI).drawImage(eq(160), eq(80), eq(mockRightImage));
     }
 }

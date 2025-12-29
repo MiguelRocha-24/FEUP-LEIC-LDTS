@@ -42,16 +42,26 @@ tasks.jacocoTestReport {
 
 pitest {
     junit5PluginVersion = '1.2.1'
-    // Selective mutation testing - only controllers
+    // Selective mutation testing - high and medium priority packages
+    // High Priority: model.game, controller.game, states (core game logic and state management)
+    // Medium Priority: model.menu, controller.menu (user management, shop, menu interactions)
     // Excluding Game class due to threading and System.exit() issues
     targetClasses = [
-        'feup2526.ldts.t02g03.controller.*'
+        'feup2526.ldts.t02g03.model.game.*',
+        'feup2526.ldts.t02g03.controller.game.*',
+        'feup2526.ldts.t02g03.model.menu.*',
+        'feup2526.ldts.t02g03.controller.menu.*',
+        'feup2526.ldts.t02g03.states.*'
     ]
     excludedClasses = [
         'feup2526.ldts.t02g03.application.Game'
     ]
     targetTests = [
-        'feup2526.ldts.t02g03.controller.*'
+        'feup2526.ldts.t02g03.model.game.*',
+        'feup2526.ldts.t02g03.controller.game.*',
+        'feup2526.ldts.t02g03.model.menu.*',
+        'feup2526.ldts.t02g03.controller.menu.*',
+        'feup2526.ldts.t02g03.states.*'
     ]
     mutators = ['DEFAULTS']
     outputFormats = ['HTML', 'XML']

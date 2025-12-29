@@ -5,10 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserManager {
-    private final String filePath = "docs/users.csv";
+    private final String filePath;
     private List<User> users;
 
     public UserManager() {
+        this("docs/users.csv");
+    }
+
+    public UserManager(String filePath) {
+        this.filePath = filePath;
         this.users = new ArrayList<>();
         loadUsers();
         if (users.isEmpty()) {

@@ -5,16 +5,14 @@ import feup2526.ldts.t02g03.controller.Controller;
 import feup2526.ldts.t02g03.view.GUI;
 import feup2526.ldts.t02g03.view.Viewer;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class StateTest {
 
     @Test
+    @SuppressWarnings("unchecked")
     void testStep() throws IOException {
         // Create a stub concrete State
         Controller<Object> mockController = mock(Controller.class);
@@ -41,7 +39,7 @@ class StateTest {
         state.step(mockGame, mockGUI, time);
 
         // Verify that controller.step and viewer.draw were called
-        verify(mockController).step(mockGame, mockGUI.readInput(), time);
+        verify(mockController).step(mockGame, mockGUI.readInput());
         verify(mockViewer).draw(mockGUI);
     }
 }

@@ -60,12 +60,7 @@ class RiverTest {
     void testUpdate() {
         Log l = new Log(new Position(1, 1), Direction.RIGHT);
         river.addLog(l);
-        river.update(); // Expects log to move
-        // River update calls log.move(speed). Speed is 1.0, Dir is RIGHT.
-        // Log is MovableEntity. move() updates position.
-        // Assuming move() works as per MovableEntity implementation (checked previously)
-        // Manual verification of Log movement via River update is implicit if Log works.
-        // We can check if position changed.
+        river.update(); 
         assertNotEquals(1.0, l.getPosition().getX()); 
     }
 }

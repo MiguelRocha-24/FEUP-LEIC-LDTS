@@ -37,9 +37,9 @@ public class LaneGenerationManager {
         if (level.getLane(row) != null)
             return;
 
-        Direction dir = (Math.random() < 0.5) ? Direction.RIGHT : Direction.LEFT;
-        double speed = 0.03 + (Math.random() * 0.04) + (Math.abs(row) * 0.0002);
-        double choseLane = Math.random();
+        Direction dir = (getRandom() < 0.5) ? Direction.RIGHT : Direction.LEFT;
+        double speed = 0.03 + (getRandom() * 0.04) + (Math.abs(row) * 0.0002);
+        double choseLane = getRandom();
 
         Lane lane;
         if (choseLane < 0.33) {
@@ -50,5 +50,9 @@ public class LaneGenerationManager {
             lane = new SafeLane(row, level.getGrid().getW(), true);
         }
         level.addLane(row, lane);
+    }
+
+    protected double getRandom() {
+        return Math.random();
     }
 }

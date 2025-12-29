@@ -34,14 +34,4 @@ public class Player extends MovableEntity {
     public void setOnLog(boolean onLog) {
         isOnLog = onLog;
     }
-
-    @Override
-    protected Position nextPosition() {
-        return switch (direction) {
-            case UP -> targetPosition.up();
-            case DOWN -> targetPosition.down();
-            case LEFT -> targetPosition.left();
-            case RIGHT -> targetPosition.right();
-        };
-    }
 }

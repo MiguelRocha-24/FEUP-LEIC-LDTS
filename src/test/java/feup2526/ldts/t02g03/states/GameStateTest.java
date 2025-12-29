@@ -3,7 +3,6 @@ package feup2526.ldts.t02g03.states;
 import feup2526.ldts.t02g03.application.Game;
 import feup2526.ldts.t02g03.model.game.Level;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
