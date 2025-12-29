@@ -1,2 +1,0 @@
-Added a clamp function because of possible efficiency improvements during game design. Might be
-beneficial to clamp position instead of deny movement to player. To test in future.

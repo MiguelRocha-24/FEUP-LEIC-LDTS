@@ -1,2 +1,0 @@
-Position class was developed with a immutable design because it is a very simple class, and this way it
-prevents any unwanted / unrelated classes from modifying another objects position.

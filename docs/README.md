@@ -25,8 +25,8 @@ This project was developed by João Barros (up202406502@edu.fe.up.pt), Miguel Ro
 All planned features were either implemented, or a decision was made against implementing them as justified below
 ## Not Implemented Features
 
-- **Buttons** - Functional and interactive buttons. Reason: A keyboard-focused navigation system for menus proved to be easier to implement and user-friendly enough so that it was not necessary to implement buttons.
-- **Mouse control** - The mouse inputs will be received through the respective events and interpreted according to the current game state. Reason: Same as above.
+- **Buttons** - Functional and interactive buttons. Reason: A keyboard-focused navigation system for menus proved to be easier to implement and user-friendly enough.
+- **Mouse control** - Again, we decided a keyboard-focused system was enough.
 
 
 ## Game Preview
@@ -129,12 +129,9 @@ As described before, regarding the "Architectural Pattern", the project follows 
 
 #### Controller Implementation:
 The Controller package is responsible for handling user input and updating the game state. It acts as the bridge between the Model and the View. The main classes of this package do the following: 
-- **GameController**: The central controller for the gameplay state. It orchestrates the game loop, managing the player's movement, lane generation, collision detection, and score updates. It delegates specific tasks to specialized sub-controllers.
+- **GameController**: The central controller for the gameplay state. It manages the multiple sub-controllers, as well as the main game loop.
 - **LaneController**: An interface for handling logic specific to different types of lanes.
-- **PlayerController**: Dedicated to handling player-specific logic, such as movement validation and position updates based on keyboard input.
-- **MenuController**: Manages navigation and interaction within the various menu screens (Main Menu, Shop, Game Over), allowing users to select options and switch states.
-
-This structure ensures that the game logic is modular and that input handling is separated from the core game rules. 
+- **MenuController**: Manages navigation and interaction within the various menu screens (Main Menu, Shop, Game Over), allowing users to select options between multiple options.
 
 ### Main Controllers in the package
 <p align="center" justify="center">
@@ -155,7 +152,7 @@ This structure ensures that the game logic is modular and that input handling is
 The Model package is split into two domains: **Game** (gameplay entities) and **Menu** (user interface data). To keep them understable / maintain relevancy, we decided to remove from the UMLs:
 
 - **Position and Direction**: Used by almost every game entity. Including them would clutter the UML and make it less readable.
-- **GameOver and RemoveUser**: These classes are just to help the state, and have no relevant relationships to other model classes. `GameOver` is standalone, and `RemoveUser` is a thin wrapper around Menu.
+- **GameOver and RemoveUser**: These classes have no relevant relationships to other model classes. `GameOver` is standalone, and `RemoveUser` is a thin wrapper around Menu.
 
 The **Game Model** also holds a camera, to make sure the entities are drawn in their correct locations - a helper to the viewer.
 
@@ -188,8 +185,8 @@ The View component separates the game's visual logic from the rendering library 
 
 #### Viewer Hierarchy
 - **`Viewer<T>`**: Abstract base class holding a model reference and defining `draw(GUI gui)`. Each `State<T>` holds a corresponding `Viewer<T>`.
-- **Game Viewers** (`view.game`): `GameViewer` orchestrates all gameplay rendering; `SpriteViewer<T>` provides sprite-based rendering with caching.
-- **Menu Viewers** (`view.menu`): `MenuViewer`, `GameOverViewer`, `ShopViewer`, `NewUserViewer`, `RemoveUserViewer`
+- **Game Viewers**: `GameViewer` coordinates all gameplay rendering; `SpriteViewer<T>` provides sprite-based rendering - using a cache for efficiency.
+- **Menu Viewers**: `MenuViewer`, `GameOverViewer`, `ShopViewer`, `NewUserViewer`, `RemoveUserViewer`
 
 #### Benefits
 - **Interchangeability**: Lanterna can be replaced by implementing a new `GUI`, without modifying viewers.
@@ -214,7 +211,7 @@ This section details the main design patterns used throughout the project, expla
 ### 1. State Pattern
 
 #### Problem in Context
-The game has multiple states (Main Menu and its options, and the main Gameplay), with different behaviours and input handling. Managing these with conditionals would lead to complex, hard-to-maintain code. The fact that text would also require sprites, or become almost unreadable due to the font of the main game, we proceeded with the State Pattern, also to allow different terminals to have different GUIs.
+The game has multiple states (Main Menu and its options, and the main Gameplay), with different behaviours and input handling. Managing these with conditionals would lead to complex, hard-to-maintain code. Due to the fact that text would also require sprites, or become almost unreadable due to the font of the main game, we proceeded with the State Pattern, also to allow different terminals to have different GUIs.
 
 #### The Pattern
 "The **State Pattern** allows an object to alter its behavior when its internal state changes. The object will appear to change its class".
@@ -227,7 +224,6 @@ The game has multiple states (Main Menu and its options, and the main Gameplay),
 #### Consequences
 - **Single Responsibility Principle (SRP)**: Each state encapsulates its own behavior and logic, preventing a "God Class" that handles all game states.
 - **Open/Closed Principle (OCP)**: New states can be introduced without modifying the existing `Game` class or other states.
-- **Simplicity**: Eliminates complex conditional logic (switch/case) in the main game loop related to state management.
 
 ### 2. Factory Method Pattern
 
@@ -412,7 +408,7 @@ We excluded the **`view`** package because it primarily contains presentation lo
 
 ### Testing Results
 
-Our testing achieved **88% line coverage** with JaCoCo and **69% mutation score (76% test strength)** with PIT. While the line coverage is pretty good, we know that the mutation testing results indicate room for improvement, however, we consider it to be good enough for our purposes, since the game is functionaly working. 
+Our testing achieved **88% line coverage** with JaCoCo and **69% mutation score (76% test strength)** with PIT. While the line coverage is pretty good, we know that the mutation testing results indicate room for improvement. Despite this, we consider it to be good enough for our purposes, since the game is functionally working. 
 
 
 ## Self-evaluation

@@ -1,4 +1,0 @@
-Movable entity is an abstract class of entity (also abstract class) that adds
-direction to entities. Later usefull for drawing, as well as moving obstacles and player object.
-JaCoCo reports 1 missing branch test, but there is no way to test it without violating the invariant of
-direction options, therefore we decided to leave it
