@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 
 class NumberViewerTest {
@@ -29,20 +28,18 @@ class NumberViewerTest {
         viewer = new TestableNumberViewer();
     }
 
+    //Width of each sprite is 10; 
+
+    
     @Test
     void testDrawSingleDigit() {
         viewer.draw(mockGUI, 1, 10, 10);
-        
-        // Should draw digit '1' at (10, 10)
         Mockito.verify(mockGUI).drawImage(eq(10), eq(10), eq(mockImage));
     }
     
     @Test
     void testDrawMultipleDigits() {
         viewer.draw(mockGUI, 12, 10, 10);
-        
-        // Should draw '1' at (10,10) and '2' at (10+width, 10)
-        // Since mockImage width is 10
         Mockito.verify(mockGUI).drawImage(eq(10), eq(10), eq(mockImage));
         Mockito.verify(mockGUI).drawImage(eq(20), eq(10), eq(mockImage));
     }
@@ -50,7 +47,6 @@ class NumberViewerTest {
     @Test
     void testGetWidth() {
         int width = viewer.getWidth(mockGUI, 123);
-        // 3 digits, each 10 width -> 30
         org.junit.jupiter.api.Assertions.assertEquals(30, width);
     }
 }

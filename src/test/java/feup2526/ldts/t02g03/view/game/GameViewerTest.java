@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 
 class GameViewerTest {
 
+    @SuppressWarnings({ "rawtypes"})
     private static class TestableGameViewerWithGetters extends GameViewer {
         private PlayerViewer generatedPlayerViewer;
         private NumberViewer generatedNumberViewer;
@@ -54,6 +55,7 @@ class GameViewerTest {
     }
 
     @Test
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     void testDrawElements() throws IOException {
         // Arrange
         Level mockLevel = Mockito.mock(Level.class);
@@ -72,13 +74,10 @@ class GameViewerTest {
         when(mockLevel.getCollisionTime()).thenReturn(12345L);
         when(mockPlayer.getPosition()).thenReturn(mockPos);
         when(mockRunScore.getCount()).thenReturn(42);
-        
-        when(mockCamera.getY()).thenReturn(5.0); // Camera at
+        when(mockCamera.getY()).thenReturn(5.0);
         RoadLane road = new RoadLane(Direction.RIGHT, 1.0, 5);
         River river = new River(6, Direction.LEFT, 1.0);
-        
         when(mockLevel.getLane(anyInt())).thenReturn(null);
-        
         GUI mockGUI = Mockito.mock(GUI.class);
         when(mockGUI.getTerminalHeight()).thenReturn(160);
         when(mockGUI.getTerminalWidth()).thenReturn(100);
@@ -86,27 +85,13 @@ class GameViewerTest {
         when(mockLevel.getLane(6)).thenReturn(river);
 
         TestableGameViewerWithGetters viewer = new TestableGameViewerWithGetters(mockLevel);
-        
         when(viewer.getMockNumberViewer().getWidth(any(GUI.class), anyInt())).thenReturn(5);
-
         viewer.draw(mockGUI);
 
-
-        verify(viewer.getMockPlayerViewer()).draw(
-            eq(mockGUI), 
-            eq(mockPlayer), 
-            eq(16), 
-            anyInt(),
-            eq(true),
-            eq(12345L)
-        );
-
+        verify(viewer.getMockPlayerViewer()).draw(eq(mockGUI),eq(mockPlayer),eq(16),anyInt(),eq(true),eq(12345L));
         verify(viewer.getMockNumberViewer()).draw(eq(mockGUI), eq(42), anyInt(), eq(1));
-
         LaneViewer mockRoadViewer = viewer.getMockLaneViewer(RoadLane.class);
         LaneViewer mockRiverViewer = viewer.getMockLaneViewer(River.class);
-        
-        verify(mockRoadViewer).draw(eq(mockGUI), eq(road), eq(16), anyInt());
         verify(mockRoadViewer).draw(eq(mockGUI), eq(road), eq(16), anyInt());
         verify(mockRiverViewer).draw(eq(mockGUI), eq(river), eq(16), anyInt());
     }
@@ -115,11 +100,8 @@ class GameViewerTest {
     void testSetPlayerSkin() {
         Level mockLevel = Mockito.mock(Level.class);
         when(mockLevel.getGrid()).thenReturn(Mockito.mock(Grid.class));
-        
         TestableGameViewerWithGetters viewer = new TestableGameViewerWithGetters(mockLevel);
-        
         viewer.setPlayerSkin("newSkin");
-        
         verify(viewer.getMockPlayerViewer()).setSkinName("newSkin");
     }
 }
