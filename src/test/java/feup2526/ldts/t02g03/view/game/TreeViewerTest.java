@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 
 class TreeViewerTest {
@@ -33,9 +32,7 @@ class TreeViewerTest {
     @Test
     void testDraw() {
         Tree tree = new Tree(new Position(4, 4));
-        
         viewer.draw(mockGUI, tree, 10, 40);
-
         Mockito.verify(mockGUI).drawImage(eq(40), eq(40), eq(mockImage));
     }
 }
