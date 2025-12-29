@@ -6,9 +6,6 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-
 class ViewerTest {
     private static class ConcreteViewer extends Viewer<Object> {
         public ConcreteViewer(Object model) {

@@ -44,10 +44,8 @@ class LanternaGUITest {
     void testScreenOperations() throws IOException {
         gui.clear();
         verify(screen).clear();
-
         gui.refresh();
         verify(screen).refresh();
-
         gui.close();
         verify(screen).close();
     }
@@ -56,7 +54,6 @@ class LanternaGUITest {
     void testDrawImageOpaque() {
         LanternaGUIImage image = new LanternaGUIImage(5, 5);
         image.setTransparency(false);
-        
         gui.drawImage(1, 1, image);
         
         verify(tg).drawImage(eq(new com.googlecode.lanterna.TerminalPosition(1, 1)), any());
@@ -67,7 +64,6 @@ class LanternaGUITest {
         LanternaGUIImage image = new LanternaGUIImage(2, 2);
         image.setTransparency(true);
         image.setPixel(0, 0, "#FFFFFF");
-        
         gui.drawImage(1, 1, image);
 
         verify(tg, atLeastOnce()).setCharacter(anyInt(), anyInt(), any());
