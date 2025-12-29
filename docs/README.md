@@ -384,14 +384,35 @@ We are also aware that the error handling is not the best, as we only catch IOEx
 NewUserController and NewUserViewer are also tightly coupled, and we are aware of this Code-Smell. We decided to accept this trade-off, as NewUserViewer is very simple, and the benefits of decoupling are not worth the added complexity, at least considering our specific use case. 
 ## Testing
 
-
-### Screenshot of coverage report
+### Code Coverage Report (JaCoCo)
 <p align="center" justify="center">
-  <img src="images/testCoverage/jacoco.png"/>
+  <img src="images/testCoverage/Jacoco.png"/>
 </p>
 <p align="center">
-  <b><i>Fig 12. Code coverage screenshot</i></b>
+  <b><i>Fig 12. JaCoCo Report</i></b>
 </p>
+
+<br>
+<br />
+
+### Mutation Testing Report (PIT)
+<p align="center" justify="center">
+  <img src="images/testCoverage/Pitest.png"/>
+</p>
+<p align="center">
+  <b><i>Fig 13. PitestReport</i></b>
+</p>
+
+Our mutation testing focuses on packages containing core business logic:
+- **`model.game`** and **`controller.game`**: Core gameplay mechanics
+- **`model.menu`** and **`controller.menu`**: User management, shop interactions, and menu navigation
+- **`states`**: State coordination and transitions between different game modes
+
+We excluded the **`view`** package because it primarily contains presentation logic with minimal business logic. Mutation testing on view classes would provide limited value, as these classes focus on rendering. The **`application`** package was excluded due to the `Game` class containing threading and `System.exit()` calls that complicate mutation testing.
+
+### Testing Results
+
+Our testing achieved **88% line coverage** with JaCoCo and **69% mutation score (76% test strength)** with PIT. While the line coverage is pretty good, we know that the mutation testing results indicate room for improvement, however, we consider it to be good enough for our purposes, since the game is functionaly working. 
 
 
 ## Self-evaluation
