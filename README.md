@@ -1,5 +1,14 @@
 # CROSSY ROADS
 
+<p align="center">
+  <img src="docs/images/LandingImage.jpeg" width="1000"/>
+</p>
+
+![Project Grade](https://img.shields.io/badge/Grade-17.0%2F20-1E90FF?style=for-the-badge&labelColor=21262d)
+![Course](https://img.shields.io/badge/Course-LDTS-1E90FF?style=for-the-badge&labelColor=21262d)
+![Course Grade](https://img.shields.io/badge/Course_Grade-17%2F20-1E90FF?style=for-the-badge&labelColor=21262d)
+![Year](https://img.shields.io/badge/Year-2025%2F26-1E90FF?style=for-the-badge&labelColor=21262d)
+
 ## Game Description
 
 Crossy Roads is an endless arcade hopper game where you guide a character across busy roads and rivers while avoiding various obstacles. Your goal is to travel as far as possible without getting hit by vehicles or falling into the water.
