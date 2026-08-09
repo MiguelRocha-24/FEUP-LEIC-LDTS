@@ -1,11 +1,11 @@
-# LDTS_T02_G03 - CROSSY ROADS
+# CROSSY ROADS
 
 ## Game Description
 
 Crossy Roads is an endless arcade hopper game where you guide a character across busy roads and rivers while avoiding various obstacles. Your goal is to travel as far as possible without getting hit by vehicles or falling into the water.
 As you progress, the difficulty increases with faster-moving traffic and more challenging patterns.
 
-This project was developed by João Barros (up202406502@edu.fe.up.pt), Miguel Rocha (up202405484@edu.fe.up.pt) and Rosa Chilengue (up202109257@edu.fe.up.pt) for LDTS 2025-26.
+This project was developed by myself and João Barros (up202406502@edu.fe.up.pt)
 
 ## Implemented Features
 
@@ -409,13 +409,3 @@ We excluded the **`view`** package because it primarily contains presentation lo
 ### Testing Results
 
 Our testing achieved **88% line coverage** with JaCoCo and **69% mutation score (76% test strength)** with PIT. While the line coverage is pretty good, we know that the mutation testing results indicate room for improvement. Despite this, we consider it to be good enough for our purposes, since the game is functionally working. 
-
-
-## Self-evaluation
-
-One of the members almost did not participate in the development. In the first delivery, we looked aside as motivation was shown. No contact since. 
-Therefore, we consider the rest of the work to have been like:
-
-- João Barros: 49%
-- Miguel Rocha: 49%
-- Rosa Chilengue: 2%
